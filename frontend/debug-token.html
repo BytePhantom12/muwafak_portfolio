@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Token Debugger</title>
+  <style>
+    body {
+      font-family: monospace;
+      padding: 20px;
+      background: #1a1a1a;
+      color: #00ff00;
+    }
+    .section {
+      margin: 20px 0;
+      padding: 15px;
+      background: #2a2a2a;
+      border-radius: 8px;
+    }
+    button {
+      background: #00d4ff;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    button:hover {
+      background: #00a8cc;
+    }
+    pre {
+      background: #000;
+      padding: 10px;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔍 Token Debugger</h1>
+  
+  <div class="section">
+    <h2>Current Token Status</h2>
+    <button onclick="checkToken()">Check Token</button>
+    <button onclick="clearToken()">Clear Token</button>
+    <pre id="tokenInfo">Click "Check Token" to see details</pre>
+  </div>
+
+  <div class="section">
+    <h2>Test Login</h2>
+    <input type="text" id="username" placeholder="Username" value="admin" style="padding: 8px; margin: 5px;">
+    <input type="password" id="password" placeholder="Password" value="admin123456" style="padding: 8px; margin: 5px;">
+    <button onclick="testLogin()">Test Login</button>
+    <pre id="loginResult"></pre>
+  </div>
+
+  <div class="section">
+    <h2>Test Upload Endpoint</h2>
+    <button onclick="testUpload()">Test Upload Auth</button>
+    <pre id="uploadResult"></pre>
+  </div>
+
+  <script>
+    const API_URL = 'http://localhost:5000/api';
+
+    function checkToken() {
+      const token = localStorage.getItem('admin_token');
+      const user = localStorage.getItem('admin_user');
+      
+      if (!token) {
+        document.getElementById('tokenInfo').textContent = '❌ No token found in localStorage';
+        return;
+      }
+
+      // Decode JWT (without verification)
+      try {
+        const parts = token.split('.');
+        const payload = JSON.parse(atob(parts[1]));
+        const now = Math.floor(Date.now() / 1000);
+        const expired = payload.exp && payload.exp < now;
+
+        document.getElementById('tokenInfo').textContent = 
+          `✅ Token found!\n\n` +
+          `Token: ${token.substring(0, 50)}...\n\n` +
+          `Decoded Payload:\n${JSON.stringify(payload, null, 2)}\n\n` +
+          `Expiration: ${payload.exp ? new Date(payload.exp * 1000).toLocaleString() : 'No expiration'}\n` +
+          `Status: ${expired ? '❌ EXPIRED' : '✅ Valid'}\n\n` +
+          `User Data:\n${user || 'No user data'}`;
+      } catch (e) {
+        document.getElementById('tokenInfo').textContent = 
+          `⚠️ Token found but invalid format:\n${token}\n\nError: ${e.message}`;
+      }
+    }
+
+    function clearToken() {
+      localStorage.removeItem('admin_token');
+      localStorage.removeItem('admin_user');
+      sessionStorage.removeItem('admin_authenticated');
+      document.getElementById('tokenInfo').textContent = '✅ Token cleared! Refresh the page and try logging in again.';
+    }
+
+    async function testLogin() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const resultEl = document.getElementById('loginResult');
+      
+      resultEl.textContent = '⏳ Testing login...';
+      
+      try {
+        const response = await fetch(`${API_URL}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          localStorage.setItem('admin_token', data.token);
+          localStorage.setItem('admin_user', JSON.stringify(data.user));
+          resultEl.textContent = 
+            `✅ Login successful!\n\n` +
+            `Token: ${data.token.substring(0, 50)}...\n\n` +
+            `User: ${JSON.stringify(data.user, null, 2)}`;
+        } else {
+          resultEl.textContent = `❌ Login failed:\n${JSON.stringify(data, null, 2)}`;
+        }
+      } catch (error) {
+        resultEl.textContent = `❌ Error: ${error.message}`;
+      }
+    }
+
+    async function testUpload() {
+      const token = localStorage.getItem('admin_token');
+      const resultEl = document.getElementById('uploadResult');
+      
+      if (!token) {
+        resultEl.textContent = '❌ No token found. Please login first.';
+        return;
+      }
+      
+      resultEl.textContent = '⏳ Testing upload endpoint...';
+      
+      try {
+        const response = await fetch(`${API_URL}/upload`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          body: new FormData() // Empty form data just to test auth
+        });
+        
+        const data = await response.json();
+        
+        resultEl.textContent = 
+          `Status: ${response.status} ${response.statusText}\n\n` +
+          `Response:\n${JSON.stringify(data, null, 2)}\n\n` +
+          `${response.status === 401 ? '❌ Authentication failed!' : response.status === 400 ? '✅ Auth passed (400 is expected for empty upload)' : '✅ Success!'}`;
+      } catch (error) {
+        resultEl.textContent = `❌ Error: ${error.message}`;
+      }
+    }
+
+    // Auto-check on load
+    window.onload = checkToken;
+  </script>
+</body>
+</html>

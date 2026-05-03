@@ -1,0 +1,23 @@
+{
+  "name": "Muwafak  - Full Stack Developer",
+  "short_name": "Muwafak Portfolio",
+  "description": "Passionate Full Stack Developer crafting navigationally-perfect web experiences",
+  "icons": [
+    {
+      "src": "/src/assets/favicon/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/src/assets/favicon/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#00d4ff",
+  "background_color": "#0a0a0f",
+  "display": "standalone",
+  "start_url": "/",
+  "scope": "/",
+  "orientation": "portrait-primary"
+}
