@@ -206,8 +206,8 @@ export default function Hero() {
                 <img
                   src={profileImage}
                   alt="Muwafak – Full Stack Developer"
-                  className="w-full h-full rounded-full object-cover object-top"
-                  style={{ width: '272px', height: '272px' }}
+                  className="w-full h-full opacity-85 brightness-85 rounded-full object-cover object-top"
+                  style={{ width: '100%', height: '100%' }}
                 />
               </div>
               <div className="absolute inset-[-8px] rounded-full border border-[#00d4ff]/20 animate-spin-slow" />

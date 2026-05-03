@@ -65,11 +65,9 @@ export default function About() {
                 {/* Inner Image Mask */}
                 <div className="relative rounded-[calc(1.5rem-2px)] overflow-hidden bg-[#111118] h-full w-full z-10">
                   <img
-                    src={portfolioData.profile?.profileImage 
-                      ? `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${portfolioData.profile.profileImage}`
-                      : 'https://via.placeholder.com/360x400?text=Profile'}
+                    src="/src/assets/favicon/android-chrome-192x192.png"
                     alt="Muwafak Abubakar – About"
-                    className="w-full h-auto object-cover object-top opacity-90 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-[1.02]"
+                    className="w-full h-auto object-cover object-top opacity-75 brightness-85 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-[1.02]"
                     style={{ minHeight: '400px', objectPosition: 'top center' }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0f]/80 via-[#0a0a0f]/20 to-transparent pointer-events-none" />
