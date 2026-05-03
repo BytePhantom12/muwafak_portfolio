@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { HiArrowDownTray, HiEnvelope } from 'react-icons/hi2';
 import { FaGithub, FaLinkedinIn, FaFacebookF, FaInstagram, FaWhatsapp } from 'react-icons/fa';
 import { usePortfolioData } from '../context/PortfolioContext';
+import profileImage from '../assets/favicon/android-chrome-192x192.png';
 
 const containerVariants = {
   hidden: {},
@@ -203,7 +204,7 @@ export default function Hero() {
               <div className="absolute inset-[-16px] rounded-full bg-gradient-to-br from-[#00d4ff]/20 to-[#7c3aed]/20 blur-xl animate-pulse-slow" />
               <div className="profile-ring" style={{ width: 280, height: 280 }}>
                 <img
-                  src="/src/assets/favicon/android-chrome-192x192.png"
+                  src={profileImage}
                   alt="Muwafak – Full Stack Developer"
                   className="w-full h-full opacity-85 brightness-85 rounded-full object-cover object-top"
                   style={{ width: '100%', height: '100%' }}
