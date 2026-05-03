@@ -203,12 +203,10 @@ export default function Hero() {
               <div className="absolute inset-[-16px] rounded-full bg-gradient-to-br from-[#00d4ff]/20 to-[#7c3aed]/20 blur-xl animate-pulse-slow" />
               <div className="profile-ring" style={{ width: 280, height: 280 }}>
                 <img
-                  src={portfolioData.profile?.profileImage 
-                    ? `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${portfolioData.profile.profileImage}`
-                    : 'https://via.placeholder.com/280?text=Profile'}
+                  src="/src/assets/favicon/android-chrome-192x192.png"
                   alt="Muwafak – Full Stack Developer"
-                  className="w-full h-full rounded-full object-cover object-top"
-                  style={{ width: '272px', height: '272px' }}
+                  className="w-full h-full opacity-85 brightness-85 rounded-full object-cover object-top"
+                  style={{ width: '100%', height: '100%' }}
                 />
               </div>
               <div className="absolute inset-[-8px] rounded-full border border-[#00d4ff]/20 animate-spin-slow" />
