@@ -14,7 +14,7 @@ const FALLBACK_DATA = {
     'AI/ML Enthusiast',
   ],
   heroDescription:
-    'I build modern web applications powered by data. <br />Full Stack Developer and Data Analyst, I create responsive, high-performance systems using React, FastAPI, and modern databases—while turning data into insights that drive smarter decisions.',
+    'I build modern web applications powered by data. Full Stack Developer and Data Analyst, I create responsive, high-performance systems using React, FastAPI, and modern databases—while turning data into insights that drive smarter decisions.',
   cvUrl: '/muwafak-cv.pdf',
 
   // About
