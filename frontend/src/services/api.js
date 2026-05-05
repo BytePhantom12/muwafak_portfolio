@@ -1,5 +1,7 @@
 // API Configuration
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// In production with Vercel Services, the backend is at /api
+// In development, it may be a separate server
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 // Helper function to get auth token
 const getAuthToken = () => {
@@ -83,9 +85,9 @@ export const authAPI = {
     });
     const data = await handleResponse(response);
     
-    // Store token in localStorage
-    if (data.token) {
-      localStorage.setItem('admin_token', data.token);
+    // Store token in localStorage (FastAPI returns access_token)
+    if (data.access_token) {
+      localStorage.setItem('admin_token', data.access_token);
       localStorage.setItem('admin_user', JSON.stringify(data.user));
     }
     
@@ -103,9 +105,9 @@ export const authAPI = {
     });
     const data = await handleResponse(response);
     
-    // Store token in localStorage
-    if (data.token) {
-      localStorage.setItem('admin_token', data.token);
+    // Store token in localStorage (FastAPI returns access_token)
+    if (data.access_token) {
+      localStorage.setItem('admin_token', data.access_token);
       localStorage.setItem('admin_user', JSON.stringify(data.user));
     }
     
@@ -194,7 +196,7 @@ export const contactAPI = {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${getAuthToken()}`
       },
-      body: JSON.stringify({ replyMessage })
+      body: JSON.stringify({ reply: replyMessage })
     });
     return handleResponse(response);
   },
