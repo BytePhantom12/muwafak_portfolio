@@ -1,7 +1,7 @@
 // API Configuration
 // In production with Vercel Services, the backend is at /api
 // In development, it may be a separate server
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://muwafak-portfolio-xw.vercel.app/';
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 // Helper function to get auth token
 const getAuthToken = () => {
