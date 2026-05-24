@@ -49,6 +49,7 @@ class ProfileResponse(BaseModel):
     location: Optional[str] = None
     languages: Optional[str] = None
     email: Optional[str] = None
+    availability: Optional[str] = None
 
 
 # About Schemas
@@ -60,6 +61,15 @@ class AboutUpdate(BaseModel):
 class AboutResponse(BaseModel):
     description: Optional[str] = None
     highlights: List[str] = []
+    introHeading: Optional[str] = None
+    introHeadingHighlight: Optional[str] = None
+    introDescription: Optional[str] = None
+    yearsOfExperience: Optional[int] = None
+    projectsDone: Optional[int] = None
+    location: Optional[str] = None
+    role: Optional[str] = None
+    education: Optional[str] = None
+    languages: Optional[str] = None
 
 
 # Contact Info Schemas

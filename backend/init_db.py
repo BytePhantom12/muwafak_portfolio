@@ -32,11 +32,18 @@ def init_db():
         location TEXT,
         languages TEXT,
         email TEXT,
+        availability TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         UNIQUE(user_id)
     )
     ''')
+
+    # Add availability to existing profiles if missing
+    cursor.execute("PRAGMA table_info(profiles)")
+    columns = [row[1] for row in cursor.fetchall()]
+    if "availability" not in columns:
+        cursor.execute("ALTER TABLE profiles ADD COLUMN availability TEXT")
 
     # About Sections Table
     cursor.execute('''

@@ -67,9 +67,9 @@ export default function Hero() {
 
   const stats = [
     { value: `${portfolioData.about.yearsOfExperience}+`, label: 'Years Experience' },
-    { value: `${portfolioData.about.projectsDone}+`,      label: 'Projects Completed' },
-    { value: '5+',                                          label: 'Technologies' },
-    { value: '100%',                                        label: 'Dedication' },
+    { value: `${portfolioData.about.projectsDone}+`, label: 'Projects Completed' },
+    { value: '5+', label: 'Technologies' },
+    { value: '100%', label: 'Dedication' },
     { value: visitorCount !== null ? visitorCount.toLocaleString() : '...', label: '👁️ Portfolio Views' },
   ];
 
@@ -77,8 +77,8 @@ export default function Hero() {
     return (
       <section id="home" className="relative min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-[#00d4ff] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-slate-400">Loading portfolio...</p>
+          <div className="w-16 h-16 border-4 border-[#185FA5] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-[#626058]">Loading portfolio...</p>
         </div>
       </section>
     );
@@ -90,11 +90,11 @@ export default function Hero() {
       className="relative min-h-screen flex flex-col justify-center overflow-hidden"
     >
       {/* Background layer */}
-      <div className="absolute inset-0 bg-[#0a0a0f]">
+      <div className="absolute inset-0 bg-[#E8E6DE]">
         <div className="absolute inset-0 dot-grid opacity-40" />
-        <div className="blob w-[500px] h-[500px] bg-[#00d4ff] top-[-100px] right-[-100px]" />
-        <div className="blob w-[600px] h-[600px] bg-[#7c3aed] bottom-[-150px] left-[-150px]" />
-        <div className="blob w-[300px] h-[300px] bg-[#00d4ff] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.08]" />
+        <div className="blob w-[500px] h-[500px] bg-[#185FA5] top-[-100px] right-[-100px] opacity-[0.1]" />
+        <div className="blob w-[600px] h-[600px] bg-[#C2C0B8] bottom-[-150px] left-[-150px] opacity-[0.1]" />
+        <div className="blob w-[300px] h-[300px] bg-[#185FA5] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.08]" />
       </div>
 
       <div className="container-custom relative z-10 pt-24 pb-16 md:pt-32">
@@ -120,7 +120,7 @@ export default function Hero() {
 
             <motion.div
               variants={itemVariants}
-              className="text-xl sm:text-2xl md:text-3xl font-display font-semibold text-slate-300 mb-6 h-10"
+              className="text-xl sm:text-2xl md:text-3xl font-display font-semibold text-[#1C1B19] mb-6 h-10"
             >
               I'm a{' '}
               <TypeAnimation
@@ -134,7 +134,7 @@ export default function Hero() {
 
             <motion.p
               variants={itemVariants}
-              className="text-slate-400 text-base md:text-lg leading-relaxed max-w-lg mx-auto lg:mx-0 mb-8"
+              className="text-[#626058] text-base md:text-lg leading-relaxed max-w-lg mx-auto lg:mx-0 mb-8"
             >
               {portfolioData.heroDescription}
             </motion.p>
@@ -154,8 +154,8 @@ export default function Hero() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={label}
-                    className="w-10 h-10 flex items-center justify-center rounded-xl glass-card text-slate-400
-                      hover:text-[#00d4ff] hover:border-[#00d4ff]/30 hover:shadow-[0_0_15px_rgba(0,212,255,0.2)]
+                    className="w-10 h-10 flex items-center justify-center rounded-xl glass-card text-[#626058]
+                      hover:text-[#185FA5] hover:border-[#185FA5]/30 hover:shadow-[0_0_15px_rgba(24,95,165,0.2)]
                       transition-all duration-300 group"
                   >
                     {Icon && <Icon className="w-4 h-4 group-hover:scale-110 transition-transform duration-200" />}
@@ -175,10 +175,10 @@ export default function Hero() {
                   Hire Me
                 </button>
               </Link>
-              <a 
-                href={portfolioData.cvUrl ? `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${portfolioData.cvUrl}` : '#'} 
-                download 
-                id="hero-download-cv" 
+              <a
+                href={portfolioData.cvUrl ? `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${portfolioData.cvUrl}` : '#'}
+                download
+                id="hero-download-cv"
                 className="btn-outline"
                 onClick={(e) => {
                   if (!portfolioData.cvUrl) {
@@ -201,7 +201,7 @@ export default function Hero() {
             transition={{ duration: 0.8, ease: 'easeOut', delay: 0.2 }}
           >
             <div className="relative animate-float">
-              <div className="absolute inset-[-16px] rounded-full bg-gradient-to-br from-[#00d4ff]/20 to-[#7c3aed]/20 blur-xl animate-pulse-slow" />
+              <div className="absolute inset-[-16px] rounded-full bg-gradient-to-br from-[#185FA5]/20 to-[#C2C0B8]/20 blur-xl animate-pulse-slow" />
               <div className="profile-ring" style={{ width: 280, height: 280 }}>
                 <img
                   src={profileImage}
@@ -210,22 +210,22 @@ export default function Hero() {
                   style={{ width: '100%', height: '100%' }}
                 />
               </div>
-              <div className="absolute inset-[-8px] rounded-full border border-[#00d4ff]/20 animate-spin-slow" />
+              <div className="absolute inset-[-8px] rounded-full border border-[#185FA5]/20 animate-spin-slow" />
               <motion.div
                 className="absolute -bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-2
-                  bg-[#111118] border border-white/[0.08] rounded-full px-4 py-2 shadow-card whitespace-nowrap"
+                  bg-[#DDDBD3] border border-[#C2C0B8]/30 rounded-full px-4 py-2 shadow-card whitespace-nowrap"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 }}
               >
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-xs text-slate-300 font-medium">Available for work</span>
+                <span className="text-xs text-[#626058] font-medium">Available for work</span>
               </motion.div>
 
               {/* Orbiting skill badges */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none hidden sm:flex">
                 <motion.div
-                  className="relative w-[380px] h-[380px] rounded-full border border-white/[0.05]"
+                  className="relative w-[380px] h-[380px] rounded-full border border-[#C2C0B8]/20"
                   animate={{ rotate: 360 }}
                   transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
                 >
@@ -233,40 +233,40 @@ export default function Hero() {
                     <motion.div
                       animate={{ rotate: -360 }}
                       transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
-                      className="glass-card px-4 py-2 rounded-xl flex items-center gap-2 bg-[#111118]/80 backdrop-blur-md border-[#61dafb]/20"
+                      className="glass-card px-4 py-2 rounded-xl flex items-center gap-2 bg-[#DDDBD3]/80 backdrop-blur-md border-[#C2C0B8]/30"
                     >
                       <span className="text-base">⚛️</span>
-                      <span className="text-xs text-slate-200 font-semibold tracking-wide">React</span>
+                      <span className="text-xs text-[#1C1B19] font-semibold tracking-wide">React</span>
                     </motion.div>
                   </div>
                   <div className="absolute top-1/2 right-0 translate-x-1/2 -translate-y-1/2">
                     <motion.div
                       animate={{ rotate: -360 }}
                       transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
-                      className="glass-card px-4 py-2 rounded-xl flex items-center gap-2 bg-[#111118]/80 backdrop-blur-md border-[#06b6d4]/20"
+                      className="glass-card px-4 py-2 rounded-xl flex items-center gap-2 bg-[#DDDBD3]/80 backdrop-blur-md border-[#C2C0B8]/30"
                     >
                       <span className="text-base">🎨</span>
-                      <span className="text-xs text-slate-200 font-semibold tracking-wide">Tailwind</span>
+                      <span className="text-xs text-[#1C1B19] font-semibold tracking-wide">Tailwind</span>
                     </motion.div>
                   </div>
                   <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2">
                     <motion.div
                       animate={{ rotate: -360 }}
                       transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
-                      className="glass-card px-4 py-2 rounded-xl flex items-center gap-2 bg-[#111118]/80 backdrop-blur-md border-white/20"
+                      className="glass-card px-4 py-2 rounded-xl flex items-center gap-2 bg-[#DDDBD3]/80 backdrop-blur-md border-[#C2C0B8]/30"
                     >
                       <span className="text-base">⚡</span>
-                      <span className="text-xs text-slate-200 font-semibold tracking-wide">Next.js</span>
+                      <span className="text-xs text-[#1C1B19] font-semibold tracking-wide">Next.js</span>
                     </motion.div>
                   </div>
                   <div className="absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2">
                     <motion.div
                       animate={{ rotate: -360 }}
                       transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
-                      className="glass-card px-4 py-2 rounded-xl flex items-center gap-2 bg-[#111118]/80 backdrop-blur-md border-[#3178c6]/20"
+                      className="glass-card px-4 py-2 rounded-xl flex items-center gap-2 bg-[#DDDBD3]/80 backdrop-blur-md border-[#C2C0B8]/30"
                     >
                       <span className="text-base">📘</span>
-                      <span className="text-xs text-slate-200 font-semibold tracking-wide">TypeScript</span>
+                      <span className="text-xs text-[#1C1B19] font-semibold tracking-wide">TypeScript</span>
                     </motion.div>
                   </div>
                 </motion.div>
@@ -283,13 +283,13 @@ export default function Hero() {
           transition={{ delay: 0.8, duration: 0.6 }}
         >
           {/* Cyberpunk / High-Tech HUD Container */}
-          <div className="relative rounded-2xl bg-[#09090b] border border-white/5 overflow-hidden group shadow-[0_0_30px_rgba(0,0,0,0.5)]">
-            
+          <div className="relative rounded-2xl bg-[#DDDBD3] border border-[#C2C0B8]/30 overflow-hidden group shadow-[0_0_30px_rgba(0,0,0,0.05)]">
+
             {/* Tech Grid Background Animation */}
-            <div 
+            <div
               className="absolute inset-0 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity duration-700"
               style={{
-                backgroundImage: 'linear-gradient(#00d4ff 1px, transparent 1px), linear-gradient(90deg, #00d4ff 1px, transparent 1px)',
+                backgroundImage: 'linear-gradient(#185FA5 1px, transparent 1px), linear-gradient(90deg, #185FA5 1px, transparent 1px)',
                 backgroundSize: '32px 32px',
                 backgroundPosition: 'center center'
               }}
@@ -297,46 +297,46 @@ export default function Hero() {
 
             {/* Animated Data Streams (Vertical & Horizontal scanning lines) */}
             <motion.div
-              className="absolute w-full h-[1px] shadow-[0_0_15px_#00d4ff]"
-              style={{ background: 'linear-gradient(90deg, transparent, #00d4ff, transparent)' }}
+              className="absolute w-full h-[1px] shadow-[0_0_15px_#185FA5]"
+              style={{ background: 'linear-gradient(90deg, transparent, #185FA5, transparent)' }}
               animate={{ top: ['-10%', '110%'] }}
               transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
             />
             <motion.div
-              className="absolute h-full w-[1px] shadow-[0_0_15px_#7c3aed]"
-              style={{ background: 'linear-gradient(180deg, transparent, #7c3aed, transparent)' }}
+              className="absolute h-full w-[1px] shadow-[0_0_15px_#C2C0B8]"
+              style={{ background: 'linear-gradient(180deg, transparent, #C2C0B8, transparent)' }}
               animate={{ left: ['-10%', '110%'] }}
               transition={{ duration: 4, repeat: Infinity, ease: 'linear', delay: 1.5 }}
             />
 
             {/* Corner HUD Markers */}
-            <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-[#00d4ff] rounded-tl-xl opacity-70" />
-            <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-[#7c3aed] rounded-tr-xl opacity-70" />
-            <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-[#7c3aed] rounded-bl-xl opacity-70" />
-            <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-[#00d4ff] rounded-br-xl opacity-70" />
+            <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-[#185FA5] rounded-tl-xl opacity-70" />
+            <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-[#C2C0B8] rounded-tr-xl opacity-70" />
+            <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-[#C2C0B8] rounded-bl-xl opacity-70" />
+            <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-[#185FA5] rounded-br-xl opacity-70" />
 
             {/* Content Container */}
             <div className="relative z-10 w-full backdrop-blur-sm">
-              <div className="grid grid-cols-2 lg:grid-cols-5 divide-x divide-y lg:divide-y-0 divide-[#00d4ff]/10">
+              <div className="grid grid-cols-2 lg:grid-cols-5 divide-x divide-y lg:divide-y-0 divide-[#185FA5]/10">
                 {stats.map(({ value, label }, i) => (
                   <motion.div
                     key={label}
                     className="flex flex-col items-center justify-center py-6 px-4 gap-1.5
-                      hover:bg-[#00d4ff]/[0.02] transition-colors duration-300 relative group/stat"
+                      hover:bg-[#185FA5]/[0.02] transition-colors duration-300 relative group/stat"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 1 + i * 0.1 }}
                   >
                     {/* Hover tech overlay on individual stat */}
                     <div className="absolute inset-0 opacity-0 group-hover/stat:opacity-100 transition-opacity duration-300 pointer-events-none flex items-center justify-between p-2">
-                       <div className="w-1.5 h-1.5 bg-[#00d4ff]/40 rounded-sm" />
-                       <div className="w-1.5 h-1.5 bg-[#7c3aed]/40 rounded-sm" />
+                      <div className="w-1.5 h-1.5 bg-[#185FA5]/40 rounded-sm" />
+                      <div className="w-1.5 h-1.5 bg-[#C2C0B8]/40 rounded-sm" />
                     </div>
 
-                    <span className="text-3xl md:text-4xl font-bold font-display text-gradient drop-shadow-[0_0_12px_rgba(0,212,255,0.2)]">
+                    <span className="text-3xl md:text-4xl font-bold font-display text-gradient drop-shadow-[0_0_12px_rgba(24,95,165,0.2)]">
                       {value}
                     </span>
-                    <span className="text-[11px] md:text-xs text-slate-400 text-center font-semibold tracking-wider uppercase">
+                    <span className="text-[11px] md:text-xs text-[#626058] text-center font-semibold tracking-wider uppercase">
                       {label}
                     </span>
                   </motion.div>
@@ -354,10 +354,10 @@ export default function Hero() {
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5 }}
       >
-        <span className="text-xs text-slate-500">Scroll down</span>
-        <div className="w-5 h-9 border border-white/20 rounded-full flex items-start justify-center p-1">
+        <span className="text-xs text-[#626058]">Scroll down</span>
+        <div className="w-5 h-9 border border-[#C2C0B8]/40 rounded-full flex items-start justify-center p-1">
           <motion.div
-            className="w-1 h-2 bg-[#00d4ff] rounded-full"
+            className="w-1 h-2 bg-[#185FA5] rounded-full"
             animate={{ y: [0, 16, 0] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
           />

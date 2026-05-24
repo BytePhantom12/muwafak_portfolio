@@ -53,10 +53,26 @@ def execute_query(query: str, params: tuple = None, fetch_one: bool = False, fet
         return None
 
 def execute_returning(query: str, params: tuple = None):
-    """Execute a query with RETURNING clause and fetch the result."""
+    """Execute INSERT query and return last inserted row."""
     query = _rewrite_query(query)
     params = params or ()
+
     with get_db() as conn:
         cur = conn.cursor()
+
+        # If SQLite has trouble with RETURNING, remove it manually
+        if "RETURNING" in query.upper():
+            query_without_returning = query.split("RETURNING")[0].strip()
+            cur.execute(query_without_returning, params)
+
+            last_id = cur.lastrowid
+
+            cur.execute(
+                "SELECT * FROM uploads WHERE id = ?",
+                (last_id,)
+            )
+
+            return _dict_factory(cur.fetchone())
+
         cur.execute(query, params)
         return _dict_factory(cur.fetchone())

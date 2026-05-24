@@ -34,7 +34,7 @@ export default function Navbar() {
         transition={{ duration: 0.6, ease: 'easeOut' }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           scrolled
-            ? 'bg-[#0a0a0f]/90 backdrop-blur-xl border-b border-white/[0.06] shadow-[0_4px_30px_rgba(0,0,0,0.5)]'
+            ? 'bg-[#DDDBD3]/90 backdrop-blur-xl border-b border-[#C2C0B8]/20 shadow-[0_4px_30px_rgba(0,0,0,0.05)]'
             : 'bg-transparent'
         }`}
       >
@@ -47,10 +47,10 @@ export default function Navbar() {
               transition={{ delay: 0.2 }}
               className="flex items-center gap-2"
             >
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#00d4ff] to-[#7c3aed] flex items-center justify-center shadow-[0_0_15px_rgba(0,212,255,0.4)]">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#185FA5] to-[#C2C0B8] flex items-center justify-center shadow-[0_0_15px_rgba(24,95,165,0.4)]">
                 <span className="text-white font-bold text-sm font-display">M</span>
               </div>
-              <span className="text-white font-display font-bold text-lg">
+              <span className="text-[#1C1B19] font-display font-bold text-lg">
                 Muwafak <span className="text-gradient text-base">Portfolio</span>
               </span>
             </motion.div>
@@ -89,7 +89,7 @@ export default function Navbar() {
             >
               <RouterLink
                 to="/admin"
-                className="p-2.5 rounded-xl glass-card text-slate-400 hover:text-[#00d4ff] hover:border-[#00d4ff]/30 hover:shadow-[0_0_15px_rgba(0,212,255,0.2)] transition-all duration-300"
+                className="p-2.5 rounded-xl glass-card text-[#626058] hover:text-[#185FA5] hover:border-[#185FA5]/30 hover:shadow-[0_0_15px_rgba(24,95,165,0.2)] transition-all duration-300"
                 title="Admin Panel"
               >
                 <HiCog6Tooth className="w-4 h-4" />
@@ -104,14 +104,14 @@ export default function Navbar() {
                 Download CV
               </a>
             </motion.div>
-
+ 
             {/* Hamburger */}
             <button
-              id="mobile-menu-toggle"
-              className="md:hidden w-10 h-10 flex items-center justify-center rounded-xl glass-card text-white/80 hover:text-white transition-colors"
-              onClick={() => setMenuOpen(!menuOpen)}
-              aria-label="Toggle menu"
-            >
+               id="mobile-menu-toggle"
+               className="md:hidden w-10 h-10 flex items-center justify-center rounded-xl glass-card text-[#626058] hover:text-[#1C1B19] transition-colors"
+               onClick={() => setMenuOpen(!menuOpen)}
+               aria-label="Toggle menu"
+             >
               {menuOpen ? <HiX className="w-5 h-5" /> : <HiMenuAlt3 className="w-5 h-5" />}
             </button>
           </div>
@@ -126,7 +126,7 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0, height: 'auto' }}
             exit={{ opacity: 0, y: -20, height: 0 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="fixed top-16 left-0 right-0 z-40 md:hidden bg-[#0a0a0f]/95 backdrop-blur-xl border-b border-white/[0.06] overflow-hidden"
+            className="fixed top-16 left-0 right-0 z-40 md:hidden bg-[#DDDBD3]/95 backdrop-blur-xl border-b border-[#C2C0B8]/20 overflow-hidden"
           >
             <div className="container-custom py-6 flex flex-col gap-4">
               {navLinks.map((link, i) => (
@@ -142,7 +142,7 @@ export default function Navbar() {
                     smooth={true}
                     duration={600}
                     offset={-80}
-                    className="block py-3 px-4 rounded-xl nav-link text-base hover:bg-white/[0.04] cursor-pointer"
+                    className="block py-3 px-4 rounded-xl nav-link text-base hover:bg-[#DDDBD3] cursor-pointer"
                     onClick={() => setMenuOpen(false)}
                     id={`mobile-nav-${link.to}`}
                   >
@@ -154,7 +154,7 @@ export default function Navbar() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
-                className="pt-2 border-t border-white/[0.06] space-y-3"
+                className="pt-2 border-t border-[#C2C0B8]/20 space-y-3"
               >
                 <RouterLink
                   to="/admin"

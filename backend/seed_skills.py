@@ -23,7 +23,7 @@ SKILLS = [
         "items": ["PostgreSQL", "MySQL", "SQLite", "Redis"],
     },
     {
-        "category": "Data & AI",
+        "category": "Data Analysis",
         "items": ["Pandas", "NumPy", "Scikit-learn", "Data Analysis", "Matplotlib"],
     },
     {
@@ -59,7 +59,7 @@ TECH_STACK = [
     {"name": "Docker",       "category": "Tools",     "icon": ""},
     {"name": "VS Code",      "category": "Tools",     "icon": ""},
     {"name": "Figma",        "category": "Tools",     "icon": ""},
-    # Data & AI
+    # Data Analysis
     {"name": "Pandas",       "category": "Tools",     "icon": ""},
     {"name": "NumPy",        "category": "Tools",     "icon": ""},
     {"name": "Scikit-learn", "category": "Tools",     "icon": ""},

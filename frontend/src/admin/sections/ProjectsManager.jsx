@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { HiPlus, HiPencil, HiTrash, HiCheck, HiXMark, HiEye } from 'react-icons/hi2';
 import { portfolioAPI, uploadAPI } from '../../services/api';
+import { usePortfolioData } from '../../context/PortfolioContext';
 import Modal from '../../components/Modal';
 import FileUpload from '../../components/FileUpload';
 
@@ -43,29 +44,23 @@ export default function ProjectsManager() {
   });
 
   const [uploadedImage, setUploadedImage] = useState(null);
+  const { updateLocalPortfolio, portfolioData } = usePortfolioData();
 
   useEffect(() => {
-    fetchProjects();
-  }, []);
-
-  const fetchProjects = async () => {
-    try {
-      setLoading(true);
-      const data = await portfolioAPI.getPortfolio();
-      setProjects(data.projects || []);
-    } catch (error) {
-      console.error('Error fetching projects:', error);
-      alert('Failed to load projects');
-    } finally {
-      setLoading(false);
-    }
-  };
+    // keep in sync if portfolioData changes
+    if (portfolioData?.projects) setProjects(portfolioData.projects);
+    setLoading(false);
+  }, [portfolioData]);
 
   const saveProjects = async (updatedProjects) => {
     try {
       setSaving(true);
       await portfolioAPI.updateSection('projects', updatedProjects);
       setProjects(updatedProjects);
+      try {
+        // update shared context so homepage reflects changes immediately
+        updateLocalPortfolio({ projects: updatedProjects });
+      } catch {}
       alert('Projects updated successfully!');
     } catch (error) {
       console.error('Error saving projects:', error);
@@ -201,7 +196,7 @@ export default function ProjectsManager() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="w-8 h-8 border-4 border-[#00d4ff] border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4 border-[#185FA5] border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -225,7 +220,7 @@ export default function ProjectsManager() {
         {projects.map((project) => (
           <div key={project._id} className="glass-card rounded-2xl overflow-hidden">
             {project.image ? (
-              <div className="h-48 bg-gradient-to-br from-[#00d4ff]/10 to-[#7c3aed]/10 flex items-center justify-center overflow-hidden">
+              <div className="h-48 bg-gradient-to-br from-[#185FA5]/10 to-[#0C447C]/10 flex items-center justify-center overflow-hidden">
                 <img 
                   src={getImageUrl(project.image)} 
                   alt={project.title} 
@@ -233,8 +228,8 @@ export default function ProjectsManager() {
                 />
               </div>
             ) : (
-              <div className="h-48 bg-gradient-to-br from-[#00d4ff]/10 to-[#7c3aed]/10 flex items-center justify-center">
-                <div className="text-center text-slate-500">
+              <div className="h-48 bg-gradient-to-br from-[#185FA5]/10 to-[#0C447C]/10 flex items-center justify-center">
+                <div className="text-center text-[#626058]">
                   <div className="text-4xl mb-2">📷</div>
                   <div className="text-sm">No image</div>
                 </div>
@@ -242,18 +237,18 @@ export default function ProjectsManager() {
             )}
             <div className="p-5">
               <div className="flex items-start justify-between mb-3">
-                <h3 className="text-lg font-semibold text-slate-200">{project.title}</h3>
+                <h3 className="text-lg font-semibold text-[#1C1B19]">{project.title}</h3>
                 <div className="flex gap-1">
                   <button
                     onClick={() => openModal('view', project)}
-                    className="p-1.5 rounded-lg hover:bg-white/[0.04] text-slate-400 hover:text-[#00d4ff] transition-colors"
+                    className="p-1.5 rounded-lg hover:bg-[#C2C0B8]/30 text-[#626058] hover:text-[#185FA5] transition-colors"
                     title="View"
                   >
                     <HiEye className="w-3.5 h-3.5" />
                   </button>
                   <button
                     onClick={() => openModal('edit', project)}
-                    className="p-1.5 rounded-lg hover:bg-white/[0.04] text-slate-400 hover:text-[#00d4ff] transition-colors"
+                    className="p-1.5 rounded-lg hover:bg-[#C2C0B8]/30 text-[#626058] hover:text-[#185FA5] transition-colors"
                     disabled={saving}
                     title="Edit"
                   >
@@ -261,7 +256,7 @@ export default function ProjectsManager() {
                   </button>
                   <button
                     onClick={() => handleDelete(project._id)}
-                    className="p-1.5 rounded-lg hover:bg-white/[0.04] text-slate-400 hover:text-red-400 transition-colors"
+                    className="p-1.5 rounded-lg hover:bg-[#C2C0B8]/30 text-[#626058] hover:text-red-500 transition-colors"
                     disabled={saving}
                     title="Delete"
                   >
@@ -269,10 +264,10 @@ export default function ProjectsManager() {
                   </button>
                 </div>
               </div>
-              <p className="text-sm text-slate-400 mb-3 line-clamp-2">{project.description}</p>
+              <p className="text-sm text-[#626058] mb-3 line-clamp-2">{project.description}</p>
               <div className="flex flex-wrap gap-2">
                 {(project.technologies || []).map((tag, idx) => (
-                  <span key={idx} className="text-xs px-2 py-1 rounded-lg bg-[#00d4ff]/10 text-[#00d4ff]">
+                  <span key={idx} className="text-xs px-2 py-1 rounded-lg bg-[#185FA5]/10 text-[#185FA5] border border-[#185FA5]/20">
                     {tag}
                   </span>
                 ))}
@@ -308,7 +303,7 @@ export default function ProjectsManager() {
 
           {/* Project Title */}
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">Project Title</label>
+            <label className="block text-sm font-medium text-[#1C1B19] mb-2">Project Title</label>
             <input
               type="text"
               value={formData.title}
@@ -321,7 +316,7 @@ export default function ProjectsManager() {
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">Description</label>
+            <label className="block text-sm font-medium text-[#1C1B19] mb-2">Description</label>
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -334,7 +329,7 @@ export default function ProjectsManager() {
 
           {/* Technologies */}
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">Technologies</label>
+            <label className="block text-sm font-medium text-[#1C1B19] mb-2">Technologies</label>
             <div className="space-y-2">
               {formData.tags.map((tag, index) => (
                 <div key={index} className="flex gap-2">
@@ -349,7 +344,7 @@ export default function ProjectsManager() {
                   {modalMode !== 'view' && formData.tags.length > 1 && (
                     <button
                       onClick={() => removeTag(index)}
-                      className="p-3 rounded-xl hover:bg-white/[0.04] text-slate-400 hover:text-red-400 transition-colors"
+                      className="p-3 rounded-xl hover:bg-[#C2C0B8]/30 text-[#626058] hover:text-red-500 transition-colors"
                     >
                       <HiTrash className="w-4 h-4" />
                     </button>
@@ -359,7 +354,7 @@ export default function ProjectsManager() {
               {modalMode !== 'view' && (
                 <button
                   onClick={addTag}
-                  className="text-sm text-[#00d4ff] hover:text-[#00aad4] transition-colors"
+                  className="text-sm text-[#185FA5] hover:text-[#0C447C] transition-colors"
                 >
                   + Add Technology
                 </button>
@@ -370,7 +365,7 @@ export default function ProjectsManager() {
           {/* URLs */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Live/Demo URL</label>
+              <label className="block text-sm font-medium text-[#1C1B19] mb-2">Live/Demo URL</label>
               <input
                 type="url"
                 value={formData.liveUrl}
@@ -382,7 +377,7 @@ export default function ProjectsManager() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">GitHub URL</label>
+              <label className="block text-sm font-medium text-[#1C1B19] mb-2">GitHub URL</label>
               <input
                 type="url"
                 value={formData.githubUrl}

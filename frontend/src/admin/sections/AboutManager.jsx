@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { HiPencil, HiCheck, HiXMark } from 'react-icons/hi2';
 import { portfolioAPI } from '../../services/api';
+import { usePortfolioData } from '../../context/PortfolioContext';
 import Modal from '../../components/Modal';
 
 export default function AboutManager() {
+  const { portfolioData, updateLocalPortfolio } = usePortfolioData();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -20,31 +22,21 @@ export default function AboutManager() {
   });
 
   useEffect(() => {
-    fetchAboutData();
-  }, []);
+    if (!portfolioData) return;
 
-  const fetchAboutData = async () => {
-    try {
-      setLoading(true);
-      const data = await portfolioAPI.getPortfolio();
-      setFormData({
-        introHeading: data.about?.description || '',
-        introHeadingHighlight: data.about?.highlights?.[0] || '',
-        introDescription: data.about?.highlights?.[1] || '',
-        location: data.profile?.location || '',
-        role: data.profile?.title || '',
-        education: data.education?.[0]?.degree || '',
-        languages: data.profile?.languages || '',
-        yearsOfExperience: data.profile?.yearsOfExperience || '',
-        projectsDone: data.profile?.projectsDone || '',
-      });
-    } catch (error) {
-      console.error('Error fetching about data:', error);
-      alert('Failed to load about data');
-    } finally {
-      setLoading(false);
-    }
-  };
+    setFormData({
+      introHeading: portfolioData.about?.introHeading || portfolioData.about?.description || '',
+      introHeadingHighlight: portfolioData.about?.introHeadingHighlight || portfolioData.about?.highlights?.[0] || '',
+      introDescription: portfolioData.about?.introDescription || portfolioData.about?.highlights?.[1] || '',
+      location: portfolioData.about?.location || portfolioData.profile?.location || '',
+      role: portfolioData.role || portfolioData.profile?.title || '',
+      education: portfolioData.education?.[0]?.degree || '',
+      languages: portfolioData.about?.languages || portfolioData.profile?.languages || '',
+      yearsOfExperience: portfolioData.about?.yearsOfExperience || portfolioData.profile?.yearsOfExperience || '',
+      projectsDone: portfolioData.about?.projectsDone || portfolioData.profile?.projectsDone || '',
+    });
+    setLoading(false);
+  }, [portfolioData]);
 
   const openModal = () => {
     setShowModal(true);
@@ -52,7 +44,6 @@ export default function AboutManager() {
 
   const closeModal = () => {
     setShowModal(false);
-    fetchAboutData(); // Reset form data
   };
 
   const handleSave = async () => {
@@ -62,8 +53,16 @@ export default function AboutManager() {
       setSaving(true);
       const updateData = {
         about: {
-          description: formData.introHeading,
+          introHeading: formData.introHeading,
+          introHeadingHighlight: formData.introHeadingHighlight,
+          introDescription: formData.introDescription,
           highlights: [formData.introHeadingHighlight, formData.introDescription],
+          location: formData.location,
+          role: formData.role,
+          education: formData.education,
+          languages: formData.languages,
+          yearsOfExperience: formData.yearsOfExperience,
+          projectsDone: formData.projectsDone,
         },
         profile: {
           location: formData.location,
@@ -74,6 +73,7 @@ export default function AboutManager() {
         },
       };
       await portfolioAPI.updatePortfolio(updateData);
+      updateLocalPortfolio(updateData);
       alert('About section updated successfully!');
       closeModal();
     } catch (error) {
@@ -87,7 +87,7 @@ export default function AboutManager() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="w-8 h-8 border-4 border-[#00d4ff] border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4 border-[#185FA5] border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -107,50 +107,50 @@ export default function AboutManager() {
         {/* Intro Heading */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-slate-500 mb-2">Intro Heading</label>
-            <p className="text-slate-200">{formData.introHeading || 'Not set'}</p>
+            <label className="block text-sm font-medium text-[#626058] mb-2">Intro Heading</label>
+            <p className="text-[#1C1B19]">{formData.introHeading || 'Not set'}</p>
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-500 mb-2">Heading Highlight</label>
-            <p className="text-slate-200">{formData.introHeadingHighlight || 'Not set'}</p>
+            <label className="block text-sm font-medium text-[#626058] mb-2">Heading Highlight</label>
+            <p className="text-[#1C1B19]">{formData.introHeadingHighlight || 'Not set'}</p>
           </div>
         </div>
 
         {/* Description */}
         <div>
-          <label className="block text-sm font-medium text-slate-500 mb-2">Description</label>
-          <p className="text-slate-200">{formData.introDescription || 'Not set'}</p>
+          <label className="block text-sm font-medium text-[#626058] mb-2">Description</label>
+          <p className="text-[#1C1B19]">{formData.introDescription || 'Not set'}</p>
         </div>
 
         {/* Quick Facts */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-slate-500 mb-2">Location</label>
-            <p className="text-slate-200">{formData.location || 'Not set'}</p>
+            <label className="block text-sm font-medium text-[#626058] mb-2">Location</label>
+            <p className="text-[#1C1B19]">{formData.location || 'Not set'}</p>
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-500 mb-2">Role</label>
-            <p className="text-slate-200">{formData.role || 'Not set'}</p>
+            <label className="block text-sm font-medium text-[#626058] mb-2">Role</label>
+            <p className="text-[#1C1B19]">{formData.role || 'Not set'}</p>
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-500 mb-2">Education</label>
-            <p className="text-slate-200">{formData.education || 'Not set'}</p>
+            <label className="block text-sm font-medium text-[#626058] mb-2">Education</label>
+            <p className="text-[#1C1B19]">{formData.education || 'Not set'}</p>
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-500 mb-2">Languages</label>
-            <p className="text-slate-200">{formData.languages || 'Not set'}</p>
+            <label className="block text-sm font-medium text-[#626058] mb-2">Languages</label>
+            <p className="text-[#1C1B19]">{formData.languages || 'Not set'}</p>
           </div>
         </div>
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-slate-500 mb-2">Years of Experience</label>
-            <p className="text-slate-200">{formData.yearsOfExperience || 'Not set'}</p>
+            <label className="block text-sm font-medium text-[#626058] mb-2">Years of Experience</label>
+            <p className="text-[#1C1B19]">{formData.yearsOfExperience || 'Not set'}</p>
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-500 mb-2">Projects Done</label>
-            <p className="text-slate-200">{formData.projectsDone || 'Not set'}</p>
+            <label className="block text-sm font-medium text-[#626058] mb-2">Projects Done</label>
+            <p className="text-[#1C1B19]">{formData.projectsDone || 'Not set'}</p>
           </div>
         </div>
       </div>
@@ -166,7 +166,7 @@ export default function AboutManager() {
           {/* Intro Heading */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Intro Heading</label>
+              <label className="block text-sm font-medium text-[#1C1B19] mb-2">Intro Heading</label>
               <input
                 type="text"
                 value={formData.introHeading}
@@ -176,7 +176,7 @@ export default function AboutManager() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Heading Highlight</label>
+              <label className="block text-sm font-medium text-[#1C1B19] mb-2">Heading Highlight</label>
               <input
                 type="text"
                 value={formData.introHeadingHighlight}
@@ -189,7 +189,7 @@ export default function AboutManager() {
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">Description</label>
+            <label className="block text-sm font-medium text-[#1C1B19] mb-2">Description</label>
             <textarea
               value={formData.introDescription}
               onChange={(e) => setFormData({ ...formData, introDescription: e.target.value })}
@@ -202,7 +202,7 @@ export default function AboutManager() {
           {/* Quick Facts */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Location</label>
+              <label className="block text-sm font-medium text-[#1C1B19] mb-2">Location</label>
               <input
                 type="text"
                 value={formData.location}
@@ -212,7 +212,7 @@ export default function AboutManager() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Role</label>
+              <label className="block text-sm font-medium text-[#1C1B19] mb-2">Role</label>
               <input
                 type="text"
                 value={formData.role}
@@ -222,7 +222,7 @@ export default function AboutManager() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Education</label>
+              <label className="block text-sm font-medium text-[#1C1B19] mb-2">Education</label>
               <input
                 type="text"
                 value={formData.education}
@@ -232,7 +232,7 @@ export default function AboutManager() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Languages</label>
+              <label className="block text-sm font-medium text-[#1C1B19] mb-2">Languages</label>
               <input
                 type="text"
                 value={formData.languages}
@@ -246,7 +246,7 @@ export default function AboutManager() {
           {/* Stats */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Years of Experience</label>
+              <label className="block text-sm font-medium text-[#1C1B19] mb-2">Years of Experience</label>
               <input
                 type="number"
                 value={formData.yearsOfExperience}
@@ -256,7 +256,7 @@ export default function AboutManager() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Projects Done</label>
+              <label className="block text-sm font-medium text-[#1C1B19] mb-2">Projects Done</label>
               <input
                 type="number"
                 value={formData.projectsDone}

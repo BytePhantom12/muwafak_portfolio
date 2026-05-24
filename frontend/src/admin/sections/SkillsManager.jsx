@@ -3,6 +3,7 @@ import { HiPlus, HiPencil, HiTrash, HiCheck, HiXMark } from 'react-icons/hi2';
 import { portfolioAPI, uploadAPI } from '../../services/api';
 import Modal from '../../components/Modal';
 import FileUpload from '../../components/FileUpload';
+import { usePortfolioData } from '../../context/PortfolioContext';
 
 export default function SkillsManager() {
   const [skills, setSkills] = useState([]);
@@ -19,6 +20,7 @@ export default function SkillsManager() {
   });
 
   const [uploadedIcon, setUploadedIcon] = useState(null);
+  const { portfolioData, updateLocalPortfolio } = usePortfolioData();
 
   const categories = [
     { name: 'Frontend', color: '#00d4ff' },
@@ -27,32 +29,22 @@ export default function SkillsManager() {
   ];
 
   useEffect(() => {
-    fetchSkills();
-  }, []);
-
-  const fetchSkills = async () => {
-    try {
-      setLoading(true);
-      const data = await portfolioAPI.getPortfolio();
-      const flatSkills = (data.skills || []).flatMap((skillCategory, catIndex) => 
-        (skillCategory.items || []).map((item, itemIndex) => ({
+    if (portfolioData?.skillCategories) {
+      setLoading(false);
+      const flatSkills = (portfolioData.skillCategories || []).flatMap((skillCategory, catIndex) => 
+        (skillCategory.skills || []).map((item, itemIndex) => ({
           _id: `${catIndex}-${itemIndex}`,
-          name: item,
-          icon: '',
-          level: 90,
-          category: skillCategory.category,
-          categoryColor: categories.find(c => c.name === skillCategory.category)?.color || '#00d4ff',
-          color: categories.find(c => c.name === skillCategory.category)?.color || '#00d4ff',
+          name: item.name || item,
+          icon: item.icon || '',
+          level: item.level || 90,
+          category: skillCategory.name || skillCategory.category,
+          categoryColor: skillCategory.color || '#00d4ff',
+          color: item.color || skillCategory.color || '#00d4ff',
         }))
       );
       setSkills(flatSkills);
-    } catch (error) {
-      console.error('Error fetching skills:', error);
-      alert('Failed to load skills');
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [portfolioData]);
 
   const saveSkills = async (updatedSkills) => {
     try {
@@ -72,6 +64,7 @@ export default function SkillsManager() {
 
       await portfolioAPI.updateSection('skills', backendFormat);
       setSkills(updatedSkills);
+      try { updateLocalPortfolio({ skillCategories: backendFormat }); } catch {}
       alert('Skills updated successfully!');
     } catch (error) {
       console.error('Error saving skills:', error);
@@ -180,7 +173,7 @@ export default function SkillsManager() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="w-8 h-8 border-4 border-[#00d4ff] border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4 border-[#185FA5] border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -190,7 +183,7 @@ export default function SkillsManager() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-2xl font-bold font-display text-gradient">Skills & Tech Stack</h2>
-          <p className="text-sm text-slate-400 mt-1">Manage all your technical skills and technologies in one place</p>
+          <p className="text-sm text-[#626058] mt-1">Manage all your technical skills and technologies in one place</p>
         </div>
         <button onClick={openAddModal} className="btn-primary text-sm" disabled={saving}>
           <HiPlus className="w-4 h-4" />
@@ -207,7 +200,7 @@ export default function SkillsManager() {
       >
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">Skill Name</label>
+            <label className="block text-sm font-medium text-[#1C1B19] mb-2">Skill Name</label>
             <input
               type="text"
               value={formData.name}
@@ -229,7 +222,7 @@ export default function SkillsManager() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">Category</label>
+            <label className="block text-sm font-medium text-[#1C1B19] mb-2">Category</label>
             <select
               value={formData.category}
               onChange={(e) => setFormData({ ...formData, category: e.target.value })}
@@ -242,7 +235,7 @@ export default function SkillsManager() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">
+            <label className="block text-sm font-medium text-[#1C1B19] mb-2">
               Proficiency Level: {formData.level}%
             </label>
             <input
@@ -251,9 +244,9 @@ export default function SkillsManager() {
               max="100"
               value={formData.level}
               onChange={(e) => setFormData({ ...formData, level: parseInt(e.target.value) })}
-              className="w-full h-2 bg-white/[0.08] rounded-lg appearance-none cursor-pointer"
+              className="w-full h-2 bg-[#C2C0B8]/20 rounded-lg appearance-none cursor-pointer"
               style={{
-                background: `linear-gradient(to right, #00d4ff ${formData.level}%, rgba(255,255,255,0.08) ${formData.level}%)`
+                background: `linear-gradient(to right, #185FA5 ${formData.level}%, rgba(194, 192, 184, 0.2) ${formData.level}%)`
               }}
             />
           </div>
@@ -261,12 +254,12 @@ export default function SkillsManager() {
           {/* Preview */}
           {formData.name && (
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Preview</label>
+              <label className="block text-sm font-medium text-[#1C1B19] mb-2">Preview</label>
               <div className="glass-card p-4 rounded-xl">
                 <div className="flex items-center gap-3 mb-3">
                   <div 
                     className="w-10 h-10 rounded-xl flex items-center justify-center text-white text-sm font-bold"
-                    style={{ backgroundColor: categories.find(c => c.name === formData.category)?.color || '#00d4ff' }}
+                    style={{ backgroundColor: categories.find(c => c.name === formData.category)?.color || '#185FA5' }}
                   >
                     {formData.icon ? (
                       <img src={getImageUrl(formData.icon)} alt={formData.name} className="w-6 h-6 object-contain" />
@@ -275,16 +268,16 @@ export default function SkillsManager() {
                     )}
                   </div>
                   <div>
-                    <h4 className="font-semibold text-slate-200">{formData.name}</h4>
-                    <p className="text-xs text-slate-500">{formData.level}% proficiency</p>
+                    <h4 className="font-semibold text-[#1C1B19]">{formData.name}</h4>
+                    <p className="text-xs text-[#626058]">{formData.level}% proficiency</p>
                   </div>
                 </div>
-                <div className="w-full h-2 bg-white/[0.08] rounded-full overflow-hidden">
+                <div className="w-full h-2 bg-[#C2C0B8]/25 rounded-full overflow-hidden">
                   <div
                     className="h-full rounded-full transition-all duration-500"
                     style={{ 
                       width: `${formData.level}%`,
-                      backgroundColor: categories.find(c => c.name === formData.category)?.color || '#00d4ff'
+                      backgroundColor: categories.find(c => c.name === formData.category)?.color || '#185FA5'
                     }}
                   />
                 </div>
@@ -326,7 +319,7 @@ export default function SkillsManager() {
 
         return (
           <div key={category.name} className="mb-8">
-            <h3 className="text-lg font-semibold text-slate-200 mb-4 flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-[#1C1B19] mb-4 flex items-center gap-2">
               <div 
                 className="w-3 h-3 rounded-full"
                 style={{ backgroundColor: category.color }}
@@ -350,28 +343,28 @@ export default function SkillsManager() {
                         )}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <h4 className="font-semibold text-slate-200 truncate">{skill.name}</h4>
-                        <p className="text-xs text-slate-500">{skill.level}% proficiency</p>
+                        <h4 className="font-semibold text-[#1C1B19] truncate">{skill.name}</h4>
+                        <p className="text-xs text-[#626058]">{skill.level}% proficiency</p>
                       </div>
                     </div>
                     <div className="flex gap-1 flex-shrink-0">
                       <button
                         onClick={() => handleEdit(skill)}
-                        className="p-1.5 rounded-lg hover:bg-white/[0.04] text-slate-400 hover:text-[#00d4ff] transition-colors"
+                        className="p-1.5 rounded-lg hover:bg-[#C2C0B8]/30 text-[#626058] hover:text-[#185FA5] transition-colors"
                         disabled={saving}
                       >
                         <HiPencil className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => handleDelete(skill._id)}
-                        className="p-1.5 rounded-lg hover:bg-white/[0.04] text-slate-400 hover:text-red-400 transition-colors"
+                        className="p-1.5 rounded-lg hover:bg-[#C2C0B8]/30 text-[#626058] hover:text-red-500 transition-colors"
                         disabled={saving}
                       >
                         <HiTrash className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </div>
-                  <div className="w-full h-2 bg-white/[0.08] rounded-full overflow-hidden">
+                  <div className="w-full h-2 bg-[#C2C0B8]/25 rounded-full overflow-hidden">
                     <div
                       className="h-full rounded-full transition-all duration-500"
                       style={{ 

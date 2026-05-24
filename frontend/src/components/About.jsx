@@ -20,8 +20,8 @@ export default function About() {
 
   return (
     <section id="about" className="py-24 md:py-32 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0f] via-[#0d1117] to-[#0a0a0f]" />
-      <div className="blob w-[400px] h-[400px] bg-[#7c3aed] top-0 right-0 opacity-[0.08]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#E8E6DE] via-[#DDDBD3] to-[#E8E6DE]" />
+      <div className="blob w-[400px] h-[400px] bg-[#C2C0B8] top-0 right-0 opacity-[0.1]" />
 
       <div className="container-custom relative z-10" ref={ref}>
         {/* Section Header */}
@@ -50,31 +50,31 @@ export default function About() {
             <div className="relative">
               
               {/* Main Image Container with Spinning Tech Border */}
-              <div className="relative w-[300px] sm:w-[360px] rounded-3xl p-[2px] overflow-hidden group shadow-[0_0_40px_rgba(0,212,255,0.15)] bg-[#0a0a0f]">
+              <div className="relative w-[300px] sm:w-[360px] rounded-3xl p-[2px] overflow-hidden group shadow-[0_0_40px_rgba(24,95,165,0.15)] bg-[#E8E6DE]">
                 
                 {/* Techno Spinning Laser Background */}
                 <motion.div 
                   className="absolute left-[-50%] top-[-50%] w-[200%] h-[200%]"
                   style={{
-                    background: 'conic-gradient(from 0deg, transparent 60%, rgba(0, 212, 255, 0.8) 80%, rgba(124, 58, 237, 1) 100%)',
+                    background: 'conic-gradient(from 0deg, transparent 60%, rgba(24, 95, 165, 0.8) 80%, rgba(194, 192, 184, 1) 100%)',
                   }}
                   animate={{ rotate: 360 }}
                   transition={{ duration: 3.5, repeat: Infinity, ease: "linear" }}
                 />
                 
                 {/* Inner Image Mask */}
-                <div className="relative rounded-[calc(1.5rem-2px)] overflow-hidden bg-[#111118] h-full w-full z-10">
-                  <img
+                <div className="relative rounded-[calc(1.5rem-2px)] overflow-hidden bg-[#DDDBD3] h-full w-full z-10">
+                   <img
                     src="/src/assets/favicon/android-chrome-192x192.png"
                     alt="Muwafak Abubakar – About"
                     className="w-full h-auto object-cover object-top opacity-75 brightness-85 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-[1.02]"
                     style={{ minHeight: '400px', objectPosition: 'top center' }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0f]/80 via-[#0a0a0f]/20 to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#E8E6DE]/80 via-[#E8E6DE]/20 to-transparent pointer-events-none" />
                   
                   {/* Digital Scanline Overlay */}
                   <motion.div 
-                    className="absolute inset-x-0 h-[3px] bg-gradient-to-r from-transparent via-[#00d4ff]/40 to-transparent blur-[1px] pointer-events-none"
+                    className="absolute inset-x-0 h-[3px] bg-gradient-to-r from-transparent via-[#185FA5]/40 to-transparent blur-[1px] pointer-events-none"
                     animate={{ top: ['0%', '100%'] }}
                     transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
                   />
@@ -83,39 +83,39 @@ export default function About() {
 
               {/* Floating card - Experience */}
               <motion.div
-                className="absolute -bottom-6 -right-6 glass-card px-5 py-4 rounded-2xl shadow-[0_0_30px_rgba(0,0,0,0.8)] z-20 border border-white/10"
+                className="absolute -bottom-6 -right-6 glass-card px-5 py-4 rounded-2xl shadow-[0_0_30px_rgba(0,0,0,0.1)] z-20 border border-[#C2C0B8]/30"
                 initial={{ opacity: 0, y: 20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.6 }}
               >
                 <span className="text-2xl font-bold font-display text-gradient block">{about.yearsOfExperience}+</span>
-                <span className="text-xs text-slate-400">Year of Experience</span>
+                <span className="text-xs text-[#626058]">Year of Experience</span>
               </motion.div>
 
               {/* Floating card - Projects */}
               <motion.div
-                className="absolute -top-6 -left-6 glass-card px-5 py-4 rounded-2xl shadow-[0_0_30px_rgba(0,0,0,0.8)] z-20 border border-white/10"
+                className="absolute -top-6 -left-6 glass-card px-5 py-4 rounded-2xl shadow-[0_0_30px_rgba(0,0,0,0.1)] z-20 border border-[#C2C0B8]/30"
                 initial={{ opacity: 0, y: -20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.7 }}
               >
                 <span className="text-2xl font-bold font-display text-gradient block">{about.projectsDone}+</span>
-                <span className="text-xs text-slate-400">Projects Done</span>
+                <span className="text-xs text-[#626058]">Projects Done</span>
               </motion.div>
 
               {/* Outer Techno Pulsing Frames (Softened and Elegant) */}
               
-              {/* Inner frame - Glowing Cyan Pulse */}
+              {/* Inner frame - Glowing Pulse */}
               <div className="absolute inset-[-20px] pointer-events-none -z-10">
                 <svg className="w-full h-full overflow-visible">
                   <motion.rect
                     x="0" y="0" width="100%" height="100%" rx="36"
                     fill="none"
-                    stroke="#00d4ff"
+                    stroke="#185FA5"
                     strokeWidth="1"
                     animate={{ opacity: [0.1, 0.3, 0.1] }}
                     transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                    style={{ filter: 'drop-shadow(0 0 8px rgba(0,212,255,0.3))' }}
+                    style={{ filter: 'drop-shadow(0 0 8px rgba(24,95,165,0.3))' }}
                   />
                 </svg>
               </div>
@@ -126,14 +126,14 @@ export default function About() {
                   <motion.rect
                     x="0" y="0" width="100%" height="100%" rx="48"
                     fill="none"
-                    stroke="#7c3aed"
+                    stroke="#C2C0B8"
                     strokeWidth="1.5"
                     strokeDasharray="20 40"
                     strokeLinecap="round"
                     animate={{ strokeDashoffset: [0, -360] }}
                     transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
                     className="opacity-30"
-                    style={{ filter: 'drop-shadow(0 0 4px rgba(124,58,237,0.3))' }}
+                    style={{ filter: 'drop-shadow(0 0 4px rgba(194,192,184,0.3))' }}
                   />
                 </svg>
               </div>
@@ -152,7 +152,7 @@ export default function About() {
               <span className="text-gradient">{about.introHeadingHighlight}</span>
             </h3>
 
-            <p className="text-slate-400 leading-relaxed mb-6">
+            <p className="text-[#626058] leading-relaxed mb-6">
               {about.introDescription}
             </p>
 
@@ -166,8 +166,8 @@ export default function About() {
                   animate={isInView ? { opacity: 1, x: 0 } : {}}
                   transition={{ delay: 0.5 + i * 0.1 }}
                 >
-                  <HiCheckBadge className="w-5 h-5 text-[#00d4ff] flex-shrink-0 mt-0.5" />
-                  <span className="text-slate-300 text-sm">{item}</span>
+                  <HiCheckBadge className="w-5 h-5 text-[#185FA5] flex-shrink-0 mt-0.5" />
+                  <span className="text-[#1C1B19] text-sm">{item}</span>
                 </motion.div>
               ))}
             </div>
@@ -178,8 +178,8 @@ export default function About() {
                 <div key={label} className="glass-card p-3 rounded-xl flex items-center gap-3">
                   <span className="text-xl">{emoji}</span>
                   <div>
-                    <span className="text-[10px] text-slate-500 uppercase tracking-wider block">{label}</span>
-                    <span className="text-sm text-slate-200 font-medium">{value}</span>
+                    <span className="text-[10px] text-[#626058] uppercase tracking-wider block">{label}</span>
+                    <span className="text-sm text-[#1C1B19] font-medium">{value}</span>
                   </div>
                 </div>
               ))}

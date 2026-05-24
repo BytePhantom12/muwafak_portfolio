@@ -20,8 +20,8 @@ export default function Contact() {
   const { contact, socials } = portfolioData;
 
   const contactInfo = [
-    { icon: HiEnvelope, label: 'Email',    value: contact.email,    href: `mailto:${contact.email}`, color: '#00d4ff' },
-    { icon: HiPhone,    label: 'Phone',    value: contact.phone,    href: `tel:${contact.phone}`,    color: '#7c3aed' },
+    { icon: HiEnvelope, label: 'Email',    value: contact.email,    href: `mailto:${contact.email}`, color: '#185FA5' },
+    { icon: HiPhone,    label: 'Phone',    value: contact.phone,    href: `tel:${contact.phone}`,    color: '#C2C0B8' },
     { icon: HiMapPin,   label: 'Location', value: contact.location, href: null,                      color: '#10b981' },
   ];
 
@@ -68,9 +68,9 @@ export default function Contact() {
 
   return (
     <section id="contact" className="py-24 md:py-32 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0f] to-[#0d1117]" />
-      <div className="blob w-[500px] h-[500px] bg-[#00d4ff] top-0 left-0 opacity-[0.07]" />
-      <div className="blob w-[400px] h-[400px] bg-[#7c3aed] bottom-0 right-0 opacity-[0.07]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#E8E6DE] to-[#DDDBD3]" />
+      <div className="blob w-[500px] h-[500px] bg-[#185FA5] top-0 left-0 opacity-[0.1]" />
+      <div className="blob w-[400px] h-[400px] bg-[#C2C0B8] bottom-0 right-0 opacity-[0.1]" />
 
       <div className="container-custom relative z-10" ref={ref}>
         {/* Header */}
@@ -97,10 +97,10 @@ export default function Contact() {
             transition={{ duration: 0.7, delay: 0.2 }}
           >
             <div>
-              <h3 className="text-2xl font-bold font-display text-white mb-3">
+              <h3 className="text-2xl font-bold font-display text-[#1C1B19] mb-3">
                 Ready to Start a <span className="text-gradient">Project?</span>
               </h3>
-              <p className="text-slate-400 text-sm leading-relaxed">
+              <p className="text-[#626058] text-sm leading-relaxed">
                 I'm always open to discussing new opportunities, creative projects, or just
                 having a chat about tech. Let's build something awesome together!
               </p>
@@ -121,13 +121,13 @@ export default function Contact() {
                     <Icon className="w-5 h-5" style={{ color }} />
                   </div>
                   <div>
-                    <span className="text-xs text-slate-500 uppercase tracking-wider block mb-0.5">{label}</span>
+                    <span className="text-xs text-[#626058] uppercase tracking-wider block mb-0.5">{label}</span>
                     {href ? (
-                      <a href={href} className="text-sm text-slate-200 font-medium hover:text-[#00d4ff] transition-colors">
+                      <a href={href} className="text-sm text-[#1C1B19] font-medium hover:text-[#185FA5] transition-colors">
                         {value}
                       </a>
                     ) : (
-                      <span className="text-sm text-slate-200 font-medium">{value}</span>
+                      <span className="text-sm text-[#1C1B19] font-medium">{value}</span>
                     )}
                   </div>
                 </motion.div>
@@ -136,7 +136,7 @@ export default function Contact() {
 
             {/* Social Links */}
             <div>
-              <p className="text-sm text-slate-500 mb-4">Follow me on social media</p>
+              <p className="text-sm text-[#626058] mb-4">Follow me on social media</p>
               <div className="flex gap-3">
                 {socials.map(({ id, label, href, icon }) => {
                   const Icon = iconMap[icon];
@@ -149,8 +149,8 @@ export default function Contact() {
                       rel="noopener noreferrer"
                       aria-label={label}
                       className="w-11 h-11 flex items-center justify-center rounded-xl glass-card
-                        text-slate-400 hover:text-[#00d4ff] hover:border-[#00d4ff]/30
-                        hover:shadow-[0_0_15px_rgba(0,212,255,0.2)] transition-all duration-300"
+                        text-[#626058] hover:text-[#185FA5] hover:border-[#185FA5]/30
+                        hover:shadow-[0_0_15px_rgba(24,95,165,0.2)] transition-all duration-300"
                     >
                       {Icon && <Icon className="w-4 h-4" />}
                     </a>
@@ -163,9 +163,9 @@ export default function Contact() {
             <div className="glass-card rounded-2xl p-5 neon-border">
               <div className="flex items-center gap-3 mb-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-sm font-semibold text-white">Currently Available</span>
+                <span className="text-sm font-semibold text-[#1C1B19]">Currently Available</span>
               </div>
-              <p className="text-xs text-slate-400 leading-relaxed">
+              <p className="text-xs text-[#626058] leading-relaxed">
                 Open to freelance projects, full-time roles, and exciting collaborations.
               </p>
             </div>
@@ -179,7 +179,7 @@ export default function Contact() {
             transition={{ duration: 0.7, delay: 0.4 }}
           >
             <div className="glass-card rounded-[2rem] p-6 sm:p-10 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-[#00d4ff]/10 to-[#7c3aed]/10 blur-3xl rounded-full" />
+              <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-[#185FA5]/10 to-[#C2C0B8]/10 blur-3xl rounded-full" />
 
               {submitted ? (
                 <motion.div
@@ -190,8 +190,8 @@ export default function Contact() {
                   <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mb-6">
                     <HiCheckCircle className="w-12 h-12 text-emerald-400" />
                   </div>
-                  <h3 className="text-2xl font-bold font-display text-white mb-3">Message Sent!</h3>
-                  <p className="text-slate-400 max-w-sm mb-8">
+                  <h3 className="text-2xl font-bold font-display text-[#1C1B19] mb-3">Message Sent!</h3>
+                  <p className="text-[#626058] max-w-sm mb-8">
                     Thank you for reaching out. I'll get back to you as soon as possible.
                   </p>
                   <button onClick={() => setSubmitted(false)} className="btn-outline py-2.5 px-6 text-sm">
@@ -202,30 +202,30 @@ export default function Contact() {
                 <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <label htmlFor="name" className="text-xs font-semibold text-slate-400 uppercase tracking-wider pl-1">Your Name</label>
+                      <label htmlFor="name" className="text-xs font-semibold text-[#626058] uppercase tracking-wider pl-1">Your Name</label>
                       <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required placeholder="John Doe"
-                        className="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-4 py-3.5 text-white placeholder:text-slate-600 focus:outline-none focus:border-[#00d4ff]/50 focus:bg-white/[0.05] transition-all" />
+                        className="form-input" />
                     </div>
                     <div className="space-y-2">
-                      <label htmlFor="email" className="text-xs font-semibold text-slate-400 uppercase tracking-wider pl-1">Email Address</label>
+                      <label htmlFor="email" className="text-xs font-semibold text-[#626058] uppercase tracking-wider pl-1">Email Address</label>
                       <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required placeholder="john@example.com"
-                        className="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-4 py-3.5 text-white placeholder:text-slate-600 focus:outline-none focus:border-[#00d4ff]/50 focus:bg-white/[0.05] transition-all" />
+                        className="form-input" />
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <label htmlFor="subject" className="text-xs font-semibold text-slate-400 uppercase tracking-wider pl-1">Subject</label>
+                    <label htmlFor="subject" className="text-xs font-semibold text-[#626058] uppercase tracking-wider pl-1">Subject</label>
                     <input type="text" id="subject" name="subject" value={formData.subject} onChange={handleChange} required placeholder="Project Inquiry"
-                      className="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-4 py-3.5 text-white placeholder:text-slate-600 focus:outline-none focus:border-[#00d4ff]/50 focus:bg-white/[0.05] transition-all" />
+                      className="form-input" />
                   </div>
                   <div className="space-y-2">
-                    <label htmlFor="message" className="text-xs font-semibold text-slate-400 uppercase tracking-wider pl-1">Message</label>
+                    <label htmlFor="message" className="text-xs font-semibold text-[#626058] uppercase tracking-wider pl-1">Message</label>
                     <textarea id="message" name="message" value={formData.message} onChange={handleChange} required rows={5} placeholder="Tell me about your project..."
-                      className="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-4 py-3.5 text-white placeholder:text-slate-600 focus:outline-none focus:border-[#00d4ff]/50 focus:bg-white/[0.05] transition-all resize-none" />
+                      className="form-input resize-none" />
                   </div>
                   <button type="submit" disabled={loading}
-                    className="w-full h-14 bg-gradient-to-r from-[#00d4ff] to-[#7c3aed] rounded-xl text-white font-semibold flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(0,212,255,0.3)] disabled:opacity-70 disabled:cursor-not-allowed transition-all">
+                    className="w-full h-14 bg-gradient-to-r from-[#185FA5] to-[#C2C0B8] rounded-xl text-[#E6F1FB] font-semibold flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(24,95,165,0.3)] disabled:opacity-70 disabled:cursor-not-allowed transition-all">
                     {loading ? (
-                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      <div className="w-5 h-5 border-2 border-[#E6F1FB]/30 border-t-[#E6F1FB] rounded-full animate-spin" />
                     ) : (
                       <>
                         <span>Send Message</span>

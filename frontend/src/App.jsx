@@ -12,12 +12,12 @@ import { Analytics } from '@vercel/analytics/react';
 import { PortfolioProvider } from './context/PortfolioContext';
 
 const SectionDivider = () => (
-  <div className="w-full h-px bg-gradient-to-r from-transparent via-[#00d4ff]/20 to-transparent" />
+  <div className="w-full h-px bg-gradient-to-r from-transparent via-[#185FA5]/20 to-transparent" />
 );
 
 function Portfolio() {
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-slate-100">
+    <div className="min-h-screen bg-[#E8E6DE] text-[#1C1B19]">
       <Navbar />
       <main>
         <Hero />

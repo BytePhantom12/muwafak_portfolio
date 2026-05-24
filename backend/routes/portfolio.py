@@ -1,5 +1,5 @@
 from typing import Any
-from fastapi import APIRouter, HTTPException, status, Depends
+from fastapi import APIRouter, HTTPException, status, Depends, Body, Request
 import json
 
 from auth import get_current_user
@@ -34,6 +34,200 @@ def get_first_user_id():
     return user["id"] if user else None
 
 
+def build_about_metadata(about_data):
+    """Build about metadata payload for storage and retrieval."""
+    if not isinstance(about_data, dict):
+        return None, None
+
+    description = about_data.get("description") or about_data.get("introDescription")
+    highlights = about_data.get("highlights")
+    if highlights is None:
+        highlights = [
+            about_data.get("introHeadingHighlight"),
+            about_data.get("introDescription"),
+        ]
+        highlights = [item for item in highlights if item is not None]
+
+    metadata = {
+        "highlights": highlights,
+        "introHeadingHighlight": about_data.get("introHeadingHighlight"),
+        "introDescription": about_data.get("introDescription"),
+        "yearsOfExperience": about_data.get("yearsOfExperience"),
+        "projectsDone": about_data.get("projectsDone"),
+        "location": about_data.get("location"),
+        "role": about_data.get("role"),
+        "education": about_data.get("education"),
+        "languages": about_data.get("languages"),
+    }
+    return description, metadata
+
+
+def update_profile(user_id, update_data):
+    if not isinstance(update_data, dict):
+        return
+    execute_query(
+        """
+        UPDATE profiles SET
+            name = COALESCE(%s, name),
+            title = COALESCE(%s, title),
+            bio = COALESCE(%s, bio),
+            resume_url = COALESCE(%s, resume_url),
+            profile_image_url = COALESCE(%s, profile_image_url),
+            location = COALESCE(%s, location),
+            languages = COALESCE(%s, languages),
+            email = COALESCE(%s, email),
+            availability = COALESCE(%s, availability),
+            updated_at = NOW()
+        WHERE user_id = %s
+        """,
+        (
+            update_data.get("name"),
+            update_data.get("title"),
+            update_data.get("bio"),
+            update_data.get("resume"),
+            update_data.get("profileImage"),
+            update_data.get("location"),
+            update_data.get("languages"),
+            update_data.get("email"),
+            update_data.get("availability"),
+            user_id
+        )
+    )
+
+
+def update_about(user_id, about_data):
+    if not isinstance(about_data, dict):
+        return
+
+    description, metadata = build_about_metadata(about_data)
+    if metadata is None:
+        return
+
+    execute_query(
+        """
+        UPDATE about_sections SET
+            description = COALESCE(%s, description),
+            highlights = %s,
+            updated_at = NOW()
+        WHERE user_id = %s
+        """,
+        (description, json.dumps(metadata), user_id)
+    )
+
+
+def update_contact(user_id, contact_data):
+    if not isinstance(contact_data, dict):
+        return
+
+    social = contact_data.get("social", {})
+    execute_query(
+        """
+        UPDATE contact_info SET
+            phone = COALESCE(%s, phone),
+            social_links = %s,
+            updated_at = NOW()
+        WHERE user_id = %s
+        """,
+        (contact_data.get("phone"), json.dumps(social), user_id)
+    )
+
+    if contact_data.get("email"):
+        execute_query(
+            "UPDATE profiles SET email = %s WHERE user_id = %s",
+            (contact_data.get("email"), user_id)
+        )
+
+
+def replace_section_data(user_id, section, section_data):
+    if section == "skills":
+        execute_query("DELETE FROM skills WHERE user_id = %s", (user_id,))
+        for idx, skill in enumerate(section_data):
+            items = skill.get("items", [])
+            execute_returning(
+                """
+                INSERT INTO skills (user_id, category, items, sort_order)
+                VALUES (%s, %s, %s, %s) RETURNING id
+                """,
+                (user_id, skill.get("category"), json.dumps(items), idx)
+            )
+    elif section == "projects":
+        execute_query("DELETE FROM projects WHERE user_id = %s", (user_id,))
+        for idx, project in enumerate(section_data):
+            techs = project.get("technologies", [])
+            execute_returning(
+                """
+                INSERT INTO projects (user_id, title, description, image_url, technologies, live_url, github_url, featured, sort_order)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id
+                """,
+                (
+                    user_id,
+                    project.get("title"),
+                    project.get("description"),
+                    project.get("image"),
+                    json.dumps(techs),
+                    project.get("liveUrl"),
+                    project.get("githubUrl"),
+                    project.get("featured", False),
+                    idx
+                )
+            )
+    elif section == "education":
+        execute_query("DELETE FROM education WHERE user_id = %s", (user_id,))
+        for idx, edu in enumerate(section_data):
+            execute_returning(
+                """
+                INSERT INTO education (user_id, institution, degree, field, description, sort_order)
+                VALUES (%s, %s, %s, %s, %s, %s) RETURNING id
+                """,
+                (
+                    user_id,
+                    edu.get("institution"),
+                    edu.get("degree"),
+                    edu.get("field"),
+                    edu.get("description"),
+                    idx
+                )
+            )
+    elif section == "experience":
+        execute_query("DELETE FROM experience WHERE user_id = %s", (user_id,))
+        for idx, exp in enumerate(section_data):
+            execute_returning(
+                """
+                INSERT INTO experience (user_id, company, position, start_date, end_date, is_current, description, technologies, sort_order)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id
+                """,
+                (
+                    user_id,
+                    exp.get("company"),
+                    exp.get("position"),
+                    exp.get("startDate"),
+                    exp.get("endDate"),
+                    exp.get("current", False),
+                    exp.get("description"),
+                    json.dumps(exp.get("technologies", [])),
+                    idx
+                )
+            )
+    elif section == "techStack":
+        execute_query("DELETE FROM tech_stack WHERE user_id = %s", (user_id,))
+        for idx, tech in enumerate(section_data):
+            execute_returning(
+                """
+                INSERT INTO tech_stack (user_id, name, icon, category, sort_order)
+                VALUES (%s, %s, %s, %s, %s) RETURNING id
+                """,
+                (
+                    user_id,
+                    tech.get("name"),
+                    tech.get("icon"),
+                    tech.get("category"),
+                    idx
+                )
+            )
+    else:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Section not found")
+
+
 @router.get("", response_model=PortfolioResponse)
 async def get_portfolio():
     """Get complete portfolio data."""
@@ -66,7 +260,8 @@ async def get_portfolio():
         profileImage=profile_row.get("profile_image_url") if profile_row else None,
         location=profile_row.get("location") if profile_row else None,
         languages=profile_row.get("languages") if profile_row else None,
-        email=profile_row.get("email") if profile_row else None
+        email=profile_row.get("email") if profile_row else None,
+        availability=profile_row.get("availability") if profile_row else None
     )
     
     # Fetch about
@@ -75,9 +270,26 @@ async def get_portfolio():
         (user_id,),
         fetch_one=True
     )
+    raw_highlights = parse_json_field(about_row.get("highlights"), []) if about_row else []
+    if isinstance(raw_highlights, dict):
+        about_metadata = raw_highlights
+        parsed_highlights = about_metadata.get("highlights", [])
+    else:
+        about_metadata = {}
+        parsed_highlights = raw_highlights
+
     about = AboutResponse(
         description=about_row.get("description") if about_row else None,
-        highlights=parse_json_field(about_row.get("highlights"), []) if about_row else []
+        highlights=parsed_highlights,
+        introHeading=about_metadata.get("introHeading"),
+        introHeadingHighlight=about_metadata.get("introHeadingHighlight"),
+        introDescription=about_metadata.get("introDescription"),
+        yearsOfExperience=about_metadata.get("yearsOfExperience"),
+        projectsDone=about_metadata.get("projectsDone"),
+        location=about_metadata.get("location"),
+        role=about_metadata.get("role"),
+        education=about_metadata.get("education"),
+        languages=about_metadata.get("languages"),
     )
     
     # Fetch contact info
@@ -189,10 +401,72 @@ async def get_portfolio():
     )
 
 
-@router.put("/section/{section}")
-async def update_section(section: str, data: dict, current_user: dict = Depends(get_current_user)):
-    """Update a specific portfolio section."""
+@router.put("")
+async def update_portfolio(data: dict, current_user: dict = Depends(get_current_user)):
+    """Update multiple portfolio sections in one request."""
     user_id = current_user["id"]
+
+    if not isinstance(data, dict):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid payload")
+
+    if data.get("profile"):
+        update_profile(user_id, data.get("profile"))
+    if data.get("about"):
+        update_about(user_id, data.get("about"))
+    if data.get("contact"):
+        update_contact(user_id, data.get("contact"))
+
+    # Section lists may come as top-level arrays or nested under keys
+    if data.get("skills") is not None:
+        replace_section_data(user_id, "skills", data.get("skills"))
+    if data.get("projects") is not None:
+        replace_section_data(user_id, "projects", data.get("projects"))
+    if data.get("education") is not None:
+        replace_section_data(user_id, "education", data.get("education"))
+    if data.get("experience") is not None:
+        replace_section_data(user_id, "experience", data.get("experience"))
+    if data.get("techStack") is not None:
+        replace_section_data(user_id, "techStack", data.get("techStack"))
+
+    return {"message": "Portfolio updated successfully"}
+
+
+@router.put("/section/{section}")
+async def update_section(section: str, request: Request, current_user: dict = Depends(get_current_user)):
+    """Update a specific portfolio section.
+
+    Accepts either a JSON array (for sections like skills/projects/etc.) or
+    an object that contains the section under a key. Coerce both shapes to
+    a list before passing to the replacement helper to avoid 422 errors
+    when clients send raw arrays.
+    """
+    user_id = current_user["id"]
+
+    # Read and parse raw JSON body to avoid FastAPI automatic parse issues
+    raw = await request.body()
+    try:
+        data = json.loads(raw) if raw else None
+    except Exception:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid JSON body")
+
+    # Normalize payload: allow either list (raw section data) or object { section: [...] }
+    section_data = None
+    if isinstance(data, list):
+        section_data = data
+    elif isinstance(data, dict):
+        section_data = data.get(section) or data.get('data') or data.get('items')
+    else:
+        section_data = None
+
+    if section_data is None:
+        # allow dict payloads for single-object sections
+        if section in ("profile", "about", "contact") and isinstance(data, dict):
+            # proceed, handlers below will read `data` directly
+            pass
+        elif isinstance(data, list):
+            section_data = data
+        else:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid section payload")
     
     if section == "profile":
         # Update profile
@@ -375,27 +649,4 @@ async def update_section(section: str, data: dict, current_user: dict = Depends(
         )
 
 
-@router.put("")
-async def update_portfolio(data: dict, current_user: dict = Depends(get_current_user)):
-    """Update entire portfolio."""
-    user_id = current_user["id"]
-    
-    # Update each section if provided
-    if "profile" in data:
-        await update_section("profile", data["profile"], current_user)
-    if "about" in data:
-        await update_section("about", data["about"], current_user)
-    if "contact" in data:
-        await update_section("contact", data["contact"], current_user)
-    if "skills" in data:
-        await update_section("skills", data["skills"], current_user)
-    if "projects" in data:
-        await update_section("projects", data["projects"], current_user)
-    if "education" in data:
-        await update_section("education", data["education"], current_user)
-    if "experience" in data:
-        await update_section("experience", data["experience"], current_user)
-    if "techStack" in data:
-        await update_section("techStack", data["techStack"], current_user)
-    
-    return {"message": "Portfolio updated successfully"}
+

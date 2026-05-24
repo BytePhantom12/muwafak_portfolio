@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { HiPencil, HiCheck, HiXMark, HiPlus, HiTrash, HiEye } from 'react-icons/hi2';
 import { portfolioAPI, uploadAPI } from '../../services/api';
+import { usePortfolioData } from '../../context/PortfolioContext';
 import Modal from '../../components/Modal';
 import FileUpload from '../../components/FileUpload';
 
 export default function ProfileManager() {
+  const { portfolioData, updateLocalPortfolio } = usePortfolioData();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   
@@ -24,6 +26,7 @@ export default function ProfileManager() {
     roleDetail: '',
     education: '',
     languages: '',
+    email: '',
     socials: [],
   });
 
@@ -33,39 +36,30 @@ export default function ProfileManager() {
   });
 
   useEffect(() => {
-    fetchProfileData();
-  }, []);
+    if (!portfolioData) return;
 
-  const fetchProfileData = async () => {
-    try {
-      setLoading(true);
-      const data = await portfolioAPI.getPortfolio();
-      setFormData({
-        name: data.profile?.name || '',
-        role: data.profile?.title || '',
-        heroDescription: data.profile?.bio || '',
-        cvUrl: data.profile?.resume || '',
-        profileImage: data.profile?.profileImage || '',
-        title: data.about?.description || '',
-        shortDescription: data.about?.highlights?.[0] || '',
-        location: data.profile?.location || '',
-        roleDetail: data.profile?.title || '',
-        education: data.education?.[0]?.degree || '',
-        languages: data.profile?.languages || '',
-        socials: data.contact?.social ? Object.entries(data.contact.social).map(([key, value]) => ({
-          id: key,
-          label: key.charAt(0).toUpperCase() + key.slice(1),
-          href: value,
-          icon: `Fa${key.charAt(0).toUpperCase() + key.slice(1)}`
-        })) : [],
-      });
-    } catch (error) {
-      console.error('Error fetching profile:', error);
-      alert('Failed to load profile data');
-    } finally {
-      setLoading(false);
-    }
-  };
+    setFormData({
+      name: portfolioData.name || portfolioData.profile?.name || '',
+      role: portfolioData.role || portfolioData.profile?.title || '',
+      heroDescription: portfolioData.heroDescription || portfolioData.profile?.bio || '',
+      cvUrl: portfolioData.cvUrl || portfolioData.profile?.resume || '',
+      profileImage: portfolioData.profile?.profileImage || '',
+      title: portfolioData.about?.introDescription || portfolioData.about?.description || '',
+      shortDescription: portfolioData.about?.highlights?.[0] || '',
+      email: portfolioData.contact?.email || portfolioData.profile?.email || '',
+      location: portfolioData.about?.location || portfolioData.profile?.location || '',
+      roleDetail: portfolioData.about?.role || portfolioData.profile?.title || '',
+      education: portfolioData.education?.[0]?.degree || '',
+      languages: portfolioData.about?.languages || portfolioData.profile?.languages || '',
+      socials: portfolioData.socials || (portfolioData.contact?.social ? Object.entries(portfolioData.contact.social).map(([key, value]) => ({
+        id: key,
+        label: key.charAt(0).toUpperCase() + key.slice(1),
+        href: value,
+        icon: `Fa${key.charAt(0).toUpperCase() + key.slice(1)}`
+      })) : []),
+    });
+    setLoading(false);
+  }, [portfolioData]);
 
   const openModal = (mode) => {
     setModalMode(mode);
@@ -135,6 +129,21 @@ export default function ProfileManager() {
       };
 
       await portfolioAPI.updatePortfolio(updateData);
+      updateLocalPortfolio({
+        name: formData.name,
+        role: formData.role,
+        heroDescription: formData.heroDescription,
+        cvUrl: formData.cvUrl,
+        profile: {
+          ...updateData.profile,
+        },
+        about: {
+          introDescription: formData.title,
+          highlights: [formData.shortDescription],
+        },
+        contact: updateData.contact,
+        socials: updateData.contact.social,
+      });
       alert('Profile updated successfully!');
       closeModal();
     } catch (error) {
@@ -184,7 +193,7 @@ export default function ProfileManager() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="w-8 h-8 border-4 border-[#00d4ff] border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4 border-[#185FA5] border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -214,7 +223,7 @@ export default function ProfileManager() {
       {/* Profile Summary Card */}
       <div className="glass-card p-6 rounded-2xl">
         <div className="flex items-start gap-6">
-          <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-[#00d4ff]/20 to-[#7c3aed]/20 flex items-center justify-center overflow-hidden">
+          <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-[#185FA5]/20 to-[#0C447C]/20 flex items-center justify-center overflow-hidden">
             {formData.profileImage ? (
               <img 
                 src={getFileUrl(formData.profileImage)} 
@@ -222,16 +231,16 @@ export default function ProfileManager() {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <span className="text-2xl font-bold text-slate-400">
+              <span className="text-2xl font-bold text-[#626058]">
                 {formData.name.split(' ').map(n => n[0]).join('').toUpperCase()}
               </span>
             )}
           </div>
           <div className="flex-1">
-            <h3 className="text-xl font-bold text-slate-200 mb-1">{formData.name || 'Your Name'}</h3>
-            <p className="text-[#00d4ff] mb-2">{formData.role || 'Your Role'}</p>
-            <p className="text-sm text-slate-400 mb-3">{formData.heroDescription || 'Your bio description'}</p>
-            <div className="flex flex-wrap gap-4 text-xs text-slate-500">
+            <h3 className="text-xl font-bold text-[#1C1B19] mb-1">{formData.name || 'Your Name'}</h3>
+            <p className="text-[#185FA5] mb-2">{formData.role || 'Your Role'}</p>
+            <p className="text-sm text-[#626058] mb-3">{formData.heroDescription || 'Your bio description'}</p>
+            <div className="flex flex-wrap gap-4 text-xs text-[#626058]">
               <span>📍 {formData.location || 'Location'}</span>
               <span>🎓 {formData.education || 'Education'}</span>
               <span>🌍 {formData.languages || 'Languages'}</span>
@@ -241,11 +250,11 @@ export default function ProfileManager() {
         
         {/* Social Links */}
         {formData.socials.length > 0 && (
-          <div className="mt-6 pt-6 border-t border-white/10">
-            <p className="text-sm text-slate-500 mb-3">Social Media</p>
+          <div className="mt-6 pt-6 border-t border-[#C2C0B8]/30">
+            <p className="text-sm text-[#626058] mb-3">Social Media</p>
             <div className="flex flex-wrap gap-2">
               {formData.socials.map((social, index) => (
-                <span key={index} className="text-xs px-3 py-1 rounded-full bg-[#00d4ff]/10 text-[#00d4ff]">
+                <span key={index} className="text-xs px-3 py-1 rounded-full bg-[#185FA5]/10 text-[#185FA5] border border-[#185FA5]/20">
                   {social.label}
                 </span>
               ))}
@@ -285,11 +294,11 @@ export default function ProfileManager() {
 
           {/* Basic Information */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-slate-200">Basic Information</h3>
+            <h3 className="text-lg font-semibold text-[#1C1B19]">Basic Information</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Full Name</label>
+                <label className="block text-sm font-medium text-[#1C1B19] mb-2">Full Name</label>
                 <input
                   type="text"
                   value={formData.name}
@@ -300,7 +309,7 @@ export default function ProfileManager() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Primary Role</label>
+                <label className="block text-sm font-medium text-[#1C1B19] mb-2">Primary Role</label>
                 <input
                   type="text"
                   value={formData.role}
@@ -311,22 +320,20 @@ export default function ProfileManager() {
                 />
               </div>
             </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Hero Description</label>
-              <textarea
-                value={formData.heroDescription}
-                onChange={(e) => setFormData({ ...formData, heroDescription: e.target.value })}
-                disabled={modalMode === 'view'}
-                rows={3}
-                className="form-input disabled:opacity-60 disabled:cursor-not-allowed resize-none"
-                placeholder="Brief description for hero section"
-              />
-            </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">📍 Location</label>
+                <label className="block text-sm font-medium text-[#1C1B19] mb-2">Email</label>
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  disabled={modalMode === 'view'}
+                  className="form-input disabled:opacity-60 disabled:cursor-not-allowed"
+                  placeholder="contact@example.com"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-[#1C1B19] mb-2">Location</label>
                 <input
                   type="text"
                   value={formData.location}
@@ -336,26 +343,26 @@ export default function ProfileManager() {
                   placeholder="Malaysia (Available Remotely)"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">🌍 Languages</label>
-                <input
-                  type="text"
-                  value={formData.languages}
-                  onChange={(e) => setFormData({ ...formData, languages: e.target.value })}
-                  disabled={modalMode === 'view'}
-                  className="form-input disabled:opacity-60 disabled:cursor-not-allowed"
-                  placeholder="English, Arabic"
-                />
-              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[#1C1B19] mb-2">🌍 Languages</label>
+              <input
+                type="text"
+                value={formData.languages}
+                onChange={(e) => setFormData({ ...formData, languages: e.target.value })}
+                disabled={modalMode === 'view'}
+                className="form-input disabled:opacity-60 disabled:cursor-not-allowed"
+                placeholder="English, Arabic"
+              />
             </div>
           </div>
 
           {/* About Section */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-slate-200">About Section</h3>
+            <h3 className="text-lg font-semibold text-[#1C1B19]">About Section</h3>
             
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Title (Who Am I)</label>
+              <label className="block text-sm font-medium text-[#1C1B19] mb-2">Title (Who Am I)</label>
               <input
                 type="text"
                 value={formData.title}
@@ -367,7 +374,7 @@ export default function ProfileManager() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Short Description</label>
+              <label className="block text-sm font-medium text-[#1C1B19] mb-2">Short Description</label>
               <textarea
                 value={formData.shortDescription}
                 onChange={(e) => setFormData({ ...formData, shortDescription: e.target.value })}
@@ -382,7 +389,7 @@ export default function ProfileManager() {
           {/* Social Media */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-slate-200">Social Media Handles</h3>
+              <h3 className="text-lg font-semibold text-[#1C1B19]">Social Media Handles</h3>
               {modalMode === 'edit' && (
                 <button onClick={addSocial} className="btn-outline text-sm">
                   <HiPlus className="w-4 h-4" />
@@ -393,9 +400,9 @@ export default function ProfileManager() {
 
             <div className="space-y-4">
               {formData.socials.map((social, index) => (
-                <div key={index} className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-white/[0.02] rounded-xl">
+                <div key={index} className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-[#C2C0B8]/10 rounded-xl">
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">Platform ID</label>
+                    <label className="block text-sm font-medium text-[#1C1B19] mb-2">Platform ID</label>
                     <input
                       type="text"
                       value={social.id}
@@ -406,7 +413,7 @@ export default function ProfileManager() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">Label</label>
+                    <label className="block text-sm font-medium text-[#1C1B19] mb-2">Label</label>
                     <input
                       type="text"
                       value={social.label}
@@ -417,7 +424,7 @@ export default function ProfileManager() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">URL</label>
+                    <label className="block text-sm font-medium text-[#1C1B19] mb-2">URL</label>
                     <input
                       type="url"
                       value={social.href}
@@ -429,7 +436,7 @@ export default function ProfileManager() {
                   </div>
                   <div className="flex items-end gap-2">
                     <div className="flex-1">
-                      <label className="block text-sm font-medium text-slate-300 mb-2">Icon</label>
+                      <label className="block text-sm font-medium text-[#1C1B19] mb-2">Icon</label>
                       <input
                         type="text"
                         value={social.icon}
@@ -442,7 +449,7 @@ export default function ProfileManager() {
                     {modalMode === 'edit' && (
                       <button
                         onClick={() => removeSocial(index)}
-                        className="p-3 rounded-xl hover:bg-white/[0.04] text-slate-400 hover:text-red-400 transition-colors"
+                        className="p-3 rounded-xl hover:bg-[#C2C0B8]/30 text-[#626058] hover:text-red-500 transition-colors"
                       >
                         <HiTrash className="w-4 h-4" />
                       </button>

@@ -46,21 +46,21 @@ export default function NotFound() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-slate-100 flex items-center justify-center relative overflow-hidden">
+    <div className="min-h-screen bg-[#E8E6DE] text-[#1C1B19] flex items-center justify-center relative overflow-hidden">
       {/* Animated Background */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 dot-grid opacity-30" />
-        <div className="blob w-[400px] h-[400px] bg-[#00d4ff] top-[-100px] right-[-100px] opacity-20" />
-        <div className="blob w-[500px] h-[500px] bg-[#7c3aed] bottom-[-150px] left-[-150px] opacity-15" />
+        <div className="blob w-[400px] h-[400px] bg-[#185FA5] top-[-100px] right-[-100px] opacity-10" />
+        <div className="blob w-[500px] h-[500px] bg-[#C2C0B8] bottom-[-150px] left-[-150px] opacity-10" />
         
         {/* Scanning lines */}
         <motion.div
-          className="absolute w-full h-[2px] bg-gradient-to-r from-transparent via-[#00d4ff] to-transparent opacity-60"
+          className="absolute w-full h-[2px] bg-gradient-to-r from-transparent via-[#185FA5] to-transparent opacity-60"
           animate={{ top: ['-10%', '110%'] }}
           transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
         />
         <motion.div
-          className="absolute h-full w-[2px] bg-gradient-to-b from-transparent via-[#7c3aed] to-transparent opacity-40"
+          className="absolute h-full w-[2px] bg-gradient-to-b from-transparent via-[#C2C0B8] to-transparent opacity-40"
           animate={{ left: ['-10%', '110%'] }}
           transition={{ duration: 4, repeat: Infinity, ease: 'linear', delay: 1.5 }}
         />
@@ -78,19 +78,19 @@ export default function NotFound() {
             <h1 className="text-8xl md:text-9xl font-bold font-display text-gradient mb-4 relative">
               {glitchText}
               {/* Glitch overlay effects */}
-              <span className="absolute inset-0 text-[#00d4ff] opacity-70 animate-pulse">
+              <span className="absolute inset-0 text-[#185FA5] opacity-70 animate-pulse">
                 {glitchText}
               </span>
-              <span className="absolute inset-0 text-[#7c3aed] opacity-50 translate-x-1 translate-y-1">
+              <span className="absolute inset-0 text-[#C2C0B8] opacity-50 translate-x-1 translate-y-1">
                 {glitchText}
               </span>
             </h1>
             
             {/* Tech corner brackets */}
-            <div className="absolute -top-4 -left-4 w-8 h-8 border-t-2 border-l-2 border-[#00d4ff] opacity-60" />
-            <div className="absolute -top-4 -right-4 w-8 h-8 border-t-2 border-r-2 border-[#7c3aed] opacity-60" />
-            <div className="absolute -bottom-4 -left-4 w-8 h-8 border-b-2 border-l-2 border-[#7c3aed] opacity-60" />
-            <div className="absolute -bottom-4 -right-4 w-8 h-8 border-b-2 border-r-2 border-[#00d4ff] opacity-60" />
+            <div className="absolute -top-4 -left-4 w-8 h-8 border-t-2 border-l-2 border-[#185FA5] opacity-60" />
+            <div className="absolute -top-4 -right-4 w-8 h-8 border-t-2 border-r-2 border-[#C2C0B8] opacity-60" />
+            <div className="absolute -bottom-4 -left-4 w-8 h-8 border-b-2 border-l-2 border-[#C2C0B8] opacity-60" />
+            <div className="absolute -bottom-4 -right-4 w-8 h-8 border-b-2 border-r-2 border-[#185FA5] opacity-60" />
           </motion.div>
 
           {/* Error Message */}
@@ -105,7 +105,7 @@ export default function NotFound() {
               <div 
                 className="absolute inset-0 opacity-[0.03]"
                 style={{
-                  backgroundImage: 'linear-gradient(#00d4ff 1px, transparent 1px), linear-gradient(90deg, #00d4ff 1px, transparent 1px)',
+                  backgroundImage: 'linear-gradient(#185FA5 1px, transparent 1px), linear-gradient(90deg, #185FA5 1px, transparent 1px)',
                   backgroundSize: '20px 20px'
                 }}
               />
@@ -114,19 +114,19 @@ export default function NotFound() {
                 <motion.div
                   variants={floatingVariants}
                   animate="animate"
-                  className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-[#00d4ff]/20 to-[#7c3aed]/20 mb-4 mx-auto"
+                  className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-[#185FA5]/20 to-[#C2C0B8]/20 mb-4 mx-auto"
                 >
-                  <HiExclamationTriangle className="w-8 h-8 text-[#00d4ff]" />
+                  <HiExclamationTriangle className="w-8 h-8 text-[#185FA5]" />
                 </motion.div>
                 
                 <h2 className="text-2xl md:text-3xl font-bold font-display mb-3">
                   <span className="text-gradient">System Error</span>
                 </h2>
-                <p className="text-slate-400 text-lg mb-2">
+                <p className="text-[#626058] text-lg mb-2">
                   The requested page could not be found in the database.
                 </p>
-                <p className="text-slate-500 text-sm">
-                  <span className="text-[#00d4ff] font-mono">ERROR_CODE:</span> PAGE_NOT_FOUND
+                <p className="text-[#626058] text-sm">
+                  <span className="text-[#185FA5] font-mono">ERROR_CODE:</span> PAGE_NOT_FOUND
                 </p>
               </div>
             </div>
@@ -161,23 +161,23 @@ export default function NotFound() {
             className="mt-12"
           >
             <div className="glass-card p-4 max-w-md mx-auto">
-              <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
+              <div className="flex items-center justify-between text-xs text-[#626058] mb-2">
                 <span>SYSTEM STATUS</span>
-                <span className="text-[#00d4ff]">OPERATIONAL</span>
+                <span className="text-[#185FA5]">OPERATIONAL</span>
               </div>
               
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
                   <div className="w-2 h-2 bg-emerald-400 rounded-full mx-auto mb-1 animate-pulse" />
-                  <span className="text-xs text-slate-500">SERVER</span>
+                  <span className="text-xs text-[#626058]">SERVER</span>
                 </div>
                 <div>
                   <div className="w-2 h-2 bg-emerald-400 rounded-full mx-auto mb-1 animate-pulse" />
-                  <span className="text-xs text-slate-500">DATABASE</span>
+                  <span className="text-xs text-[#626058]">DATABASE</span>
                 </div>
                 <div>
                   <div className="w-2 h-2 bg-red-400 rounded-full mx-auto mb-1 animate-pulse" />
-                  <span className="text-xs text-slate-500">PAGE</span>
+                  <span className="text-xs text-[#626058]">PAGE</span>
                 </div>
               </div>
             </div>
@@ -187,7 +187,7 @@ export default function NotFound() {
 
       {/* Floating tech elements */}
       <motion.div
-        className="absolute top-20 left-10 w-4 h-4 border border-[#00d4ff]/30 rotate-45"
+        className="absolute top-20 left-10 w-4 h-4 border border-[#185FA5]/30 rotate-45"
         animate={{ 
           rotate: [45, 225, 45],
           scale: [1, 1.2, 1]
@@ -196,7 +196,7 @@ export default function NotFound() {
       />
       
       <motion.div
-        className="absolute bottom-32 right-16 w-6 h-6 border border-[#7c3aed]/40"
+        className="absolute bottom-32 right-16 w-6 h-6 border border-[#C2C0B8]/40"
         animate={{ 
           rotate: [0, 360],
           opacity: [0.4, 0.8, 0.4]
@@ -205,7 +205,7 @@ export default function NotFound() {
       />
       
       <motion.div
-        className="absolute top-1/3 right-20 w-2 h-2 bg-[#00d4ff] rounded-full"
+        className="absolute top-1/3 right-20 w-2 h-2 bg-[#185FA5] rounded-full"
         animate={{ 
           scale: [1, 1.5, 1],
           opacity: [0.5, 1, 0.5]

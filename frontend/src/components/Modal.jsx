@@ -35,7 +35,7 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md' })
               <h2 className="text-xl font-bold font-display text-gradient">{title}</h2>
               <button
                 onClick={onClose}
-                className="p-2 rounded-xl hover:bg-white/[0.04] text-slate-400 hover:text-slate-200 transition-colors"
+                className="p-2 rounded-xl hover:bg-[#C2C0B8]/30 text-[#626058] hover:text-[#1C1B19] transition-colors"
               >
                 <HiXMark className="w-5 h-5" />
               </button>
