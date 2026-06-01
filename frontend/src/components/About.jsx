@@ -5,6 +5,7 @@ import { HiCheckBadge } from 'react-icons/hi2';
 import { Link } from 'react-scroll';
 import { usePortfolioData } from '../context/PortfolioContext';
 
+
 export default function About() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
@@ -122,7 +123,7 @@ export default function About() {
                 {/* Inner Image Mask */}
                 <div className="relative rounded-[calc(1.5rem-2px)] overflow-hidden bg-[#DDDBD3] h-full w-full z-10">
                    <img
-                    src="/src/assets/favicon/android-chrome-192x192.png"
+                    src="/profile.png"
                     alt="Muwafak Abubakar – About"
                     className="w-full h-auto object-cover object-top transition duration-500 group-hover:scale-[1.02]"
                     style={{ minHeight: '400px', objectPosition: 'top center' }}
