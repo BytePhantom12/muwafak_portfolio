@@ -94,7 +94,7 @@ export default function SkillsManager() {
   const getImageUrl = (iconPath) => {
     if (!iconPath) return null;
     if (iconPath.startsWith('/uploads')) {
-      return `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${iconPath}`;
+      return `${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}${iconPath}`;
     }
     return iconPath;
   };

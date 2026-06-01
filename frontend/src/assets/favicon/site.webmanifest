@@ -1,7 +1,7 @@
 {
-  "name": "Muwafak  - Full Stack Developer",
+  "name": "Muwafak Abubakar - Full-Stack Developer & Data Analyst",
   "short_name": "Muwafak Portfolio",
-  "description": "Passionate Full Stack Developer crafting navigationally-perfect web experiences",
+  "description": "Full-Stack Web Developer & Data Analyst — building scalable apps and data-driven solutions",
   "icons": [
     {
       "src": "/src/assets/favicon/android-chrome-192x192.png",
@@ -14,8 +14,8 @@
       "type": "image/png"
     }
   ],
-  "theme_color": "#00d4ff",
-  "background_color": "#0a0a0f",
+  "theme_color": "#E8E6DE",
+  "background_color": "#E8E6DE",
   "display": "standalone",
   "start_url": "/",
   "scope": "/",

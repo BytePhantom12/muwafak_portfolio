@@ -10,7 +10,7 @@ const getImageUrl = (imagePath) => {
   if (!imagePath) return null;
   if (imagePath.startsWith('http')) return imagePath;
   if (imagePath.startsWith('/uploads')) {
-    return `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${imagePath}`;
+    return `${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}${imagePath}`;
   }
   return imagePath;
 };
@@ -40,7 +40,6 @@ function ProjectSlideshow({ images, title, hovered }) {
           animate={{ 
             opacity: 1, 
             scale: hovered ? 1.05 : 1,
-            filter: hovered ? 'brightness(1.1) contrast(1.1)' : 'brightness(0.9) contrast(1)'
           }}
           exit={{ opacity: 0, scale: 0.95 }}
           transition={{ duration: 0.6, ease: "easeInOut" }}
@@ -146,7 +145,6 @@ function ProjectCard({ project, index }) {
               className="w-full h-full object-cover object-top"
               animate={{ 
                 scale: hovered ? 1.05 : 1,
-                filter: hovered ? 'brightness(1.1) contrast(1.1)' : 'brightness(0.9) contrast(1)'
               }}
               transition={{ duration: 0.6, ease: "easeOut" }}
             />
@@ -250,12 +248,10 @@ function ProjectCard({ project, index }) {
           {project.description}
         </p>
 
-        {/* Tags */}
         <div className="flex flex-wrap gap-2 mt-auto relative z-10 pointer-events-auto">
-          {project.tags.split(',').map((tag_item) => {
-            const tag = tag_item.trim();
-            return <ProjectTag key={tag} tag={tag} accentColor={project.accentColor} />;
-          })}
+          {project.tags && project.tags.split(',').map((tag_item) => tag_item.trim()).filter(Boolean).map((tag) => (
+            <ProjectTag key={tag} tag={tag} accentColor={project.accentColor} />
+          ))}
         </div>
       </div>
     </motion.div>

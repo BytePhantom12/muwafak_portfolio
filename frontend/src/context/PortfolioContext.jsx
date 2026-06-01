@@ -7,33 +7,32 @@ import { portfolioAPI } from '../services/api';
 const FALLBACK_DATA = {
   // Hero
   name: 'Muwafak Abubakar',
-  role: 'Full Stack Developer',
+  role: 'Full-Stack Developer & Data Analyst',
   typingPhrases: [
-    'Full Stack Developer',
-    'Data Analyst',
-    'AI/ML Enthusiast',
+    'Full-Stack Web Developer',
+    'Data Analyst'
   ],
   heroDescription:
-    'I build modern web applications powered by data. Full Stack Developer and Data Analyst, I create responsive, high-performance systems using React, FastAPI, and modern databases—while turning data into insights that drive smarter decisions.',
+    'I build full-stack web applications and turn data into actionable insights.',
   cvUrl: '/muwafak-cv.pdf',
 
   // About
   about: {
-    introHeading: 'Full Stack Developer',
+    introHeading: 'Full-Stack Developer & Data Analyst',
     introHeadingHighlight: 'Creative Problem Solver',
     introDescription:
-      "Hi! I’m Muwafak, a Full Stack Developer and Data Analyst who builds scalable, data-driven web applications. I specialize in React, Next.js, and FastAPI, combining clean, maintainable code with thoughtful design to create seamless user experiences. I enjoy turning complex ideas into practical solutions and using data to build systems that are both intelligent and impactful. ",
+      "I am a Full-Stack Developer and Data Analyst specializing in building end-to-end web applications and turning complex datasets into actionable insights. I design robust backend systems, implement scalable REST APIs, and construct highly responsive user interfaces. By bridging the gap between software engineering and data analysis, I create intelligent, high-performance systems that drive smarter, data-driven decisions.",
     yearsOfExperience: 2,
     projectsDone: 6,
     location: 'Malaysia (Available Remotely)',
-    role: 'Frontend & Full Stack Developer',
+    role: 'Full-Stack Developer & Data Analyst',
     education: "Bachelor's in Computer Science",
     languages: 'English, Arabic. Hausa',
     highlights: [
-      'Building responsive, accessible web applications',
-      'Passionate about clean code and best practices',
-      'Experience with React, Tailwind, Next.js ecosystem',
-      'Strong eye for design and user experience',
+      'Building end-to-end applications from database to UI',
+      'Designing and implementing scalable REST APIs',
+      'Analyzing complex data pipelines and creating dashboards',
+      'Bridging the gap between engineering and data insights',
     ],
   },
 
@@ -116,94 +115,7 @@ const FALLBACK_DATA = {
     },
   ],
 
-  // Projects
-  projects: [
-    {
-      id: 1,
-      title: 'Muwafak Portfolio',
-      description:
-        'A modern personal portfolio website built with React and Vite. Features a warm charcoal and blue light theme design, Framer Motion animations, and smooth scroll navigation between all sections.',
-      gradientStart: '#185FA5',
-      gradientEnd: '#C2C0B8',
-      accentColor: '#185FA5',
-      tags: 'React, Vite, Framer Motion, Tailwind',
-      githubUrl: '',
-      liveUrl: '',
-      emoji: '🚀',
-      images: ['muwafak-portfolio.png', 'proex.png', 'crafthub.png'],
-      isFeatured: true,
-    },
-    {
-      id: 2,
-      title: 'ProEx Consulting Corporate Website',
-      description:
-        'Built a modern corporate website and full-featured admin dashboard. Implemented dynamic content management for services and media, and integrated a backend for real-time CRUD operations.',
-      gradientStart: '#f59e0b',
-      gradientEnd: '#ef4444',
-      accentColor: '#f59e0b',
-      tags: 'React, Next.js, Full Stack, Dashboard',
-      githubUrl: '',
-      liveUrl: '#',
-      emoji: '🏢',
-      isFeatured: true,
-    },
-    {
-      id: 3,
-      title: 'CraftHub Manufacturing System',
-      description:
-        'Developed a comprehensive manufacturing management system to streamline operations, inventory, and production workflows. Designed for scalability to support real-time business processes.',
-      gradientStart: '#3b82f6',
-      gradientEnd: '#2563eb',
-      accentColor: '#3b82f6',
-      tags: 'React, Management System, Scalability',
-      githubUrl: '',
-      liveUrl: '#',
-      emoji: '🏭',
-      isFeatured: false,
-    },
-    {
-      id: 4,
-      title: 'Ajwah Cultural Council',
-      description:
-        'Created a modern, fully responsive website to showcase events, media, and community initiatives. Focused intensely on a clean UI and smooth user experience across all devices.',
-      gradientStart: '#10b981',
-      gradientEnd: '#059669',
-      accentColor: '#10b981',
-      tags: 'React, Next.js, HTML, CSS, JS',
-      githubUrl: '',
-      liveUrl: '#',
-      emoji: '🌐',
-      isFeatured: false,
-    },
-    {
-      id: 5,
-      title: 'LanguageHub Platform',
-      description:
-        'A web-based platform connecting students with native-speaking teachers worldwide. Features a teacher booking system, virtual coin payments, class management, and resource sharing.',
-      gradientStart: '#eab308',
-      gradientEnd: '#ca8a04',
-      accentColor: '#eab308',
-      tags: 'HTML, CSS, JavaScript',
-      githubUrl: '',
-      liveUrl: '#',
-      emoji: '🗣️',
-      isFeatured: false,
-    },
-    {
-      id: 6,
-      title: 'Ilham Education',
-      description:
-        'A comprehensive educational management system designed to empower students and educators. Features advanced learning modules, progress tracking, and interactive virtual classrooms built for the modern digital era.',
-      gradientStart: '#8b5cf6',
-      gradientEnd: '#3b82f6',
-      accentColor: '#a78bfa',
-      tags: 'React, Node.js, Educational Tech, In Progress',
-      githubUrl: '',
-      liveUrl: '',
-      emoji: '🎓',
-      isFeatured: true,
-    },
-  ],
+  projects: [],
 };
 
 // Transform database data to match frontend format

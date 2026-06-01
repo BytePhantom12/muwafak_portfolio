@@ -32,7 +32,7 @@ export default function Contact() {
     setLoading(true);
     try {
       // Save to our database first
-      const dbResponse = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/contact`, {
+      const dbResponse = await fetch(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

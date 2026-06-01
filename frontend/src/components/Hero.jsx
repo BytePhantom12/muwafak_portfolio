@@ -4,6 +4,7 @@ import { TypeAnimation } from 'react-type-animation';
 import { useEffect, useState } from 'react';
 import { HiArrowDownTray, HiEnvelope } from 'react-icons/hi2';
 import { FaGithub, FaLinkedinIn, FaFacebookF, FaInstagram, FaWhatsapp } from 'react-icons/fa';
+import { SiFastapi } from 'react-icons/si';
 import { usePortfolioData } from '../context/PortfolioContext';
 import profileImage from '../assets/favicon/android-chrome-192x192.png';
 
@@ -26,7 +27,7 @@ const iconMap = {
 };
 
 // Counter namespace — unique to this portfolio
-const COUNTER_NS = 'muhib-nabil-portfolio';
+const COUNTER_NS = 'muwafak-portfolio';
 const COUNTER_KEY = 'visitors';
 
 function useVisitorCount() {
@@ -67,10 +68,9 @@ export default function Hero() {
 
   const stats = [
     { value: `${portfolioData.about.yearsOfExperience}+`, label: 'Years Experience' },
-    { value: `${portfolioData.about.projectsDone}+`, label: 'Projects Completed' },
+    { value: `${portfolioData.projects.length}`, label: 'Projects Completed' },
     { value: '5+', label: 'Technologies' },
     { value: '100%', label: 'Dedication' },
-    { value: visitorCount !== null ? visitorCount.toLocaleString() : '...', label: '👁️ Portfolio Views' },
   ];
 
   if (loading) {
@@ -106,9 +106,9 @@ export default function Hero() {
             initial="hidden"
             animate="visible"
           >
-            <motion.div variants={itemVariants}>
+            {/* <motion.div variants={itemVariants}>
               <span className="section-badge">👋 Welcome to my portfolio</span>
-            </motion.div>
+            </motion.div> */}
 
             <motion.h1
               variants={itemVariants}
@@ -176,7 +176,7 @@ export default function Hero() {
                 </button>
               </Link>
               <a
-                href={portfolioData.cvUrl ? `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${portfolioData.cvUrl}` : '#'}
+                href={portfolioData.cvUrl ? `${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}${portfolioData.cvUrl}` : '#'}
                 download
                 id="hero-download-cv"
                 className="btn-outline"
@@ -205,8 +205,8 @@ export default function Hero() {
               <div className="profile-ring" style={{ width: 280, height: 280 }}>
                 <img
                   src={profileImage}
-                  alt="Muwafak – Full Stack Developer"
-                  className="w-full h-full opacity-85 brightness-85 rounded-full object-cover object-top"
+                  alt="Muwafak – Full-Stack Developer & Data Analyst"
+                  className="w-full h-full rounded-full object-cover object-top"
                   style={{ width: '100%', height: '100%' }}
                 />
               </div>
@@ -265,8 +265,8 @@ export default function Hero() {
                       transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
                       className="glass-card px-4 py-2 rounded-xl flex items-center gap-2 bg-[#DDDBD3]/80 backdrop-blur-md border-[#C2C0B8]/30"
                     >
-                      <span className="text-base">📘</span>
-                      <span className="text-xs text-[#1C1B19] font-semibold tracking-wide">TypeScript</span>
+                      <SiFastapi className="text-base text-[#009688]" />
+                      <span className="text-xs text-[#1C1B19] font-semibold tracking-wide">FastAPI</span>
                     </motion.div>
                   </div>
                 </motion.div>
@@ -317,7 +317,7 @@ export default function Hero() {
 
             {/* Content Container */}
             <div className="relative z-10 w-full backdrop-blur-sm">
-              <div className="grid grid-cols-2 lg:grid-cols-5 divide-x divide-y lg:divide-y-0 divide-[#185FA5]/10">
+              <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-[#185FA5]/10">
                 {stats.map(({ value, label }, i) => (
                   <motion.div
                     key={label}

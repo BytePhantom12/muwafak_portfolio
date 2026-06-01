@@ -11,7 +11,7 @@ const getImageUrl = (imagePath) => {
   
   // If it starts with /uploads, it's an uploaded file
   if (imagePath.startsWith('/uploads')) {
-    return `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${imagePath}`;
+    return `${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}${imagePath}`;
   }
   
   // If it's just a filename, use our imported images

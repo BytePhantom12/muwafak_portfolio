@@ -86,10 +86,6 @@ function SkillCard({ skill, index }) {
             viewport={{ once: true }}
           />
         </div>
-        
-        <span className="text-xs font-bold text-[#626058] group-hover:text-[#1C1B19] transition-colors">
-          <Counter value={skill.level} />%
-        </span>
       </div>
     </motion.div>
   );
@@ -138,7 +134,7 @@ export default function Skills() {
               <span className="text-[10px] text-[#626058] uppercase tracking-widest font-semibold">Years Exp</span>
             </div>
             <div className="bg-[#DDDBD3] border border-[#C2C0B8]/30 rounded-2xl px-6 py-4 flex flex-col items-center hover:border-[#C2C0B8]/50 transition-colors">
-              <span className="text-2xl font-bold text-[#1C1B19] mb-1"><Counter value={portfolioData.about.projectsDone} />+</span>
+              <span className="text-2xl font-bold text-[#1C1B19] mb-1"><Counter value={portfolioData.projects.length} /></span>
               <span className="text-[10px] text-[#626058] uppercase tracking-widest font-semibold">Projects</span>
             </div>
             <div className="bg-[#DDDBD3] border border-[#C2C0B8]/30 rounded-2xl px-6 py-4 flex flex-col items-center hover:border-[#C2C0B8]/50 transition-colors">

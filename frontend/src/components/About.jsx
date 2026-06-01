@@ -32,7 +32,7 @@ export default function About() {
           transition={{ duration: 0.6 }}
         >
           <h2 className="section-title">
-            Who I <span className="text-gradient">Am</span>
+            About <span className="text-gradient">Me</span>
           </h2>
           <p className="section-subtitle">
             A passionate developer who transforms ideas into exceptional digital experiences
@@ -40,10 +40,67 @@ export default function About() {
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          {/* Image Side */}
+          
+          {/* Left Column: Text & Content */}
           <motion.div
-            className="relative flex justify-center lg:justify-start"
             initial={{ opacity: 0, x: -50 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.3 }}
+            className="flex flex-col items-start text-left"
+          >
+            <h3 className="text-2xl md:text-3xl font-bold font-display text-[#1C1B19] mb-4">
+              {about.introHeading}{' '}
+              &amp;{' '}
+              <span className="text-gradient">{about.introHeadingHighlight}</span>
+            </h3>
+
+            <p className="text-[#626058] leading-relaxed mb-6">
+              {about.introDescription}
+            </p>
+
+            {/* Highlights */}
+            <div className="space-y-3 mb-8">
+              {about.highlights.map((item, i) => (
+                <motion.div
+                  key={i}
+                  className="flex items-start gap-3"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={isInView ? { opacity: 1, x: 0 } : {}}
+                  transition={{ delay: 0.5 + i * 0.1 }}
+                >
+                  <HiCheckBadge className="w-5 h-5 text-[#185FA5] flex-shrink-0 mt-0.5" />
+                  <span className="text-[#1C1B19] text-sm">{item}</span>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Quick Facts Grid */}
+            <div className="grid grid-cols-2 gap-4 mb-8 w-full">
+              {facts.map(({ emoji, label, value }) => (
+                <div key={label} className="glass-card p-4 rounded-xl flex items-center gap-3">
+                  <span className="text-2xl">{emoji}</span>
+                  <div>
+                    <span className="text-[10px] text-[#626058] uppercase tracking-wider block">{label}</span>
+                    <span className="text-sm text-[#1C1B19] font-medium">{value}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex gap-4 flex-wrap">
+              <Link to="contact" smooth={true} duration={600} offset={-80}>
+                <button id="about-hire-btn" className="btn-primary">Let's Work Together</button>
+              </Link>
+              <Link to="projects" smooth={true} duration={600} offset={-80}>
+                <button id="about-projects-btn" className="btn-outline">View Projects</button>
+              </Link>
+            </div>
+          </motion.div>
+
+          {/* Right Column: Image Side */}
+          <motion.div
+            className="relative flex justify-center lg:justify-end"
+            initial={{ opacity: 0, x: 50 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.2 }}
           >
@@ -67,7 +124,7 @@ export default function About() {
                    <img
                     src="/src/assets/favicon/android-chrome-192x192.png"
                     alt="Muwafak Abubakar – About"
-                    className="w-full h-auto object-cover object-top opacity-75 brightness-85 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-[1.02]"
+                    className="w-full h-auto object-cover object-top transition duration-500 group-hover:scale-[1.02]"
                     style={{ minHeight: '400px', objectPosition: 'top center' }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#E8E6DE]/80 via-[#E8E6DE]/20 to-transparent pointer-events-none" />
@@ -99,7 +156,7 @@ export default function About() {
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.7 }}
               >
-                <span className="text-2xl font-bold font-display text-gradient block">{about.projectsDone}+</span>
+                <span className="text-2xl font-bold font-display text-gradient block">{portfolioData.projects.length}</span>
                 <span className="text-xs text-[#626058]">Projects Done</span>
               </motion.div>
 
@@ -140,60 +197,6 @@ export default function About() {
             </div>
           </motion.div>
 
-          {/* Text Content */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.3 }}
-          >
-            <h3 className="text-2xl md:text-3xl font-bold font-display text-white mb-4">
-              {about.introHeading}{' '}
-              &amp;{' '}
-              <span className="text-gradient">{about.introHeadingHighlight}</span>
-            </h3>
-
-            <p className="text-[#626058] leading-relaxed mb-6">
-              {about.introDescription}
-            </p>
-
-            {/* Highlights */}
-            <div className="space-y-3 mb-8">
-              {about.highlights.map((item, i) => (
-                <motion.div
-                  key={i}
-                  className="flex items-start gap-3"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={isInView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ delay: 0.5 + i * 0.1 }}
-                >
-                  <HiCheckBadge className="w-5 h-5 text-[#185FA5] flex-shrink-0 mt-0.5" />
-                  <span className="text-[#1C1B19] text-sm">{item}</span>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Quick Facts Grid */}
-            <div className="grid grid-cols-2 gap-3 mb-8">
-              {facts.map(({ emoji, label, value }) => (
-                <div key={label} className="glass-card p-3 rounded-xl flex items-center gap-3">
-                  <span className="text-xl">{emoji}</span>
-                  <div>
-                    <span className="text-[10px] text-[#626058] uppercase tracking-wider block">{label}</span>
-                    <span className="text-sm text-[#1C1B19] font-medium">{value}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="flex gap-4 flex-wrap">
-              <Link to="contact" smooth={true} duration={600} offset={-80}>
-                <button id="about-hire-btn" className="btn-primary">Let's Work Together</button>
-              </Link>
-              <Link to="projects" smooth={true} duration={600} offset={-80}>
-                <button id="about-projects-btn" className="btn-outline">View Projects</button>
-              </Link>
-            </div>
-          </motion.div>
         </div>
       </div>
     </section>

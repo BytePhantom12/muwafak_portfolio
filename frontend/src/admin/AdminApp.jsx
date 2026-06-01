@@ -37,7 +37,7 @@ export default function AdminApp() {
 
     // Cleanup: restore original title when component unmounts
     return () => {
-      document.title = 'Muwafak Abubakar - Data Analyst | Full Stack Developer';
+      document.title = 'Muwafak Abubakar - Full-Stack Developer & Data Analyst';
     };
   }, [isAuthenticated]);
 
