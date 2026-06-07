@@ -286,8 +286,9 @@ export default function Projects() {
         <motion.div
           className="text-left mb-16"
           initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
+          viewport={{ once: true, margin: '-100px' }}
         >
           <h2 className="section-title">
             My <span className="text-gradient">Projects</span>

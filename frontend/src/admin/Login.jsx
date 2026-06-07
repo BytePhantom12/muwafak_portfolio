@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { HiLockClosed, HiUser, HiEye, HiEyeSlash } from 'react-icons/hi2';
+import { HiLockClosed, HiUser, HiEye, HiEyeSlash, HiHome } from 'react-icons/hi2';
 import { authAPI } from '../services/api';
 
 export default function Login({ onLogin }) {
@@ -29,6 +29,16 @@ export default function Login({ onLogin }) {
 
   return (
     <div className="min-h-screen bg-[#E8E6DE] flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Home Button */}
+      <a
+        href="/"
+        className="absolute top-4 right-4 p-2 sm:px-4 sm:py-2 rounded-xl glass-card text-[#626058] hover:text-[#185FA5] hover:border-[#185FA5]/30 hover:shadow-[0_0_15px_rgba(24,95,165,0.15)] transition-all duration-300 flex items-center gap-2 z-20"
+        title="Go to Homepage"
+      >
+        <HiHome className="w-4 h-4" />
+        <span className="hidden sm:inline text-sm font-medium">Home</span>
+      </a>
+
       {/* Background effects */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 dot-grid opacity-40" />

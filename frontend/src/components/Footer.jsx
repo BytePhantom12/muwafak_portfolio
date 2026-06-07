@@ -30,8 +30,8 @@ export default function Footer() {
               <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#185FA5] to-[#C2C0B8] flex items-center justify-center shadow-[0_0_15px_rgba(24,95,165,0.2)]">
                 <span className="text-white font-bold font-display">M</span>
               </div>
-              <span className="text-[#1C1B19] font-display font-bold text-xl">
-                Muwafak <span className="text-gradient text-lg">Portfolio</span>
+              <span className="text-[#1C1B19] font-display font-extrabold text-xl">
+                Muwafak <span className="text-gradient font-extrabold text-xl">Abubakar</span>
               </span>
             </div>
             <p className="text-[#626058] text-sm leading-relaxed max-w-xs">

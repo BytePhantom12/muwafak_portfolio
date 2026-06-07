@@ -49,8 +49,8 @@ export default function Navbar() {
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#185FA5] to-[#C2C0B8] flex items-center justify-center shadow-[0_0_15px_rgba(24,95,165,0.25)]">
                 <span className="text-white font-bold text-sm font-display">M</span>
               </div>
-              <span className="text-[#1C1B19] font-display font-bold text-lg">
-                Muwafak <span className="text-gradient text-base">Portfolio</span>
+              <span className="text-[#1C1B19] font-display font-extrabold text-3xl">
+               Muwafak <span className="text-gradient font-extrabold text-3xl">Abubakar</span>
               </span>
             </motion.div>
 

@@ -109,14 +109,7 @@ export default function Hero() {
               <span className="section-badge">👋 Welcome to my portfolio</span>
             </motion.div> */}
 
-            <motion.h1
-              variants={itemVariants}
-              className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-bold font-display leading-tight mb-4"
-            >
-              Hello, I'm{'  '}
-              <span className="text-gradient block sm:inline">{portfolioData.name}</span>
-            </motion.h1>
-
+            
             <motion.div
               variants={itemVariants}
               className="text-xl sm:text-2xl md:text-3xl font-display font-semibold text-[#1C1B19] mb-6 h-10"
