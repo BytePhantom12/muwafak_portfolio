@@ -148,7 +148,7 @@ export default function TechStackManager() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="w-8 h-8 border-4 border-[#185FA5] border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -178,7 +178,7 @@ export default function TechStackManager() {
       >
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-[#1C1B19] mb-2">Technology Name</label>
+            <label className="block text-sm font-medium text-text-primary mb-2">Technology Name</label>
             <input
               type="text"
               value={techForm.name}
@@ -200,7 +200,7 @@ export default function TechStackManager() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#1C1B19] mb-2">Category</label>
+            <label className="block text-sm font-medium text-text-primary mb-2">Category</label>
             <select
               value={techForm.category}
               onChange={(e) => setTechForm({ ...techForm, category: e.target.value })}
@@ -215,21 +215,21 @@ export default function TechStackManager() {
           {/* Preview */}
           {techForm.name && (
             <div>
-              <label className="block text-sm font-medium text-[#1C1B19] mb-2">Preview</label>
-              <div className="bg-[#C2C0B8]/10 p-4 rounded-xl">
+              <label className="block text-sm font-medium text-text-primary mb-2">Preview</label>
+              <div className="bg-border-base/10 p-4 rounded-xl">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-[#C2C0B8]/20 flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 rounded-lg bg-border-base/20 flex items-center justify-center flex-shrink-0">
                     {techForm.icon ? (
                       <img src={getImageUrl(techForm.icon)} alt={techForm.name} className="w-6 h-6 object-contain" />
                     ) : (
-                      <span className="text-xs font-bold text-[#626058]">
+                      <span className="text-xs font-bold text-text-muted">
                         {techForm.name.slice(0, 2).toUpperCase()}
                       </span>
                     )}
                   </div>
                   <div>
-                    <h4 className="font-semibold text-[#1C1B19]">{techForm.name}</h4>
-                    <p className="text-xs text-[#626058]">{techForm.category}</p>
+                    <h4 className="font-semibold text-text-primary">{techForm.name}</h4>
+                    <p className="text-xs text-text-muted">{techForm.category}</p>
                   </div>
                 </div>
               </div>
@@ -271,38 +271,38 @@ export default function TechStackManager() {
 
           return (
             <div key={category} className="glass-card p-6 rounded-2xl">
-              <h3 className="text-xl font-semibold text-[#1C1B19] mb-4">{category}</h3>
+              <h3 className="text-xl font-semibold text-text-primary mb-4">{category}</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {categoryTech.map((tech) => (
-                  <div key={tech._id} className="bg-[#C2C0B8]/10 p-4 rounded-xl hover:bg-[#C2C0B8]/20 transition-colors">
+                  <div key={tech._id} className="bg-border-base/10 p-4 rounded-xl hover:bg-border-base/20 transition-colors">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-3 flex-1 min-w-0">
-                        <div className="w-10 h-10 rounded-lg bg-[#C2C0B8]/25 flex items-center justify-center flex-shrink-0">
+                        <div className="w-10 h-10 rounded-lg bg-border-base/25 flex items-center justify-center flex-shrink-0">
                           {tech.icon ? (
                             <img src={getImageUrl(tech.icon)} alt={tech.name} className="w-6 h-6 object-contain" />
                           ) : (
-                            <span className="text-xs font-bold text-[#626058]">
+                            <span className="text-xs font-bold text-text-muted">
                               {tech.name.slice(0, 2).toUpperCase()}
                             </span>
                           )}
                         </div>
                         <div className="min-w-0 flex-1">
-                          <h4 className="font-semibold text-[#1C1B19] truncate">{tech.name}</h4>
-                          <p className="text-xs text-[#626058]">{tech.category}</p>
+                          <h4 className="font-semibold text-text-primary truncate">{tech.name}</h4>
+                          <p className="text-xs text-text-muted">{tech.category}</p>
                         </div>
                       </div>
                       <div className="flex gap-1 flex-shrink-0">
                         <button
                           onClick={() => handleEditTech(tech)}
-                          className="p-1.5 rounded-lg hover:bg-[#C2C0B8]/30 text-[#626058] hover:text-[#185FA5] transition-colors"
+                          className="p-1.5 rounded-lg hover:bg-border-base/30 text-text-muted hover:text-accent transition-colors"
                           disabled={saving}
                         >
                           <HiPencil className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => handleDeleteTech(tech._id)}
-                          className="p-1.5 rounded-lg hover:bg-[#C2C0B8]/30 text-[#626058] hover:text-red-500 transition-colors"
+                          className="p-1.5 rounded-lg hover:bg-border-base/30 text-text-muted hover:text-red-500 transition-colors"
                           disabled={saving}
                         >
                           <HiTrash className="w-3.5 h-3.5" />

@@ -148,7 +148,7 @@ export default function ContactManager() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="w-8 h-8 border-4 border-[#185FA5] border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -160,7 +160,7 @@ export default function ContactManager() {
       {/* Contact Information */}
       <div className="glass-card p-6 rounded-2xl mb-6">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-semibold text-[#1C1B19]">Contact Information</h3>
+          <h3 className="text-lg font-semibold text-text-primary">Contact Information</h3>
           {!isEditing ? (
             <button onClick={() => setIsEditing(true)} className="btn-primary text-sm" disabled={loading}>
               <HiPencil className="w-4 h-4" />
@@ -191,7 +191,7 @@ export default function ContactManager() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-[#1C1B19] mb-2 flex items-center gap-2">
+            <label className="block text-sm font-medium text-text-primary mb-2 flex items-center gap-2">
               <HiEnvelope className="w-4 h-4" />
               Email
             </label>
@@ -205,7 +205,7 @@ export default function ContactManager() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#1C1B19] mb-2 flex items-center gap-2">
+            <label className="block text-sm font-medium text-text-primary mb-2 flex items-center gap-2">
               <HiPhone className="w-4 h-4" />
               Phone
             </label>
@@ -219,7 +219,7 @@ export default function ContactManager() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#1C1B19] mb-2 flex items-center gap-2">
+            <label className="block text-sm font-medium text-text-primary mb-2 flex items-center gap-2">
               <HiMapPin className="w-4 h-4" />
               Location
             </label>
@@ -233,7 +233,7 @@ export default function ContactManager() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#1C1B19] mb-2">Availability Status</label>
+            <label className="block text-sm font-medium text-text-primary mb-2">Availability Status</label>
             <input
               type="text"
               value={formData.availability}
@@ -248,10 +248,10 @@ export default function ContactManager() {
       {/* Messages Inbox */}
       <div className="glass-card p-6 rounded-2xl">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-semibold text-[#1C1B19]">
+          <h3 className="text-lg font-semibold text-text-primary">
             Messages Inbox
             {unreadCount > 0 && (
-              <span className="ml-2 text-xs px-2 py-1 rounded-full bg-[#185FA5]/10 text-[#185FA5] border border-[#185FA5]/25">
+              <span className="ml-2 text-xs px-2 py-1 rounded-full bg-accent/10 text-accent border border-accent/25">
                 {unreadCount} new
               </span>
             )}
@@ -267,10 +267,10 @@ export default function ContactManager() {
 
         {messagesLoading ? (
           <div className="flex items-center justify-center py-12">
-            <div className="w-8 h-8 border-4 border-[#185FA5] border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin"></div>
           </div>
         ) : messages.length === 0 ? (
-          <p className="text-center text-[#626058] py-8">No messages yet</p>
+          <p className="text-center text-text-muted py-8">No messages yet</p>
         ) : (
           <div className="space-y-3">
             {messages.map((msg) => (
@@ -278,30 +278,30 @@ export default function ContactManager() {
                 key={msg._id}
                 className={`p-4 rounded-xl border transition-all ${
                   msg.isRead
-                    ? 'bg-[#C2C0B8]/10 border-[#C2C0B8]/20'
-                    : 'bg-[#185FA5]/5 border-[#185FA5]/20'
+                    ? 'bg-border-base/10 border-border-base/20'
+                    : 'bg-accent/5 border-accent/20'
                 }`}
               >
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <h4 className="font-semibold text-[#1C1B19]">{msg.name}</h4>
+                      <h4 className="font-semibold text-text-primary">{msg.name}</h4>
                       {msg.reply && (
                         <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400">
                           Replied
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-[#626058]">{msg.email}</p>
-                    <p className="text-sm text-[#1C1B19] font-medium mt-1">{msg.subject}</p>
+                    <p className="text-xs text-text-muted">{msg.email}</p>
+                    <p className="text-sm text-text-primary font-medium mt-1">{msg.subject}</p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-[#626058]">
+                    <span className="text-xs text-text-muted">
                       {new Date(msg.createdAt).toLocaleDateString()}
                     </span>
                     <button
                       onClick={() => viewMessage(msg)}
-                      className="p-1.5 rounded-lg hover:bg-[#C2C0B8]/30 text-[#626058] hover:text-[#185FA5] transition-colors"
+                      className="p-1.5 rounded-lg hover:bg-border-base/30 text-text-muted hover:text-accent transition-colors"
                       title="View message"
                     >
                       <HiEye className="w-4 h-4" />
@@ -310,22 +310,22 @@ export default function ContactManager() {
                       onClick={() => toggleMessageRead(msg._id, msg.isRead)}
                       className={`text-xs px-2 py-1 rounded-lg transition-colors ${
                         msg.isRead
-                          ? 'bg-[#C2C0B8]/20 text-[#626058] hover:bg-[#C2C0B8]/40 hover:text-[#1C1B19]'
-                          : 'bg-[#185FA5]/10 text-[#185FA5] hover:bg-[#185FA5]/20 border border-[#185FA5]/20'
+                          ? 'bg-border-base/20 text-text-muted hover:bg-border-base/40 hover:text-text-primary'
+                          : 'bg-accent/10 text-accent hover:bg-accent/20 border border-accent/20'
                       }`}
                     >
                       {msg.isRead ? 'Mark Unread' : 'Mark Read'}
                     </button>
                     <button
                       onClick={() => deleteMessage(msg._id)}
-                      className="p-1.5 rounded-lg hover:bg-[#C2C0B8]/30 text-[#626058] hover:text-red-500 transition-colors"
+                      className="p-1.5 rounded-lg hover:bg-border-base/30 text-text-muted hover:text-red-500 transition-colors"
                       title="Delete"
                     >
                       <HiTrash className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
-                <p className="text-sm text-[#626058] line-clamp-2">{msg.message}</p>
+                <p className="text-sm text-text-muted line-clamp-2">{msg.message}</p>
               </div>
             ))}
           </div>
@@ -338,24 +338,24 @@ export default function ContactManager() {
           <div className="glass-card rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="flex items-start justify-between mb-4">
               <div>
-                <h3 className="text-xl font-bold text-[#1C1B19]">{selectedMessage.subject}</h3>
-                <p className="text-sm text-[#626058] mt-1">
+                <h3 className="text-xl font-bold text-text-primary">{selectedMessage.subject}</h3>
+                <p className="text-sm text-text-muted mt-1">
                   From: {selectedMessage.name} ({selectedMessage.email})
                 </p>
-                <p className="text-xs text-[#626058]/80 mt-1">
+                <p className="text-xs text-text-muted/80 mt-1">
                   {new Date(selectedMessage.createdAt).toLocaleString()}
                 </p>
               </div>
               <button
                 onClick={() => setSelectedMessage(null)}
-                className="p-2 rounded-lg hover:bg-[#C2C0B8]/30 text-[#626058] hover:text-[#1C1B19]"
+                className="p-2 rounded-lg hover:bg-border-base/30 text-text-muted hover:text-text-primary"
               >
                 <HiXMark className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="bg-[#C2C0B8]/15 rounded-xl p-4 mb-4">
-              <p className="text-sm text-[#1C1B19] whitespace-pre-wrap">{selectedMessage.message}</p>
+            <div className="bg-border-base/15 rounded-xl p-4 mb-4">
+              <p className="text-sm text-text-primary whitespace-pre-wrap">{selectedMessage.message}</p>
             </div>
 
             {selectedMessage.reply && (
@@ -364,12 +364,12 @@ export default function ContactManager() {
                   <HiChatBubbleLeftRight className="w-4 h-4 text-emerald-400" />
                   <span className="text-sm font-semibold text-emerald-400">Your Reply</span>
                 </div>
-                <p className="text-sm text-[#1C1B19] whitespace-pre-wrap">{selectedMessage.reply}</p>
+                <p className="text-sm text-text-primary whitespace-pre-wrap">{selectedMessage.reply}</p>
               </div>
             )}
 
             <div className="space-y-3">
-              <label className="block text-sm font-medium text-[#1C1B19]">
+              <label className="block text-sm font-medium text-text-primary">
                 {selectedMessage.reply ? 'Update Reply' : 'Add Reply'}
               </label>
               <textarea

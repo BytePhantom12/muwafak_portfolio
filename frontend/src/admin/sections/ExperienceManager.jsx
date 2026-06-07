@@ -150,7 +150,7 @@ export default function ExperienceManager() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="w-8 h-8 border-4 border-[#185FA5] border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -175,7 +175,7 @@ export default function ExperienceManager() {
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-[#1C1B19] mb-2">Job Title</label>
+              <label className="block text-sm font-medium text-text-primary mb-2">Job Title</label>
               <input
                 type="text"
                 value={formData.title}
@@ -186,7 +186,7 @@ export default function ExperienceManager() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[#1C1B19] mb-2">Company</label>
+              <label className="block text-sm font-medium text-text-primary mb-2">Company</label>
               <input
                 type="text"
                 value={formData.company}
@@ -198,7 +198,7 @@ export default function ExperienceManager() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#1C1B19] mb-2">Period</label>
+            <label className="block text-sm font-medium text-text-primary mb-2">Period</label>
             <input
               type="text"
               value={formData.period}
@@ -209,7 +209,7 @@ export default function ExperienceManager() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#1C1B19] mb-2">Description</label>
+            <label className="block text-sm font-medium text-text-primary mb-2">Description</label>
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -220,7 +220,7 @@ export default function ExperienceManager() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#1C1B19] mb-2">Key Technologies/Achievements</label>
+            <label className="block text-sm font-medium text-text-primary mb-2">Key Technologies/Achievements</label>
             <div className="space-y-2">
               {formData.achievements.map((achievement, index) => (
                 <div key={index} className="flex gap-2">
@@ -234,7 +234,7 @@ export default function ExperienceManager() {
                   {formData.achievements.length > 1 && (
                     <button
                       onClick={() => removeAchievement(index)}
-                      className="p-3 rounded-xl hover:bg-[#C2C0B8]/30 text-[#626058] hover:text-red-500 transition-colors"
+                      className="p-3 rounded-xl hover:bg-border-base/30 text-text-muted hover:text-red-500 transition-colors"
                     >
                       <HiTrash className="w-4 h-4" />
                     </button>
@@ -243,7 +243,7 @@ export default function ExperienceManager() {
               ))}
               <button
                 onClick={addAchievement}
-                className="text-sm text-[#185FA5] hover:text-[#0C447C] transition-colors"
+                className="text-sm text-accent hover:text-[#0C447C] transition-colors"
               >
                 + Add Item
               </button>
@@ -282,33 +282,33 @@ export default function ExperienceManager() {
           <div key={item._id} className="glass-card p-6 rounded-2xl">
             <div className="flex items-start justify-between mb-3">
               <div>
-                <h3 className="text-lg font-semibold text-[#1C1B19]">{item.position}</h3>
-                <p className="text-sm text-[#185FA5]">{item.company}</p>
+                <h3 className="text-lg font-semibold text-text-primary">{item.position}</h3>
+                <p className="text-sm text-accent">{item.company}</p>
               </div>
               <div className="flex gap-2">
                 <button
                   onClick={() => handleEdit(item)}
-                  className="p-2 rounded-lg hover:bg-[#C2C0B8]/30 text-[#626058] hover:text-[#185FA5] transition-colors"
+                  className="p-2 rounded-lg hover:bg-border-base/30 text-text-muted hover:text-accent transition-colors"
                   disabled={saving}
                 >
                   <HiPencil className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => handleDelete(item._id)}
-                  className="p-2 rounded-lg hover:bg-[#C2C0B8]/30 text-[#626058] hover:text-red-500 transition-colors"
+                  className="p-2 rounded-lg hover:bg-border-base/30 text-text-muted hover:text-red-500 transition-colors"
                   disabled={saving}
                 >
                   <HiTrash className="w-4 h-4" />
                 </button>
               </div>
             </div>
-            <p className="text-sm text-[#626058] mb-3">{item.current ? 'Present' : 'Past'}</p>
-            <p className="text-sm text-[#626058]/90 mb-3">{item.description}</p>
+            <p className="text-sm text-text-muted mb-3">{item.current ? 'Present' : 'Past'}</p>
+            <p className="text-sm text-text-muted/90 mb-3">{item.description}</p>
             {item.technologies && item.technologies.length > 0 && (
               <ul className="space-y-1">
                 {item.technologies.map((tech, idx) => (
-                  <li key={idx} className="text-sm text-[#626058] flex items-start gap-2">
-                    <span className="text-[#185FA5] mt-1">•</span>
+                  <li key={idx} className="text-sm text-text-muted flex items-start gap-2">
+                    <span className="text-accent mt-1">•</span>
                     {tech}
                   </li>
                 ))}

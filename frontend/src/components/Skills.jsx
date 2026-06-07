@@ -44,24 +44,24 @@ function SkillCard({ skill, index }) {
       viewport={{ once: true, margin: '-20px' }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       whileHover={{ y: -8, scale: 1.02 }}
-      className="bg-[#DDDBD3] border border-[#C2C0B8]/30 hover:border-[#C2C0B8]/50 transition-colors rounded-[1.25rem] p-6 pb-5 flex flex-col items-center gap-5 relative overflow-hidden group w-full"
+      className="bg-[#DDDBD3] border border-[#C2C0B8]/30 hover:border-[#C2C0B8]/60 transition-colors rounded-[1.25rem] p-6 pb-5 flex flex-col items-center gap-5 relative overflow-hidden group w-full"
       style={{ '--skill-color': skill.color }}
     >
-      <div 
-        className="absolute inset-0 opacity-0 group-hover:opacity-[0.02] transition-opacity duration-300" 
-        style={{ background: skill.color }} 
+      <div
+        className="absolute inset-0 opacity-0 group-hover:opacity-[0.04] transition-opacity duration-300"
+        style={{ background: skill.color }}
       />
-      
+
       {/* Icon Container */}
       <div className="w-16 h-16 flex items-center justify-center relative mt-2">
-        <div 
+        <div
           className="absolute inset-0 rounded-full blur-[24px] opacity-20 group-hover:opacity-50 transition-opacity duration-500 scale-150"
           style={{ background: skill.color }}
         />
         {Icon && (
-          <Icon 
-            className="w-11 h-11 relative z-10 transition-transform duration-500 group-hover:scale-110 drop-shadow-md" 
-            style={{ color: skill.color }} 
+          <Icon
+            className="w-11 h-11 relative z-10 transition-transform duration-500 group-hover:scale-110 drop-shadow-md"
+            style={{ color: skill.color }}
           />
         )}
       </div>
@@ -73,12 +73,12 @@ function SkillCard({ skill, index }) {
 
       {/* Progress Bar & Percentage */}
       <div className="w-full mt-auto pt-2 flex flex-col items-center gap-3">
-        <div className="w-full h-1.5 bg-[#C2C0B8]/40 rounded-full overflow-hidden relative">
+        <div className="w-full h-1.5 bg-[#C2C0B8]/60 rounded-full overflow-hidden relative">
           <motion.div
             className="absolute top-0 left-0 h-full rounded-full"
-            style={{ 
+            style={{
               background: skill.color,
-              boxShadow: `0 0 10px ${skill.color}80` 
+              boxShadow: `0 0 10px ${skill.color}80`
             }}
             initial={{ width: 0 }}
             whileInView={{ width: `${skill.level}%` }}
@@ -115,7 +115,7 @@ export default function Skills() {
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#DDDBD3]/40 via-[#E8E6DE] to-[#E8E6DE] pointer-events-none" />
 
       <div className="container-custom relative z-10">
-        
+
         {/* Header Section */}
         <div className="mb-20 flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8">
           <div className="max-w-2xl">
@@ -126,18 +126,18 @@ export default function Skills() {
               Tools and technologies I work with to bring ideas to life.
             </p>
           </div>
-          
+
           {/* Top Right Stats */}
           <div className="flex flex-wrap gap-4 select-none">
-            <div className="bg-[#DDDBD3] border border-[#C2C0B8]/30 rounded-2xl px-6 py-4 flex flex-col items-center hover:border-[#C2C0B8]/50 transition-colors">
+            <div className="bg-[#DDDBD3] border border-[#C2C0B8]/30 rounded-2xl px-6 py-4 flex flex-col items-center hover:border-[#C2C0B8]/60 transition-colors">
               <span className="text-2xl font-bold text-[#1C1B19] mb-1"><Counter value={portfolioData.about.yearsOfExperience} />+</span>
               <span className="text-[10px] text-[#626058] uppercase tracking-widest font-semibold">Years Exp</span>
             </div>
-            <div className="bg-[#DDDBD3] border border-[#C2C0B8]/30 rounded-2xl px-6 py-4 flex flex-col items-center hover:border-[#C2C0B8]/50 transition-colors">
+            <div className="bg-[#DDDBD3] border border-[#C2C0B8]/30 rounded-2xl px-6 py-4 flex flex-col items-center hover:border-[#C2C0B8]/60 transition-colors">
               <span className="text-2xl font-bold text-[#1C1B19] mb-1"><Counter value={portfolioData.projects.length} /></span>
               <span className="text-[10px] text-[#626058] uppercase tracking-widest font-semibold">Projects</span>
             </div>
-            <div className="bg-[#DDDBD3] border border-[#C2C0B8]/30 rounded-2xl px-6 py-4 flex flex-col items-center hover:border-[#C2C0B8]/50 transition-colors">
+            <div className="bg-[#DDDBD3] border border-[#C2C0B8]/30 rounded-2xl px-6 py-4 flex flex-col items-center hover:border-[#C2C0B8]/60 transition-colors">
               <span className="text-2xl font-bold text-[#1C1B19] mb-1"><Counter value={portfolioData.skillCategories.reduce((acc, cat) => acc + cat.skills.length, 0)} />+</span>
               <span className="text-[10px] text-[#626058] uppercase tracking-widest font-semibold">Tech Stack</span>
             </div>
@@ -148,21 +148,21 @@ export default function Skills() {
         <div className="flex flex-col gap-16 md:gap-20">
           {categories.map((cat, catIdx) => (
             <div key={cat.name} className="flex flex-col gap-8">
-              
+
               {/* Category Header */}
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: '-50px' }}
                 transition={{ duration: 0.5 }}
                 className="flex items-center gap-4 w-full"
               >
-                <div 
+                <div
                   className="w-10 h-10 shrink-0 rounded-full flex items-center justify-center bg-[#DDDBD3] border border-[#C2C0B8]/30"
                 >
-                  <div 
-                    className="w-3 h-3 rounded-full animate-pulse" 
-                    style={{ backgroundColor: cat.color, boxShadow: `0 0 12px ${cat.color}` }} 
+                  <div
+                    className="w-3 h-3 rounded-full animate-pulse"
+                    style={{ backgroundColor: cat.color, boxShadow: `0 0 12px ${cat.color}` }}
                   />
                 </div>
                 <h3 className="text-2xl md:text-3xl font-bold text-[#1C1B19] tracking-wide shrink-0">
@@ -175,14 +175,14 @@ export default function Skills() {
                     {/* Fast moving data packet */}
                     <motion.div
                       className="absolute top-0 bottom-0 w-32"
-                      style={{ 
+                      style={{
                         background: `linear-gradient(90deg, transparent, ${cat.color}, transparent)`,
                         boxShadow: `0 0 10px ${cat.color}`
                       }}
                       animate={{ x: ['-200%', '500%'] }}
-                      transition={{ 
-                        duration: 3, 
-                        repeat: Infinity, 
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
                         ease: "linear",
                         delay: catIdx * 0.4 // Stagger the animation per category
                       }}
@@ -190,25 +190,25 @@ export default function Skills() {
                     {/* Slow moving ambient glow */}
                     <motion.div
                       className="absolute top-0 bottom-0 w-full"
-                      style={{ 
+                      style={{
                         background: `linear-gradient(90deg, transparent, ${cat.color}40, transparent)`,
                       }}
                       animate={{ x: ['-100%', '100%'] }}
-                      transition={{ 
-                        duration: 7, 
-                        repeat: Infinity, 
+                      transition={{
+                        duration: 7,
+                        repeat: Infinity,
                         ease: "linear",
                         delay: catIdx * 0.2
                       }}
                     />
                   </div>
                   {/* Circuit/tech node at the end */}
-                  <div 
-                    className="w-1.5 h-1.5 shrink-0 rounded-sm" 
+                  <div
+                    className="w-1.5 h-1.5 shrink-0 rounded-sm"
                     style={{ backgroundColor: cat.color, boxShadow: `0 0 8px ${cat.color}` }}
                   />
-                  <div 
-                    className="w-1 h-3 shrink-0 rounded-sm opacity-50" 
+                  <div
+                    className="w-1 h-3 shrink-0 rounded-sm opacity-50"
                     style={{ backgroundColor: cat.color }}
                   />
                 </div>

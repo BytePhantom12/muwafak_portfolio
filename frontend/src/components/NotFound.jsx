@@ -34,11 +34,11 @@ export default function NotFound() {
   useEffect(() => {
     const glitchChars = ['4', '0', '4', '█', '▓', '▒', '░'];
     const interval = setInterval(() => {
-      const randomText = Array.from({ length: 3 }, () => 
+      const randomText = Array.from({ length: 3 }, () =>
         glitchChars[Math.floor(Math.random() * glitchChars.length)]
       ).join('');
       setGlitchText(randomText);
-      
+
       setTimeout(() => setGlitchText('404'), 100);
     }, 4000);
 
@@ -50,9 +50,9 @@ export default function NotFound() {
       {/* Animated Background */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 dot-grid opacity-30" />
-        <div className="blob w-[400px] h-[400px] bg-[#185FA5] top-[-100px] right-[-100px] opacity-10" />
-        <div className="blob w-[500px] h-[500px] bg-[#C2C0B8] bottom-[-150px] left-[-150px] opacity-10" />
-        
+        <div className="blob w-[400px] h-[400px] bg-[#185FA5] top-[-100px] right-[-100px] opacity-[0.06]" />
+        <div className="blob w-[500px] h-[500px] bg-[#C2C0B8] bottom-[-150px] left-[-150px] opacity-[0.1]" />
+
         {/* Scanning lines */}
         <motion.div
           className="absolute w-full h-[2px] bg-gradient-to-r from-transparent via-[#185FA5] to-transparent opacity-60"
@@ -60,7 +60,7 @@ export default function NotFound() {
           transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
         />
         <motion.div
-          className="absolute h-full w-[2px] bg-gradient-to-b from-transparent via-[#C2C0B8] to-transparent opacity-40"
+          className="absolute h-full w-[2px] bg-gradient-to-b from-transparent via-[#185FA5] to-transparent opacity-40"
           animate={{ left: ['-10%', '110%'] }}
           transition={{ duration: 4, repeat: Infinity, ease: 'linear', delay: 1.5 }}
         />
@@ -85,7 +85,7 @@ export default function NotFound() {
                 {glitchText}
               </span>
             </h1>
-            
+
             {/* Tech corner brackets */}
             <div className="absolute -top-4 -left-4 w-8 h-8 border-t-2 border-l-2 border-[#185FA5] opacity-60" />
             <div className="absolute -top-4 -right-4 w-8 h-8 border-t-2 border-r-2 border-[#C2C0B8] opacity-60" />
@@ -102,14 +102,14 @@ export default function NotFound() {
           >
             <div className="glass-card p-6 mb-6 relative overflow-hidden">
               {/* Tech grid background */}
-              <div 
+              <div
                 className="absolute inset-0 opacity-[0.03]"
                 style={{
                   backgroundImage: 'linear-gradient(#185FA5 1px, transparent 1px), linear-gradient(90deg, #185FA5 1px, transparent 1px)',
                   backgroundSize: '20px 20px'
                 }}
               />
-              
+
               <div className="relative z-10">
                 <motion.div
                   variants={floatingVariants}
@@ -118,7 +118,7 @@ export default function NotFound() {
                 >
                   <HiExclamationTriangle className="w-8 h-8 text-[#185FA5]" />
                 </motion.div>
-                
+
                 <h2 className="text-2xl md:text-3xl font-bold font-display mb-3">
                   <span className="text-gradient">System Error</span>
                 </h2>
@@ -143,9 +143,9 @@ export default function NotFound() {
               <HiHome className="w-4 h-4 group-hover:scale-110 transition-transform duration-200" />
               Return Home
             </Link>
-            
-            <button 
-              onClick={() => window.history.back()} 
+
+            <button
+              onClick={() => window.history.back()}
               className="btn-outline group"
             >
               <HiArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-200" />
@@ -165,7 +165,7 @@ export default function NotFound() {
                 <span>SYSTEM STATUS</span>
                 <span className="text-[#185FA5]">OPERATIONAL</span>
               </div>
-              
+
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
                   <div className="w-2 h-2 bg-emerald-400 rounded-full mx-auto mb-1 animate-pulse" />
@@ -188,25 +188,25 @@ export default function NotFound() {
       {/* Floating tech elements */}
       <motion.div
         className="absolute top-20 left-10 w-4 h-4 border border-[#185FA5]/30 rotate-45"
-        animate={{ 
+        animate={{
           rotate: [45, 225, 45],
           scale: [1, 1.2, 1]
         }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
       />
-      
+
       <motion.div
         className="absolute bottom-32 right-16 w-6 h-6 border border-[#C2C0B8]/40"
-        animate={{ 
+        animate={{
           rotate: [0, 360],
           opacity: [0.4, 0.8, 0.4]
         }}
         transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
       />
-      
+
       <motion.div
         className="absolute top-1/3 right-20 w-2 h-2 bg-[#185FA5] rounded-full"
-        animate={{ 
+        animate={{
           scale: [1, 1.5, 1],
           opacity: [0.5, 1, 0.5]
         }}

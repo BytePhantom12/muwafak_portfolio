@@ -5,7 +5,6 @@ import { HiCheckBadge } from 'react-icons/hi2';
 import { Link } from 'react-scroll';
 import { usePortfolioData } from '../context/PortfolioContext';
 
-
 export default function About() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
@@ -13,8 +12,8 @@ export default function About() {
   const { about } = portfolioData;
 
   const facts = [
-    { emoji: '📍', label: 'Location',  value: about.location  },
-    { emoji: '💼', label: 'Role',      value: about.role      },
+    { emoji: '📍', label: 'Location', value: about.location },
+    { emoji: '💼', label: 'Role', value: about.role },
     { emoji: '🎓', label: 'Education', value: about.education },
     { emoji: '🌍', label: 'Languages', value: about.languages },
   ];
@@ -22,7 +21,7 @@ export default function About() {
   return (
     <section id="about" className="py-24 md:py-32 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-[#E8E6DE] via-[#DDDBD3] to-[#E8E6DE]" />
-      <div className="blob w-[400px] h-[400px] bg-[#C2C0B8] top-0 right-0 opacity-[0.1]" />
+      <div className="blob w-[400px] h-[400px] bg-[#185FA5] top-0 right-0 opacity-[0.05]" />
 
       <div className="container-custom relative z-10" ref={ref}>
         {/* Section Header */}
@@ -41,7 +40,7 @@ export default function About() {
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          
+
           {/* Left Column: Text & Content */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -106,12 +105,12 @@ export default function About() {
             transition={{ duration: 0.7, delay: 0.2 }}
           >
             <div className="relative">
-              
+
               {/* Main Image Container with Spinning Tech Border */}
               <div className="relative w-[300px] sm:w-[360px] rounded-3xl p-[2px] overflow-hidden group shadow-[0_0_40px_rgba(24,95,165,0.15)] bg-[#E8E6DE]">
-                
+
                 {/* Techno Spinning Laser Background */}
-                <motion.div 
+                <motion.div
                   className="absolute left-[-50%] top-[-50%] w-[200%] h-[200%]"
                   style={{
                     background: 'conic-gradient(from 0deg, transparent 60%, rgba(24, 95, 165, 0.8) 80%, rgba(194, 192, 184, 1) 100%)',
@@ -119,19 +118,19 @@ export default function About() {
                   animate={{ rotate: 360 }}
                   transition={{ duration: 3.5, repeat: Infinity, ease: "linear" }}
                 />
-                
+
                 {/* Inner Image Mask */}
                 <div className="relative rounded-[calc(1.5rem-2px)] overflow-hidden bg-[#DDDBD3] h-full w-full z-10">
-                   <img
+                  <img
                     src="/profile.png"
                     alt="Muwafak Abubakar – About"
                     className="w-full h-auto object-cover object-top transition duration-500 group-hover:scale-[1.02]"
                     style={{ minHeight: '400px', objectPosition: 'top center' }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#E8E6DE]/80 via-[#E8E6DE]/20 to-transparent pointer-events-none" />
-                  
+
                   {/* Digital Scanline Overlay */}
-                  <motion.div 
+                  <motion.div
                     className="absolute inset-x-0 h-[3px] bg-gradient-to-r from-transparent via-[#185FA5]/40 to-transparent blur-[1px] pointer-events-none"
                     animate={{ top: ['0%', '100%'] }}
                     transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
@@ -162,7 +161,7 @@ export default function About() {
               </motion.div>
 
               {/* Outer Techno Pulsing Frames (Softened and Elegant) */}
-              
+
               {/* Inner frame - Glowing Pulse */}
               <div className="absolute inset-[-20px] pointer-events-none -z-10">
                 <svg className="w-full h-full overflow-visible">
@@ -191,7 +190,7 @@ export default function About() {
                     animate={{ strokeDashoffset: [0, -360] }}
                     transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
                     className="opacity-30"
-                    style={{ filter: 'drop-shadow(0 0 4px rgba(194,192,184,0.3))' }}
+                    style={{ filter: 'drop-shadow(0 0 4px rgba(24,95,165,0.15))' }}
                   />
                 </svg>
               </div>

@@ -87,7 +87,7 @@ export default function AboutManager() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="w-8 h-8 border-4 border-[#185FA5] border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -107,50 +107,50 @@ export default function AboutManager() {
         {/* Intro Heading */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-[#626058] mb-2">Intro Heading</label>
-            <p className="text-[#1C1B19]">{formData.introHeading || 'Not set'}</p>
+            <label className="block text-sm font-medium text-text-muted mb-2">Intro Heading</label>
+            <p className="text-text-primary">{formData.introHeading || 'Not set'}</p>
           </div>
           <div>
-            <label className="block text-sm font-medium text-[#626058] mb-2">Heading Highlight</label>
-            <p className="text-[#1C1B19]">{formData.introHeadingHighlight || 'Not set'}</p>
+            <label className="block text-sm font-medium text-text-muted mb-2">Heading Highlight</label>
+            <p className="text-text-primary">{formData.introHeadingHighlight || 'Not set'}</p>
           </div>
         </div>
 
         {/* Description */}
         <div>
-          <label className="block text-sm font-medium text-[#626058] mb-2">Description</label>
-          <p className="text-[#1C1B19]">{formData.introDescription || 'Not set'}</p>
+          <label className="block text-sm font-medium text-text-muted mb-2">Description</label>
+          <p className="text-text-primary">{formData.introDescription || 'Not set'}</p>
         </div>
 
         {/* Quick Facts */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-[#626058] mb-2">Location</label>
-            <p className="text-[#1C1B19]">{formData.location || 'Not set'}</p>
+            <label className="block text-sm font-medium text-text-muted mb-2">Location</label>
+            <p className="text-text-primary">{formData.location || 'Not set'}</p>
           </div>
           <div>
-            <label className="block text-sm font-medium text-[#626058] mb-2">Role</label>
-            <p className="text-[#1C1B19]">{formData.role || 'Not set'}</p>
+            <label className="block text-sm font-medium text-text-muted mb-2">Role</label>
+            <p className="text-text-primary">{formData.role || 'Not set'}</p>
           </div>
           <div>
-            <label className="block text-sm font-medium text-[#626058] mb-2">Education</label>
-            <p className="text-[#1C1B19]">{formData.education || 'Not set'}</p>
+            <label className="block text-sm font-medium text-text-muted mb-2">Education</label>
+            <p className="text-text-primary">{formData.education || 'Not set'}</p>
           </div>
           <div>
-            <label className="block text-sm font-medium text-[#626058] mb-2">Languages</label>
-            <p className="text-[#1C1B19]">{formData.languages || 'Not set'}</p>
+            <label className="block text-sm font-medium text-text-muted mb-2">Languages</label>
+            <p className="text-text-primary">{formData.languages || 'Not set'}</p>
           </div>
         </div>
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-[#626058] mb-2">Years of Experience</label>
-            <p className="text-[#1C1B19]">{formData.yearsOfExperience || 'Not set'}</p>
+            <label className="block text-sm font-medium text-text-muted mb-2">Years of Experience</label>
+            <p className="text-text-primary">{formData.yearsOfExperience || 'Not set'}</p>
           </div>
           <div>
-            <label className="block text-sm font-medium text-[#626058] mb-2">Projects Done</label>
-            <p className="text-[#1C1B19]">{formData.projectsDone || 'Not set'}</p>
+            <label className="block text-sm font-medium text-text-muted mb-2">Projects Done</label>
+            <p className="text-text-primary">{formData.projectsDone || 'Not set'}</p>
           </div>
         </div>
       </div>
@@ -166,7 +166,7 @@ export default function AboutManager() {
           {/* Intro Heading */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-[#1C1B19] mb-2">Intro Heading</label>
+              <label className="block text-sm font-medium text-text-primary mb-2">Intro Heading</label>
               <input
                 type="text"
                 value={formData.introHeading}
@@ -176,7 +176,7 @@ export default function AboutManager() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#1C1B19] mb-2">Heading Highlight</label>
+              <label className="block text-sm font-medium text-text-primary mb-2">Heading Highlight</label>
               <input
                 type="text"
                 value={formData.introHeadingHighlight}
@@ -189,7 +189,7 @@ export default function AboutManager() {
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-medium text-[#1C1B19] mb-2">Description</label>
+            <label className="block text-sm font-medium text-text-primary mb-2">Description</label>
             <textarea
               value={formData.introDescription}
               onChange={(e) => setFormData({ ...formData, introDescription: e.target.value })}
@@ -202,7 +202,7 @@ export default function AboutManager() {
           {/* Quick Facts */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-[#1C1B19] mb-2">Location</label>
+              <label className="block text-sm font-medium text-text-primary mb-2">Location</label>
               <input
                 type="text"
                 value={formData.location}
@@ -212,7 +212,7 @@ export default function AboutManager() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#1C1B19] mb-2">Role</label>
+              <label className="block text-sm font-medium text-text-primary mb-2">Role</label>
               <input
                 type="text"
                 value={formData.role}
@@ -222,7 +222,7 @@ export default function AboutManager() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#1C1B19] mb-2">Education</label>
+              <label className="block text-sm font-medium text-text-primary mb-2">Education</label>
               <input
                 type="text"
                 value={formData.education}
@@ -232,7 +232,7 @@ export default function AboutManager() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#1C1B19] mb-2">Languages</label>
+              <label className="block text-sm font-medium text-text-primary mb-2">Languages</label>
               <input
                 type="text"
                 value={formData.languages}
@@ -246,7 +246,7 @@ export default function AboutManager() {
           {/* Stats */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-[#1C1B19] mb-2">Years of Experience</label>
+              <label className="block text-sm font-medium text-text-primary mb-2">Years of Experience</label>
               <input
                 type="number"
                 value={formData.yearsOfExperience}
@@ -256,7 +256,7 @@ export default function AboutManager() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#1C1B19] mb-2">Projects Done</label>
+              <label className="block text-sm font-medium text-text-primary mb-2">Projects Done</label>
               <input
                 type="number"
                 value={formData.projectsDone}

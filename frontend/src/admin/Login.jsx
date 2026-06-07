@@ -13,7 +13,7 @@ export default function Login({ onLogin }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isLoading) return; // Prevent duplicate submissions
-    
+
     setError('');
     setIsLoading(true);
 
@@ -71,7 +71,7 @@ export default function Login({ onLogin }) {
                 required
               />
             </div>
- 
+
             {/* Password */}
             <div>
               <label className="block text-sm font-medium text-[#1C1B19] mb-2">Password</label>

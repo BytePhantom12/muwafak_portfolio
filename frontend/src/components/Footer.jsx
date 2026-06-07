@@ -5,10 +5,10 @@ import { usePortfolioData } from '../context/PortfolioContext';
 const iconMap = { FaGithub, FaLinkedinIn, FaFacebookF, FaInstagram, FaWhatsapp };
 
 const navLinks = [
-  { label: 'Home',     to: 'home'     },
-  { label: 'About',   to: 'about'   },
-  { label: 'Skills',  to: 'skills'  },
-  { label: 'Projects',to: 'projects'},
+  { label: 'Home', to: 'home' },
+  { label: 'About', to: 'about' },
+  { label: 'Skills', to: 'skills' },
+  { label: 'Projects', to: 'projects' },
   { label: 'Contact', to: 'contact' },
 ];
 
@@ -18,16 +18,16 @@ export default function Footer() {
   const { contact, socials } = portfolioData;
 
   return (
-    <footer className="relative border-t border-[#C2C0B8]/20 bg-[#E8E6DE] overflow-hidden">
+    <footer className="relative border-t border-[#C2C0B8]/20 bg-[#DDDBD3] overflow-hidden">
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#185FA5]/50 to-transparent" />
-      <div className="blob w-[400px] h-[400px] bg-[#185FA5] top-[-200px] left-1/2 -translate-x-1/2 opacity-[0.08]" />
+      <div className="blob w-[400px] h-[400px] bg-[#185FA5] top-[-200px] left-1/2 -translate-x-1/2 opacity-[0.04]" />
 
       <div className="container-custom py-12 md:py-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#185FA5] to-[#C2C0B8] flex items-center justify-center shadow-[0_0_15px_rgba(24,95,165,0.3)]">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#185FA5] to-[#C2C0B8] flex items-center justify-center shadow-[0_0_15px_rgba(24,95,165,0.2)]">
                 <span className="text-white font-bold font-display">M</span>
               </div>
               <span className="text-[#1C1B19] font-display font-bold text-xl">

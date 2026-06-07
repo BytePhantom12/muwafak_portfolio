@@ -193,7 +193,7 @@ export default function ProfileManager() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="w-8 h-8 border-4 border-[#185FA5] border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -223,7 +223,7 @@ export default function ProfileManager() {
       {/* Profile Summary Card */}
       <div className="glass-card p-6 rounded-2xl">
         <div className="flex items-start gap-6">
-          <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-[#185FA5]/20 to-[#0C447C]/20 flex items-center justify-center overflow-hidden">
+          <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-accent/20 to-accent-dark/20 flex items-center justify-center overflow-hidden">
             {formData.profileImage ? (
               <img 
                 src={getFileUrl(formData.profileImage)} 
@@ -231,16 +231,16 @@ export default function ProfileManager() {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <span className="text-2xl font-bold text-[#626058]">
+              <span className="text-2xl font-bold text-text-muted">
                 {formData.name.split(' ').map(n => n[0]).join('').toUpperCase()}
               </span>
             )}
           </div>
           <div className="flex-1">
-            <h3 className="text-xl font-bold text-[#1C1B19] mb-1">{formData.name || 'Your Name'}</h3>
-            <p className="text-[#185FA5] mb-2">{formData.role || 'Your Role'}</p>
-            <p className="text-sm text-[#626058] mb-3">{formData.heroDescription || 'Your bio description'}</p>
-            <div className="flex flex-wrap gap-4 text-xs text-[#626058]">
+            <h3 className="text-xl font-bold text-text-primary mb-1">{formData.name || 'Your Name'}</h3>
+            <p className="text-accent mb-2">{formData.role || 'Your Role'}</p>
+            <p className="text-sm text-text-muted mb-3">{formData.heroDescription || 'Your bio description'}</p>
+            <div className="flex flex-wrap gap-4 text-xs text-text-muted">
               <span>📍 {formData.location || 'Location'}</span>
               <span>🎓 {formData.education || 'Education'}</span>
               <span>🌍 {formData.languages || 'Languages'}</span>
@@ -250,11 +250,11 @@ export default function ProfileManager() {
         
         {/* Social Links */}
         {formData.socials.length > 0 && (
-          <div className="mt-6 pt-6 border-t border-[#C2C0B8]/30">
-            <p className="text-sm text-[#626058] mb-3">Social Media</p>
+          <div className="mt-6 pt-6 border-t border-border-base/30">
+            <p className="text-sm text-text-muted mb-3">Social Media</p>
             <div className="flex flex-wrap gap-2">
               {formData.socials.map((social, index) => (
-                <span key={index} className="text-xs px-3 py-1 rounded-full bg-[#185FA5]/10 text-[#185FA5] border border-[#185FA5]/20">
+                <span key={index} className="text-xs px-3 py-1 rounded-full bg-accent/10 text-accent border border-accent/20">
                   {social.label}
                 </span>
               ))}
@@ -294,11 +294,11 @@ export default function ProfileManager() {
 
           {/* Basic Information */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-[#1C1B19]">Basic Information</h3>
+            <h3 className="text-lg font-semibold text-text-primary">Basic Information</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-[#1C1B19] mb-2">Full Name</label>
+                <label className="block text-sm font-medium text-text-primary mb-2">Full Name</label>
                 <input
                   type="text"
                   value={formData.name}
@@ -309,7 +309,7 @@ export default function ProfileManager() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#1C1B19] mb-2">Primary Role</label>
+                <label className="block text-sm font-medium text-text-primary mb-2">Primary Role</label>
                 <input
                   type="text"
                   value={formData.role}
@@ -322,7 +322,7 @@ export default function ProfileManager() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-[#1C1B19] mb-2">Email</label>
+                <label className="block text-sm font-medium text-text-primary mb-2">Email</label>
                 <input
                   type="email"
                   value={formData.email}
@@ -333,7 +333,7 @@ export default function ProfileManager() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#1C1B19] mb-2">Location</label>
+                <label className="block text-sm font-medium text-text-primary mb-2">Location</label>
                 <input
                   type="text"
                   value={formData.location}
@@ -345,7 +345,7 @@ export default function ProfileManager() {
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#1C1B19] mb-2">🌍 Languages</label>
+              <label className="block text-sm font-medium text-text-primary mb-2">🌍 Languages</label>
               <input
                 type="text"
                 value={formData.languages}
@@ -359,10 +359,10 @@ export default function ProfileManager() {
 
           {/* About Section */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-[#1C1B19]">About Section</h3>
+            <h3 className="text-lg font-semibold text-text-primary">About Section</h3>
             
             <div>
-              <label className="block text-sm font-medium text-[#1C1B19] mb-2">Title (Who Am I)</label>
+              <label className="block text-sm font-medium text-text-primary mb-2">Title (Who Am I)</label>
               <input
                 type="text"
                 value={formData.title}
@@ -374,7 +374,7 @@ export default function ProfileManager() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[#1C1B19] mb-2">Short Description</label>
+              <label className="block text-sm font-medium text-text-primary mb-2">Short Description</label>
               <textarea
                 value={formData.shortDescription}
                 onChange={(e) => setFormData({ ...formData, shortDescription: e.target.value })}
@@ -389,7 +389,7 @@ export default function ProfileManager() {
           {/* Social Media */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-[#1C1B19]">Social Media Handles</h3>
+              <h3 className="text-lg font-semibold text-text-primary">Social Media Handles</h3>
               {modalMode === 'edit' && (
                 <button onClick={addSocial} className="btn-outline text-sm">
                   <HiPlus className="w-4 h-4" />
@@ -400,9 +400,9 @@ export default function ProfileManager() {
 
             <div className="space-y-4">
               {formData.socials.map((social, index) => (
-                <div key={index} className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-[#C2C0B8]/10 rounded-xl">
+                <div key={index} className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-border-base/10 rounded-xl">
                   <div>
-                    <label className="block text-sm font-medium text-[#1C1B19] mb-2">Platform ID</label>
+                    <label className="block text-sm font-medium text-text-primary mb-2">Platform ID</label>
                     <input
                       type="text"
                       value={social.id}
@@ -413,7 +413,7 @@ export default function ProfileManager() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[#1C1B19] mb-2">Label</label>
+                    <label className="block text-sm font-medium text-text-primary mb-2">Label</label>
                     <input
                       type="text"
                       value={social.label}
@@ -424,7 +424,7 @@ export default function ProfileManager() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[#1C1B19] mb-2">URL</label>
+                    <label className="block text-sm font-medium text-text-primary mb-2">URL</label>
                     <input
                       type="url"
                       value={social.href}
@@ -436,7 +436,7 @@ export default function ProfileManager() {
                   </div>
                   <div className="flex items-end gap-2">
                     <div className="flex-1">
-                      <label className="block text-sm font-medium text-[#1C1B19] mb-2">Icon</label>
+                      <label className="block text-sm font-medium text-text-primary mb-2">Icon</label>
                       <input
                         type="text"
                         value={social.icon}
@@ -449,7 +449,7 @@ export default function ProfileManager() {
                     {modalMode === 'edit' && (
                       <button
                         onClick={() => removeSocial(index)}
-                        className="p-3 rounded-xl hover:bg-[#C2C0B8]/30 text-[#626058] hover:text-red-500 transition-colors"
+                        className="p-3 rounded-xl hover:bg-border-base/30 text-text-muted hover:text-red-500 transition-colors"
                       >
                         <HiTrash className="w-4 h-4" />
                       </button>

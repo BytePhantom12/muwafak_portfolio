@@ -7,7 +7,6 @@ import { FaGithub, FaLinkedinIn, FaFacebookF, FaInstagram, FaWhatsapp } from 're
 import { SiFastapi } from 'react-icons/si';
 import { usePortfolioData } from '../context/PortfolioContext';
 
-
 const containerVariants = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.12 } },
@@ -92,9 +91,9 @@ export default function Hero() {
       {/* Background layer */}
       <div className="absolute inset-0 bg-[#E8E6DE]">
         <div className="absolute inset-0 dot-grid opacity-40" />
-        <div className="blob w-[500px] h-[500px] bg-[#185FA5] top-[-100px] right-[-100px] opacity-[0.1]" />
-        <div className="blob w-[600px] h-[600px] bg-[#C2C0B8] bottom-[-150px] left-[-150px] opacity-[0.1]" />
-        <div className="blob w-[300px] h-[300px] bg-[#185FA5] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.08]" />
+        <div className="blob w-[500px] h-[500px] bg-[#185FA5] top-[-100px] right-[-100px] opacity-[0.07]" />
+        <div className="blob w-[600px] h-[600px] bg-[#C2C0B8] bottom-[-150px] left-[-150px] opacity-[0.15]" />
+        <div className="blob w-[300px] h-[300px] bg-[#185FA5] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.05]" />
       </div>
 
       <div className="container-custom relative z-10 pt-24 pb-16 md:pt-32">
@@ -283,7 +282,7 @@ export default function Hero() {
           transition={{ delay: 0.8, duration: 0.6 }}
         >
           {/* Cyberpunk / High-Tech HUD Container */}
-          <div className="relative rounded-2xl bg-[#DDDBD3] border border-[#C2C0B8]/30 overflow-hidden group shadow-[0_0_30px_rgba(0,0,0,0.05)]">
+          <div className="relative rounded-2xl bg-[#DDDBD3] border border-[#C2C0B8]/30 overflow-hidden group shadow-[0_0_30px_rgba(0,0,0,0.08)]">
 
             {/* Tech Grid Background Animation */}
             <div
@@ -304,7 +303,7 @@ export default function Hero() {
             />
             <motion.div
               className="absolute h-full w-[1px] shadow-[0_0_15px_#C2C0B8]"
-              style={{ background: 'linear-gradient(180deg, transparent, #C2C0B8, transparent)' }}
+              style={{ background: 'linear-gradient(180deg, transparent, #185FA5, transparent)' }}
               animate={{ left: ['-10%', '110%'] }}
               transition={{ duration: 4, repeat: Infinity, ease: 'linear', delay: 1.5 }}
             />
@@ -322,7 +321,7 @@ export default function Hero() {
                   <motion.div
                     key={label}
                     className="flex flex-col items-center justify-center py-6 px-4 gap-1.5
-                      hover:bg-[#185FA5]/[0.02] transition-colors duration-300 relative group/stat"
+                      hover:bg-[#185FA5]/[0.03] transition-colors duration-300 relative group/stat"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 1 + i * 0.1 }}

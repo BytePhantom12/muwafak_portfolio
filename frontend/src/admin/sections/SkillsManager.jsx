@@ -31,7 +31,7 @@ export default function SkillsManager() {
   useEffect(() => {
     if (portfolioData?.skillCategories) {
       setLoading(false);
-      const flatSkills = (portfolioData.skillCategories || []).flatMap((skillCategory, catIndex) => 
+      const flatSkills = (portfolioData.skillCategories || []).flatMap((skillCategory, catIndex) =>
         (skillCategory.skills || []).map((item, itemIndex) => ({
           _id: `${catIndex}-${itemIndex}`,
           name: item.name || item,
@@ -64,7 +64,7 @@ export default function SkillsManager() {
 
       await portfolioAPI.updateSection('skills', backendFormat);
       setSkills(updatedSkills);
-      try { updateLocalPortfolio({ skillCategories: backendFormat }); } catch {}
+      try { updateLocalPortfolio({ skillCategories: backendFormat }); } catch { }
       alert('Skills updated successfully!');
     } catch (error) {
       console.error('Error saving skills:', error);
@@ -121,7 +121,7 @@ export default function SkillsManager() {
 
   const handleAdd = async () => {
     if (saving) return; // Prevent duplicate submissions
-    
+
     try {
       setSaving(true);
       const newSkill = {
@@ -138,12 +138,12 @@ export default function SkillsManager() {
 
   const handleUpdate = async () => {
     if (saving) return; // Prevent duplicate submissions
-    
+
     try {
       setSaving(true);
-      const updatedSkills = skills.map(skill => 
-        skill._id === editingId ? { 
-          ...skill, 
+      const updatedSkills = skills.map(skill =>
+        skill._id === editingId ? {
+          ...skill,
           ...formData,
           categoryColor: categories.find(cat => cat.name === formData.category)?.color || '#00d4ff',
         } : skill
@@ -173,7 +173,7 @@ export default function SkillsManager() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="w-8 h-8 border-4 border-[#185FA5] border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -183,7 +183,7 @@ export default function SkillsManager() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-2xl font-bold font-display text-gradient">Skills & Tech Stack</h2>
-          <p className="text-sm text-[#626058] mt-1">Manage all your technical skills and technologies in one place</p>
+          <p className="text-sm text-text-muted mt-1">Manage all your technical skills and technologies in one place</p>
         </div>
         <button onClick={openAddModal} className="btn-primary text-sm" disabled={saving}>
           <HiPlus className="w-4 h-4" />
@@ -200,7 +200,7 @@ export default function SkillsManager() {
       >
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-[#1C1B19] mb-2">Skill Name</label>
+            <label className="block text-sm font-medium text-text-primary mb-2">Skill Name</label>
             <input
               type="text"
               value={formData.name}
@@ -222,7 +222,7 @@ export default function SkillsManager() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#1C1B19] mb-2">Category</label>
+            <label className="block text-sm font-medium text-text-primary mb-2">Category</label>
             <select
               value={formData.category}
               onChange={(e) => setFormData({ ...formData, category: e.target.value })}
@@ -235,7 +235,7 @@ export default function SkillsManager() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#1C1B19] mb-2">
+            <label className="block text-sm font-medium text-text-primary mb-2">
               Proficiency Level: {formData.level}%
             </label>
             <input
@@ -244,7 +244,7 @@ export default function SkillsManager() {
               max="100"
               value={formData.level}
               onChange={(e) => setFormData({ ...formData, level: parseInt(e.target.value) })}
-              className="w-full h-2 bg-[#C2C0B8]/20 rounded-lg appearance-none cursor-pointer"
+              className="w-full h-2 bg-border-base/20 rounded-lg appearance-none cursor-pointer"
               style={{
                 background: `linear-gradient(to right, #185FA5 ${formData.level}%, rgba(194, 192, 184, 0.2) ${formData.level}%)`
               }}
@@ -254,10 +254,10 @@ export default function SkillsManager() {
           {/* Preview */}
           {formData.name && (
             <div>
-              <label className="block text-sm font-medium text-[#1C1B19] mb-2">Preview</label>
+              <label className="block text-sm font-medium text-text-primary mb-2">Preview</label>
               <div className="glass-card p-4 rounded-xl">
                 <div className="flex items-center gap-3 mb-3">
-                  <div 
+                  <div
                     className="w-10 h-10 rounded-xl flex items-center justify-center text-white text-sm font-bold"
                     style={{ backgroundColor: categories.find(c => c.name === formData.category)?.color || '#185FA5' }}
                   >
@@ -268,14 +268,14 @@ export default function SkillsManager() {
                     )}
                   </div>
                   <div>
-                    <h4 className="font-semibold text-[#1C1B19]">{formData.name}</h4>
-                    <p className="text-xs text-[#626058]">{formData.level}% proficiency</p>
+                    <h4 className="font-semibold text-text-primary">{formData.name}</h4>
+                    <p className="text-xs text-text-muted">{formData.level}% proficiency</p>
                   </div>
                 </div>
-                <div className="w-full h-2 bg-[#C2C0B8]/25 rounded-full overflow-hidden">
+                <div className="w-full h-2 bg-border-base/25 rounded-full overflow-hidden">
                   <div
                     className="h-full rounded-full transition-all duration-500"
-                    style={{ 
+                    style={{
                       width: `${formData.level}%`,
                       backgroundColor: categories.find(c => c.name === formData.category)?.color || '#185FA5'
                     }}
@@ -314,25 +314,25 @@ export default function SkillsManager() {
       {/* Skills by Category */}
       {categories.map(category => {
         const categorySkills = skills.filter(skill => skill.category === category.name);
-        
+
         if (categorySkills.length === 0) return null;
 
         return (
           <div key={category.name} className="mb-8">
-            <h3 className="text-lg font-semibold text-[#1C1B19] mb-4 flex items-center gap-2">
-              <div 
+            <h3 className="text-lg font-semibold text-text-primary mb-4 flex items-center gap-2">
+              <div
                 className="w-3 h-3 rounded-full"
                 style={{ backgroundColor: category.color }}
               />
               {category.name}
             </h3>
-            
+
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {categorySkills.map((skill) => (
                 <div key={skill._id} className="glass-card p-4 lg:p-5 rounded-2xl">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-3 flex-1 min-w-0">
-                      <div 
+                      <div
                         className="w-10 h-10 rounded-xl flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
                         style={{ backgroundColor: skill.color || category.color }}
                       >
@@ -343,31 +343,31 @@ export default function SkillsManager() {
                         )}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <h4 className="font-semibold text-[#1C1B19] truncate">{skill.name}</h4>
-                        <p className="text-xs text-[#626058]">{skill.level}% proficiency</p>
+                        <h4 className="font-semibold text-text-primary truncate">{skill.name}</h4>
+                        <p className="text-xs text-text-muted">{skill.level}% proficiency</p>
                       </div>
                     </div>
                     <div className="flex gap-1 flex-shrink-0">
                       <button
                         onClick={() => handleEdit(skill)}
-                        className="p-1.5 rounded-lg hover:bg-[#C2C0B8]/30 text-[#626058] hover:text-[#185FA5] transition-colors"
+                        className="p-1.5 rounded-lg hover:bg-border-base/30 text-text-muted hover:text-accent transition-colors"
                         disabled={saving}
                       >
                         <HiPencil className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => handleDelete(skill._id)}
-                        className="p-1.5 rounded-lg hover:bg-[#C2C0B8]/30 text-[#626058] hover:text-red-500 transition-colors"
+                        className="p-1.5 rounded-lg hover:bg-border-base/30 text-text-muted hover:text-red-500 transition-colors"
                         disabled={saving}
                       >
                         <HiTrash className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </div>
-                  <div className="w-full h-2 bg-[#C2C0B8]/25 rounded-full overflow-hidden">
+                  <div className="w-full h-2 bg-border-base/25 rounded-full overflow-hidden">
                     <div
                       className="h-full rounded-full transition-all duration-500"
-                      style={{ 
+                      style={{
                         width: `${skill.level}%`,
                         backgroundColor: skill.color || category.color
                       }}

@@ -20,9 +20,9 @@ export default function Contact() {
   const { contact, socials } = portfolioData;
 
   const contactInfo = [
-    { icon: HiEnvelope, label: 'Email',    value: contact.email,    href: `mailto:${contact.email}`, color: '#185FA5' },
-    { icon: HiPhone,    label: 'Phone',    value: contact.phone,    href: `tel:${contact.phone}`,    color: '#C2C0B8' },
-    { icon: HiMapPin,   label: 'Location', value: contact.location, href: null,                      color: '#10b981' },
+    { icon: HiEnvelope, label: 'Email', value: contact.email, href: `mailto:${contact.email}`, color: '#185FA5' },
+    { icon: HiPhone, label: 'Phone', value: contact.phone, href: `tel:${contact.phone}`, color: '#C2C0B8' },
+    { icon: HiMapPin, label: 'Location', value: contact.location, href: null, color: '#10b981' },
   ];
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -37,7 +37,7 @@ export default function Contact() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-      
+
       if (!dbResponse.ok) {
         throw new Error('Failed to save message');
       }
@@ -69,8 +69,8 @@ export default function Contact() {
   return (
     <section id="contact" className="py-24 md:py-32 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-[#E8E6DE] to-[#DDDBD3]" />
-      <div className="blob w-[500px] h-[500px] bg-[#185FA5] top-0 left-0 opacity-[0.1]" />
-      <div className="blob w-[400px] h-[400px] bg-[#C2C0B8] bottom-0 right-0 opacity-[0.1]" />
+      <div className="blob w-[500px] h-[500px] bg-[#185FA5] top-0 left-0 opacity-[0.05]" />
+      <div className="blob w-[400px] h-[400px] bg-[#C2C0B8] bottom-0 right-0 opacity-[0.08]" />
 
       <div className="container-custom relative z-10" ref={ref}>
         {/* Header */}
@@ -111,7 +111,7 @@ export default function Contact() {
               {contactInfo.map(({ icon: Icon, label, value, href, color }) => (
                 <motion.div
                   key={label}
-                  className="glass-card rounded-2xl p-4 flex items-center gap-4 group hover:border-white/[0.12] transition-all duration-300"
+                  className="glass-card rounded-2xl p-4 flex items-center gap-4 group hover:border-[#C2C0B8]/60 transition-all duration-300"
                   whileHover={{ x: 4 }}
                 >
                   <div
@@ -150,7 +150,7 @@ export default function Contact() {
                       aria-label={label}
                       className="w-11 h-11 flex items-center justify-center rounded-xl glass-card
                         text-[#626058] hover:text-[#185FA5] hover:border-[#185FA5]/30
-                        hover:shadow-[0_0_15px_rgba(24,95,165,0.2)] transition-all duration-300"
+                        hover:shadow-[0_0_15px_rgba(24,95,165,0.1)] transition-all duration-300"
                     >
                       {Icon && <Icon className="w-4 h-4" />}
                     </a>
@@ -223,9 +223,9 @@ export default function Contact() {
                       className="form-input resize-none" />
                   </div>
                   <button type="submit" disabled={loading}
-                    className="w-full h-14 bg-gradient-to-r from-[#185FA5] to-[#C2C0B8] rounded-xl text-[#E6F1FB] font-semibold flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(24,95,165,0.3)] disabled:opacity-70 disabled:cursor-not-allowed transition-all">
+                    className="w-full h-14 bg-gradient-to-r from-[#185FA5] to-[#0C447C] rounded-xl text-white font-semibold flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(24,95,165,0.2)] disabled:opacity-70 disabled:cursor-not-allowed transition-all">
                     {loading ? (
-                      <div className="w-5 h-5 border-2 border-[#E6F1FB]/30 border-t-[#E6F1FB] rounded-full animate-spin" />
+                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                     ) : (
                       <>
                         <span>Send Message</span>

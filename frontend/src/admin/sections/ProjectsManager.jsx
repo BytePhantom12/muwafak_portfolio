@@ -8,18 +8,18 @@ import FileUpload from '../../components/FileUpload';
 // Helper function to get image URL
 const getImageUrl = (imagePath) => {
   if (!imagePath) return null;
-  
+
   // If it starts with /uploads, it's an uploaded file
   if (imagePath.startsWith('/uploads')) {
     return `${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}${imagePath}`;
   }
-  
+
   // If it's just a filename, use our imported images
   const filename = imagePath.split('/').pop();
   if (projectImages[filename]) {
     return projectImages[filename];
   }
-  
+
   // Otherwise, use the path as-is
   return imagePath;
 };
@@ -28,12 +28,12 @@ export default function ProjectsManager() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  
+
   // Modal states
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState('add'); // 'add', 'edit', 'view'
   const [editingProject, setEditingProject] = useState(null);
-  
+
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -60,7 +60,7 @@ export default function ProjectsManager() {
       try {
         // update shared context so homepage reflects changes immediately
         updateLocalPortfolio({ projects: updatedProjects });
-      } catch {}
+      } catch { }
       alert('Projects updated successfully!');
     } catch (error) {
       console.error('Error saving projects:', error);
@@ -73,7 +73,7 @@ export default function ProjectsManager() {
   const openModal = (mode, project = null) => {
     setModalMode(mode);
     setEditingProject(project);
-    
+
     if (mode === 'add') {
       setFormData({ title: '', description: '', image: '', tags: [''], liveUrl: '', githubUrl: '' });
       setUploadedImage(null);
@@ -97,7 +97,7 @@ export default function ProjectsManager() {
         githubUrl: project.githubUrl,
       });
     }
-    
+
     setShowModal(true);
   };
 
@@ -128,7 +128,7 @@ export default function ProjectsManager() {
 
   const handleAdd = async () => {
     if (saving) return; // Prevent duplicate submissions
-    
+
     try {
       setSaving(true);
       const newProject = {
@@ -150,12 +150,12 @@ export default function ProjectsManager() {
 
   const handleUpdate = async () => {
     if (saving) return; // Prevent duplicate submissions
-    
+
     try {
       setSaving(true);
-      const updatedProjects = projects.map(project => 
-        project._id === editingProject._id ? { 
-          ...project, 
+      const updatedProjects = projects.map(project =>
+        project._id === editingProject._id ? {
+          ...project,
           title: formData.title,
           description: formData.description,
           image: formData.image,
@@ -196,7 +196,7 @@ export default function ProjectsManager() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="w-8 h-8 border-4 border-[#185FA5] border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -205,8 +205,8 @@ export default function ProjectsManager() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold font-display text-gradient">Projects</h2>
-        <button 
-          onClick={() => openModal('add')} 
+        <button
+          onClick={() => openModal('add')}
           className="btn-primary text-sm"
           disabled={saving}
         >
@@ -220,16 +220,16 @@ export default function ProjectsManager() {
         {projects.map((project) => (
           <div key={project._id} className="glass-card rounded-2xl overflow-hidden">
             {project.image ? (
-              <div className="h-48 bg-gradient-to-br from-[#185FA5]/10 to-[#0C447C]/10 flex items-center justify-center overflow-hidden">
-                <img 
-                  src={getImageUrl(project.image)} 
-                  alt={project.title} 
+              <div className="h-48 bg-gradient-to-br from-accent/10 to-accent-dark/10 flex items-center justify-center overflow-hidden">
+                <img
+                  src={getImageUrl(project.image)}
+                  alt={project.title}
                   className="w-full h-full object-cover"
                 />
               </div>
             ) : (
-              <div className="h-48 bg-gradient-to-br from-[#185FA5]/10 to-[#0C447C]/10 flex items-center justify-center">
-                <div className="text-center text-[#626058]">
+              <div className="h-48 bg-gradient-to-br from-accent/10 to-accent-dark/10 flex items-center justify-center">
+                <div className="text-center text-text-muted">
                   <div className="text-4xl mb-2">📷</div>
                   <div className="text-sm">No image</div>
                 </div>
@@ -237,18 +237,18 @@ export default function ProjectsManager() {
             )}
             <div className="p-5">
               <div className="flex items-start justify-between mb-3">
-                <h3 className="text-lg font-semibold text-[#1C1B19]">{project.title}</h3>
+                <h3 className="text-lg font-semibold text-text-primary">{project.title}</h3>
                 <div className="flex gap-1">
                   <button
                     onClick={() => openModal('view', project)}
-                    className="p-1.5 rounded-lg hover:bg-[#C2C0B8]/30 text-[#626058] hover:text-[#185FA5] transition-colors"
+                    className="p-1.5 rounded-lg hover:bg-border-base/30 text-text-muted hover:text-accent transition-colors"
                     title="View"
                   >
                     <HiEye className="w-3.5 h-3.5" />
                   </button>
                   <button
                     onClick={() => openModal('edit', project)}
-                    className="p-1.5 rounded-lg hover:bg-[#C2C0B8]/30 text-[#626058] hover:text-[#185FA5] transition-colors"
+                    className="p-1.5 rounded-lg hover:bg-border-base/30 text-text-muted hover:text-accent transition-colors"
                     disabled={saving}
                     title="Edit"
                   >
@@ -256,7 +256,7 @@ export default function ProjectsManager() {
                   </button>
                   <button
                     onClick={() => handleDelete(project._id)}
-                    className="p-1.5 rounded-lg hover:bg-[#C2C0B8]/30 text-[#626058] hover:text-red-500 transition-colors"
+                    className="p-1.5 rounded-lg hover:bg-border-base/30 text-text-muted hover:text-red-500 transition-colors"
                     disabled={saving}
                     title="Delete"
                   >
@@ -264,10 +264,10 @@ export default function ProjectsManager() {
                   </button>
                 </div>
               </div>
-              <p className="text-sm text-[#626058] mb-3 line-clamp-2">{project.description}</p>
+              <p className="text-sm text-text-muted mb-3 line-clamp-2">{project.description}</p>
               <div className="flex flex-wrap gap-2">
                 {(project.technologies || []).map((tag, idx) => (
-                  <span key={idx} className="text-xs px-2 py-1 rounded-lg bg-[#185FA5]/10 text-[#185FA5] border border-[#185FA5]/20">
+                  <span key={idx} className="text-xs px-2 py-1 rounded-lg bg-accent/10 text-accent border border-accent/20">
                     {tag}
                   </span>
                 ))}
@@ -283,8 +283,8 @@ export default function ProjectsManager() {
         onClose={closeModal}
         title={
           modalMode === 'add' ? 'Add New Project' :
-          modalMode === 'edit' ? 'Edit Project' :
-          'View Project'
+            modalMode === 'edit' ? 'Edit Project' :
+              'View Project'
         }
         size="lg"
       >
@@ -303,7 +303,7 @@ export default function ProjectsManager() {
 
           {/* Project Title */}
           <div>
-            <label className="block text-sm font-medium text-[#1C1B19] mb-2">Project Title</label>
+            <label className="block text-sm font-medium text-text-primary mb-2">Project Title</label>
             <input
               type="text"
               value={formData.title}
@@ -316,7 +316,7 @@ export default function ProjectsManager() {
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-medium text-[#1C1B19] mb-2">Description</label>
+            <label className="block text-sm font-medium text-text-primary mb-2">Description</label>
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -329,7 +329,7 @@ export default function ProjectsManager() {
 
           {/* Technologies */}
           <div>
-            <label className="block text-sm font-medium text-[#1C1B19] mb-2">Technologies</label>
+            <label className="block text-sm font-medium text-text-primary mb-2">Technologies</label>
             <div className="space-y-2">
               {formData.tags.map((tag, index) => (
                 <div key={index} className="flex gap-2">
@@ -344,7 +344,7 @@ export default function ProjectsManager() {
                   {modalMode !== 'view' && formData.tags.length > 1 && (
                     <button
                       onClick={() => removeTag(index)}
-                      className="p-3 rounded-xl hover:bg-[#C2C0B8]/30 text-[#626058] hover:text-red-500 transition-colors"
+                      className="p-3 rounded-xl hover:bg-border-base/30 text-text-muted hover:text-red-500 transition-colors"
                     >
                       <HiTrash className="w-4 h-4" />
                     </button>
@@ -354,7 +354,7 @@ export default function ProjectsManager() {
               {modalMode !== 'view' && (
                 <button
                   onClick={addTag}
-                  className="text-sm text-[#185FA5] hover:text-[#0C447C] transition-colors"
+                  className="text-sm text-accent hover:text-[#0C447C] transition-colors"
                 >
                   + Add Technology
                 </button>
@@ -365,7 +365,7 @@ export default function ProjectsManager() {
           {/* URLs */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-[#1C1B19] mb-2">Live/Demo URL</label>
+              <label className="block text-sm font-medium text-text-primary mb-2">Live/Demo URL</label>
               <input
                 type="url"
                 value={formData.liveUrl}
@@ -377,7 +377,7 @@ export default function ProjectsManager() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[#1C1B19] mb-2">GitHub URL</label>
+              <label className="block text-sm font-medium text-text-primary mb-2">GitHub URL</label>
               <input
                 type="url"
                 value={formData.githubUrl}

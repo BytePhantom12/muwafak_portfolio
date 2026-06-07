@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  HiUser, HiAcademicCap, HiCodeBracket, HiBriefcase, 
+import {
+  HiUser, HiAcademicCap, HiCodeBracket, HiBriefcase,
   HiRectangleStack, HiEnvelope, HiArrowRightOnRectangle,
   HiChartBar, HiBars3, HiXMark, HiChevronLeft, HiChevronRight,
   HiHome, HiUserCircle, HiCpuChip
@@ -63,7 +63,7 @@ export default function Dashboard({ onLogout }) {
             >
               {sidebarOpen ? <HiXMark className="w-5 h-5" /> : <HiBars3 className="w-5 h-5" />}
             </button>
-            
+
             {/* Desktop Sidebar Toggle */}
             <button
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
@@ -72,12 +72,12 @@ export default function Dashboard({ onLogout }) {
             >
               {sidebarCollapsed ? <HiChevronRight className="w-5 h-5" /> : <HiChevronLeft className="w-5 h-5" />}
             </button>
-            
+
             <h1 className="text-lg lg:text-xl font-bold font-display text-gradient">
               {sidebarCollapsed ? 'Admin' : 'Admin Dashboard'}
             </h1>
           </div>
-          
+
           {/* Header Actions */}
           <div className="flex items-center gap-2">
             {/* Go Home Button */}
@@ -89,7 +89,7 @@ export default function Dashboard({ onLogout }) {
               <HiHome className="w-4 h-4" />
               <span className="hidden sm:inline text-sm font-medium">Home</span>
             </Link>
-            
+
             {/* Logout Button */}
             <button
               onClick={onLogout}
@@ -106,7 +106,7 @@ export default function Dashboard({ onLogout }) {
       <div className="flex relative">
         {/* Mobile Sidebar Overlay */}
         {sidebarOpen && (
-          <div 
+          <div
             className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 lg:hidden"
             onClick={() => setSidebarOpen(false)}
           />
@@ -125,20 +125,18 @@ export default function Dashboard({ onLogout }) {
               <button
                 key={id}
                 onClick={() => handleSectionChange(id)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 group relative ${
-                  activeSection === id
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 group relative ${activeSection === id
                     ? 'bg-[#185FA5]/10 text-[#185FA5] border border-[#185FA5]/25'
                     : 'text-[#626058] hover:text-[#1C1B19] hover:bg-[#C2C0B8]/20'
-                }`}
+                  }`}
                 title={sidebarCollapsed ? label : ''}
               >
                 <Icon className="w-5 h-5 flex-shrink-0" />
-                <span className={`truncate transition-all duration-300 ${
-                  sidebarCollapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto'
-                }`}>
+                <span className={`truncate transition-all duration-300 ${sidebarCollapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto'
+                  }`}>
                   {label}
                 </span>
-                
+
                 {/* Tooltip for collapsed state */}
                 {sidebarCollapsed && (
                   <div className="absolute left-full ml-2 px-2 py-1 bg-[#DDDBD3] text-xs text-[#1C1B19] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50 border border-[#C2C0B8]">
@@ -148,7 +146,7 @@ export default function Dashboard({ onLogout }) {
               </button>
             ))}
           </nav>
-          
+
           {/* Mobile Footer Actions */}
           <div className="lg:hidden absolute bottom-4 left-4 right-4 space-y-2 border-t border-[#C2C0B8]/30 pt-4">
             <Link
@@ -170,9 +168,8 @@ export default function Dashboard({ onLogout }) {
         </aside>
 
         {/* Main Content */}
-        <main className={`flex-1 p-4 lg:p-8 transition-all duration-300 ${
-          sidebarCollapsed ? 'lg:ml-0' : 'lg:ml-0'
-        }`}>
+        <main className={`flex-1 p-4 lg:p-8 transition-all duration-300 ${sidebarCollapsed ? 'lg:ml-0' : 'lg:ml-0'
+          }`}>
           <motion.div
             key={activeSection}
             initial={{ opacity: 0, y: 20 }}
@@ -217,28 +214,28 @@ function Overview({ setActiveSection }) {
       <div className="glass-card p-4 lg:p-6 rounded-2xl">
         <h3 className="text-lg lg:text-xl font-bold font-display mb-4">Quick Actions</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
-          <button 
+          <button
             onClick={() => setActiveSection('profile')}
             className="btn-primary justify-center text-sm lg:text-base py-3"
           >
             <HiUserCircle className="w-4 h-4" />
             Update Profile
           </button>
-          <button 
+          <button
             onClick={() => setActiveSection('skills')}
             className="btn-outline justify-center text-sm lg:text-base py-3"
           >
             <HiCodeBracket className="w-4 h-4" />
             Manage Skills
           </button>
-          <button 
+          <button
             onClick={() => setActiveSection('projects')}
             className="btn-outline justify-center text-sm lg:text-base py-3"
           >
             <HiRectangleStack className="w-4 h-4" />
             Add Project
           </button>
-          <button 
+          <button
             onClick={() => setActiveSection('about')}
             className="btn-outline justify-center text-sm lg:text-base py-3"
           >

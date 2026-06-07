@@ -37,36 +37,35 @@ function ProjectSlideshow({ images, title, hovered }) {
           alt={`${title} - slide ${currentIndex + 1}`}
           className="absolute inset-0 w-full h-full object-cover object-top"
           initial={{ opacity: 0, scale: 1.1 }}
-          animate={{ 
-            opacity: 1, 
+          animate={{
+            opacity: 1,
             scale: hovered ? 1.05 : 1,
           }}
           exit={{ opacity: 0, scale: 0.95 }}
           transition={{ duration: 0.6, ease: "easeInOut" }}
         />
       </AnimatePresence>
-      
+
       {/* Tech Scanning Overlay */}
-      <motion.div 
+      <motion.div
         className="absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#185FA5] to-transparent opacity-50 z-10"
-        animate={{ 
+        animate={{
           top: ["-10%", "110%"],
         }}
-        transition={{ 
-          duration: 3, 
-          repeat: Infinity, 
-          ease: "linear" 
+        transition={{
+          duration: 3,
+          repeat: Infinity,
+          ease: "linear"
         }}
       />
 
       {/* Slide Indicators */}
       <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-20">
         {images.map((_, i) => (
-          <div 
+          <div
             key={i}
-            className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-              i === currentIndex ? 'bg-[#185FA5] w-4' : 'bg-[#C2C0B8]/40'
-            }`}
+            className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === currentIndex ? 'bg-[#185FA5] w-4' : 'bg-[#C2C0B8]/60'
+              }`}
           />
         ))}
       </div>
@@ -143,22 +142,22 @@ function ProjectCard({ project, index }) {
               src={imageSrc}
               alt={project.title}
               className="w-full h-full object-cover object-top"
-              animate={{ 
+              animate={{
                 scale: hovered ? 1.05 : 1,
               }}
               transition={{ duration: 0.6, ease: "easeOut" }}
             />
-            
+
             {/* Tech Scanning Overlay */}
-            <motion.div 
+            <motion.div
               className="absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#185FA5] to-transparent opacity-50 z-10"
-              animate={{ 
+              animate={{
                 top: ["-10%", "110%"],
               }}
-              transition={{ 
-                duration: 3, 
-                repeat: Infinity, 
-                ease: "linear" 
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "linear"
               }}
             />
 
@@ -179,7 +178,7 @@ function ProjectCard({ project, index }) {
             />
             <div className="absolute inset-0 dot-grid opacity-30" />
             <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-              <span className="text-6xl mb-4 opacity-30 group-hover:scale-110 transition-transform duration-500">
+              <span className="text-[10px] mb-4 opacity-30 group-hover:scale-110 transition-transform duration-500">
                 {project.emoji || '🚀'}
               </span>
               <span className="text-xl font-bold font-display text-[#1C1B19]/40 tracking-wider uppercase group-hover:text-[#1C1B19]/60 transition-colors duration-500">
@@ -195,7 +194,7 @@ function ProjectCard({ project, index }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: hovered ? 1 : 0 }}
           transition={{ duration: 0.2 }}
-          style={{ background: 'rgba(232,230,222,0.85)', backdropFilter: 'blur(4px)' }}
+          style={{ background: 'rgba(232,230,222,0.92)', backdropFilter: 'blur(4px)' }}
         >
           {project.githubUrl && (
             <a
@@ -279,8 +278,8 @@ export default function Projects() {
   return (
     <section id="projects" className="py-24 md:py-32 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-[#DDDBD3] to-[#E8E6DE]" />
-      <div className="blob w-[500px] h-[500px] bg-[#C2C0B8] top-1/2 right-0 opacity-[0.1] -translate-y-1/2" />
-      <div className="blob w-[400px] h-[400px] bg-[#185FA5] bottom-0 left-1/4 opacity-[0.08]" />
+      <div className="blob w-[500px] h-[500px] bg-[#185FA5] top-1/2 right-0 opacity-[0.05] -translate-y-1/2" />
+      <div className="blob w-[400px] h-[400px] bg-[#C2C0B8] bottom-0 left-1/4 opacity-[0.08]" />
 
       <div className="container-custom relative z-10" ref={ref}>
         {/* Header */}
