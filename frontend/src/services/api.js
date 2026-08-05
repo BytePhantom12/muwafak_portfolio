@@ -1,7 +1,9 @@
 // API Configuration
-// In production with Vercel Services, the backend is at /api
-// In development, it may be a separate server
-const API_BASE_URL = import.meta.env.VITE_API_URL
+// The Express backend exposes routes under /api, so the frontend should target that prefix.
+const rawApiUrl = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '');
+
+export const BACKEND_BASE_URL = rawApiUrl.endsWith('/api') ? rawApiUrl.replace(/\/api$/, '') : rawApiUrl;
+export const API_BASE_URL = rawApiUrl.endsWith('/api') ? rawApiUrl : `${rawApiUrl}/api`;
 
 // Helper function to get auth token
 const getAuthToken = () => {
@@ -85,9 +87,10 @@ export const authAPI = {
     });
     const data = await handleResponse(response);
     
-    // Store token in localStorage (FastAPI returns access_token)
-    if (data.access_token) {
-      localStorage.setItem('admin_token', data.access_token);
+    // Store the token returned by the backend (supports both token and access_token)
+    const authToken = data.token || data.access_token;
+    if (authToken) {
+      localStorage.setItem('admin_token', authToken);
       localStorage.setItem('admin_user', JSON.stringify(data.user));
     }
     
@@ -105,9 +108,10 @@ export const authAPI = {
     });
     const data = await handleResponse(response);
     
-    // Store token in localStorage (FastAPI returns access_token)
-    if (data.access_token) {
-      localStorage.setItem('admin_token', data.access_token);
+    // Store the token returned by the backend (supports both token and access_token)
+    const authToken = data.token || data.access_token;
+    if (authToken) {
+      localStorage.setItem('admin_token', authToken);
       localStorage.setItem('admin_user', JSON.stringify(data.user));
     }
     

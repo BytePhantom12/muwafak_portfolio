@@ -10,7 +10,7 @@ const getImageUrl = (imagePath) => {
   if (!imagePath) return null;
   if (imagePath.startsWith('http')) return imagePath;
   if (imagePath.startsWith('/uploads')) {
-    return `${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}${imagePath}`;
+    return `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${imagePath}`;
   }
   return imagePath;
 };

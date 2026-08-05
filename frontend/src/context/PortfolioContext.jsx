@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { portfolioAPI } from '../services/api';
+import { getSkillCategoryConfig, normalizeCategoryName, normalizeSkillItem } from '../utils/skillUtils';
 
 // ─── FALLBACK DATA (Used while loading or if API fails) ────────────────────
 // This data is used as a fallback if the API is not available
@@ -58,12 +59,12 @@ const FALLBACK_DATA = {
       color: '#185FA5',
       emoji: '🎨',
       skills: [
-        { name: 'React', level: 90, icon: 'FaReact', color: '#61dafb' },
-        { name: 'Next.js', level: 85, icon: 'SiNextdotjs', color: '#1C1B19' },
-        { name: 'JavaScript', level: 92, icon: 'SiJavascript', color: '#f7df1e' },
-        { name: 'HTML5', level: 95, icon: 'FaHtml5', color: '#e34f26' },
-        { name: 'CSS3', level: 90, icon: 'FaCss3Alt', color: '#1572b6' },
-        { name: 'Tailwind', level: 88, icon: 'SiTailwindcss', color: '#06b6d4' },
+        { name: 'React', level: 90, iconType: 'react', icon: 'FaReact', color: '#61dafb' },
+        { name: 'Next.js', level: 85, iconType: 'react', icon: 'SiNextdotjs', color: '#1C1B19' },
+        { name: 'JavaScript', level: 92, iconType: 'react', icon: 'SiJavascript', color: '#f7df1e' },
+        { name: 'HTML5', level: 95, iconType: 'react', icon: 'FaHtml5', color: '#e34f26' },
+        { name: 'CSS3', level: 90, iconType: 'react', icon: 'FaCss3Alt', color: '#1572b6' },
+        { name: 'Tailwind CSS', level: 88, iconType: 'react', icon: 'SiTailwindcss', color: '#06b6d4' },
       ],
     },
     {
@@ -71,19 +72,19 @@ const FALLBACK_DATA = {
       color: '#626058',
       emoji: '⚙️',
       skills: [
-        { name: 'Python', level: 80, icon: 'FaPython', color: '#3776ab' },
-        { name: 'Django', level: 75, icon: 'SiDjango', color: '#44b78b' },
-        { name: 'FastAPI', level: 80, icon: 'SiFastapi', color: '#009688' },
-        { name: 'REST API', level: 72, icon: 'SiPostman', color: '#ff6c37' },
+        { name: 'Python', level: 80, iconType: 'react', icon: 'FaPython', color: '#3776ab' },
+        { name: 'Django', level: 75, iconType: 'react', icon: 'SiDjango', color: '#44b78b' },
+        { name: 'FastAPI', level: 80, iconType: 'react', icon: 'SiFastapi', color: '#009688' },
+        { name: 'REST API', level: 72, iconType: 'react', icon: 'SiPostman', color: '#ff6c37' },
       ],
     },
     {
-      name: 'Databases',
+      name: 'Database',
       color: '#10b981',
       emoji: '🗄️',
       skills: [
-        { name: 'PostgreSQL', level: 80, icon: 'SiPostgresql', color: '#336791' },
-        { name: 'MySQL', level: 78, icon: 'SiMysql', color: '#4479a1' },
+        { name: 'PostgreSQL', level: 80, iconType: 'react', icon: 'SiPostgresql', color: '#336791' },
+        { name: 'MySQL', level: 78, iconType: 'react', icon: 'SiMysql', color: '#4479a1' },
       ]
     },
     {
@@ -91,10 +92,10 @@ const FALLBACK_DATA = {
       color: '#f59e0b',
       emoji: '📊',
       skills: [
-        { name: 'Pandas', level: 85, icon: 'SiPandas', color: '#150458' },
-        { name: 'NumPy', level: 80, icon: 'SiNumpy', color: '#013243' },
-        { name: 'Scikit-learn', level: 78, icon: 'SiScikitlearn', color: '#f7931e' },
-        { name: 'Matplotlib', level: 75, icon: 'SiPlotly', color: '#3b82f6' }
+        { name: 'Pandas', level: 85, iconType: 'react', icon: 'SiPandas', color: '#150458' },
+        { name: 'NumPy', level: 80, iconType: 'react', icon: 'SiNumpy', color: '#013243' },
+        { name: 'Scikit-learn', level: 78, iconType: 'react', icon: 'SiScikitlearn', color: '#f7931e' },
+        { name: 'Matplotlib', level: 75, iconType: 'react', icon: 'FaChartBar', color: '#3b82f6' }
       ]
     },
 
@@ -103,9 +104,9 @@ const FALLBACK_DATA = {
       color: '#10b981',
       emoji: '🛠️',
       skills: [
-        { name: 'Git', level: 88, icon: 'FaGithub', color: '#f54d27' },
-        { name: 'VS Code', level: 95, icon: 'SiVisualstudiocode', color: '#007acc' },
-        { name: 'Vercel', level: 85, icon: 'SiVercel', color: '#1C1B19' },
+        { name: 'Git', level: 88, iconType: 'react', icon: 'FaGithub', color: '#f54d27' },
+        { name: 'VS Code', level: 95, iconType: 'react', icon: 'SiVisualstudiocode', color: '#007acc' },
+        { name: 'Vercel', level: 85, iconType: 'react', icon: 'SiVercel', color: '#1C1B19' },
       ],
     },
   ],
@@ -198,6 +199,32 @@ const FALLBACK_DATA = {
   ],
 };
 
+const extractMediaUrl = (value) => {
+  if (!value) return null;
+  if (typeof value === 'string') return value;
+  return value.url || value.secureUrl || value.secure_url || null;
+};
+
+const buildSocialLinks = (dbData) => {
+  const fallbackSocials = FALLBACK_DATA.socials;
+  const dbSocials = dbData?.socials;
+  if (Array.isArray(dbSocials) && dbSocials.length > 0) {
+    return dbSocials;
+  }
+
+  const social = dbData?.contact?.social;
+  if (!social) {
+    return fallbackSocials;
+  }
+
+  return [
+    { id: 'github', label: 'GitHub', href: social.github || '', icon: 'FaGithub' },
+    { id: 'linkedin', label: 'LinkedIn', href: social.linkedin || '', icon: 'FaLinkedinIn' },
+    { id: 'facebook', label: 'Facebook', href: social.facebook || '', icon: 'FaFacebookF' },
+    { id: 'whatsapp', label: 'WhatsApp', href: social.whatsapp || '', icon: 'FaWhatsapp' },
+  ];
+};
+
 // Transform database data to match frontend format
 const transformPortfolioData = (dbData) => {
   if (!dbData) return FALLBACK_DATA;
@@ -214,7 +241,8 @@ const transformPortfolioData = (dbData) => {
     profile: {
       name: dbData.profile?.name || FALLBACK_DATA.name,
       title: dbData.profile?.title || FALLBACK_DATA.role,
-      profileImage: dbData.profile?.profileImage || null,
+      profileImage: extractMediaUrl(dbData.profile?.profileImage),
+      profileImagePublicId: dbData.profile?.profileImagePublicId || dbData.profile?.profileImage?.publicId || null,
       email: dbData.profile?.email || FALLBACK_DATA.contact.email,
       location: dbData.profile?.location || null,
       languages: dbData.profile?.languages || null,
@@ -236,7 +264,7 @@ const transformPortfolioData = (dbData) => {
     },
 
     // Social Links - Keep static for now
-    socials: FALLBACK_DATA.socials,
+    socials: buildSocialLinks(dbData),
 
     // Contact
     contact: {
@@ -246,28 +274,16 @@ const transformPortfolioData = (dbData) => {
     },
 
     // Skills - Transform from database format
-    skillCategories: dbData.skills?.length > 0 ? dbData.skills.map(skillCategory => {
-      // Map category names to colors and emojis
-      const categoryConfig = {
-        'Frontend': { color: '#185FA5', emoji: '🎨' },
-        'Backend': { color: '#626058', emoji: '⚙️' },
-        'Tools & Cloud': { color: '#10b981', emoji: '🛠️' },
-        'Database': { color: '#10b981', emoji: '🗄️' },
-        'Tools': { color: '#10b981', emoji: '🛠️' },
-      };
-
-      const config = categoryConfig[skillCategory.category] || { color: '#185FA5', emoji: '🎨' };
+    skillCategories: dbData.skills?.length > 0 ? dbData.skills.map((skillCategory) => {
+      const categoryName = normalizeCategoryName(skillCategory.category || skillCategory.name || 'Frontend');
+      const categoryConfig = getSkillCategoryConfig(categoryName);
+      const rawItems = skillCategory.items || skillCategory.skills || [];
 
       return {
-        name: skillCategory.category,
-        color: config.color,
-        emoji: config.emoji,
-        skills: skillCategory.items?.map(item => ({
-          name: item,
-          level: 85, // Default level
-          icon: 'FaCode',
-          color: config.color
-        })) || []
+        name: categoryName,
+        color: categoryConfig.color,
+        emoji: categoryConfig.emoji,
+        skills: rawItems.map((item) => normalizeSkillItem(item, categoryName, categoryConfig.color)),
       };
     }) : FALLBACK_DATA.skillCategories,
 
@@ -282,7 +298,8 @@ const transformPortfolioData = (dbData) => {
       tags: project.technologies?.join(', ') || '',
       githubUrl: project.githubUrl || '',
       liveUrl: project.liveUrl || '',
-      image: project.image || null,
+      image: extractMediaUrl(project.image),
+      imagePublicId: project.imagePublicId || project.image?.publicId || null,
       emoji: '🚀',
       isFeatured: project.featured || false,
     })) || FALLBACK_DATA.projects,

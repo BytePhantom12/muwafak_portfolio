@@ -6,6 +6,7 @@ import {
 } from 'react-icons/hi2';
 import { FaGithub, FaLinkedinIn, FaFacebookF, FaInstagram, FaWhatsapp } from 'react-icons/fa';
 import { usePortfolioData } from '../context/PortfolioContext';
+import { API_BASE_URL } from '../services/api';
 
 const iconMap = { FaGithub, FaLinkedinIn, FaFacebookF, FaInstagram, FaWhatsapp };
 
@@ -32,7 +33,7 @@ export default function Contact() {
     setLoading(true);
     try {
       // Save to our database first
-      const dbResponse = await fetch(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}/contact`, {
+      const dbResponse = await fetch(`${API_BASE_URL}/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

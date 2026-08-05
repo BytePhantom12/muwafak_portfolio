@@ -2,16 +2,48 @@ const express = require('express');
 const multer = require('multer');
 const router = express.Router();
 const auth = require('../middleware/auth');
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
-const { 
-  cloudinary,
-  deleteFromCloudinary,
-  extractPublicId 
-} = require('../config/cloudinary');
+const { uploadBuffer, deleteFromCloudinary, extractPublicId } = require('../config/cloudinary');
 
-// File filter for validation - accepts both images and documents
+const storage = multer.memoryStorage();
+
+/**
+ * @openapi
+ * /api/upload:
+ *   post:
+ *     tags:
+ *       - Upload
+ *     summary: Upload a file to Cloudinary
+ *     description: Uploads an image or supported document as multipart/form-data.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - file
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: Image or document file. Supported image types include jpg, jpeg, png, gif, webp, svg. Supported documents include pdf, doc, docx, odt, rtf, txt.
+ *               type:
+ *                 type: string
+ *                 example: project
+ *                 description: Optional upload folder hint such as profile, project, document, cv, skill, or icon.
+ *     responses:
+ *       "200":
+ *         description: File uploaded successfully
+ *       "400":
+ *         description: No file uploaded or invalid file type
+ *       "401":
+ *         description: No token or invalid token
+ *       "500":
+ *         description: Upload failed
+ */
 const fileFilter = (req, file, cb) => {
-  // Document mime types
   const documentMimeTypes = [
     'application/pdf',
     'application/msword',
@@ -21,68 +53,74 @@ const fileFilter = (req, file, cb) => {
     'text/plain',
     'text/rtf'
   ];
-  
-  // Check if it's an image or document
-  if (file.mimetype.startsWith('image/') || documentMimeTypes.includes(file.mimetype)) {
-    cb(null, true);
-  } else {
-    cb(new Error('Only images and documents (PDF, Word, ODT, RTF, TXT) are allowed'), false);
+
+  if (file.mimetype.startsWith('image/')) {
+    const allowedImageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
+    const extension = file.originalname.split('.').pop()?.toLowerCase();
+
+    if (allowedImageExtensions.includes(extension)) {
+      cb(null, true);
+      return;
+    }
   }
+
+  if (documentMimeTypes.includes(file.mimetype)) {
+    const allowedDocumentExtensions = ['pdf', 'doc', 'docx', 'odt', 'rtf', 'txt'];
+    const extension = file.originalname.split('.').pop()?.toLowerCase();
+
+    if (allowedDocumentExtensions.includes(extension)) {
+      cb(null, true);
+      return;
+    }
+  }
+
+  cb(new Error('Only images (jpg, jpeg, png, gif, webp, svg) and documents (pdf, doc, docx, odt, rtf, txt) are allowed'));
 };
 
-// Create a unified storage that handles both images and documents
-const unifiedStorage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: async (req, file) => {
-    const { type } = req.body;
-    
-    // Determine if it's a document based on mime type
-    const isDocument = [
-      'application/pdf',
-      'application/msword',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      'application/vnd.oasis.opendocument.text',
-      'application/rtf',
-      'text/plain',
-      'text/rtf'
-    ].includes(file.mimetype);
-    
-    // Determine folder based on type
-    let folder = 'portfolio/images';
-    if (type === 'document' || type === 'cv') {
-      folder = 'portfolio/documents';
-    } else if (type === 'profile') {
-      folder = 'portfolio/profile';
-    } else if (type === 'project') {
-      folder = 'portfolio/projects';
-    }
-    
-    return {
-      folder: folder,
-      resource_type: isDocument ? 'raw' : 'image',
-      allowed_formats: isDocument 
-        ? ['pdf', 'doc', 'docx', 'odt', 'rtf', 'txt']
-        : ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'],
-      transformation: !isDocument ? [
-        { width: 2000, height: 2000, crop: 'limit' },
-        { quality: 'auto' },
-        { fetch_format: 'auto' }
-      ] : undefined
-    };
-  }
-});
-
-// Configure multer with unified storage
 const upload = multer({
-  storage: unifiedStorage,
+  storage,
   fileFilter,
   limits: {
-    fileSize: 10 * 1024 * 1024 // 10MB limit
+    fileSize: 10 * 1024 * 1024
   }
 });
 
-// POST /api/upload - Upload single file (protected)
-router.post('/', auth, upload.single('file'), (req, res) => {
+const getUploadOptions = (req, file) => {
+  const type = req.body.type || 'image';
+  const isDocument = [
+    'application/pdf',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/vnd.oasis.opendocument.text',
+    'application/rtf',
+    'text/plain',
+    'text/rtf'
+  ].includes(file.mimetype);
+
+  let folder = 'portfolio/images';
+  if (type === 'profile') {
+    folder = 'portfolio/profile';
+  } else if (type === 'project') {
+    folder = 'portfolio/projects';
+  } else if (type === 'document' || type === 'cv') {
+    folder = 'portfolio/documents';
+  } else if (type === 'skill' || type === 'skills' || type === 'icon') {
+    folder = 'portfolio/skills';
+  }
+
+  return {
+    folder,
+    resourceType: isDocument ? 'raw' : 'image',
+    public_id: `${Date.now()}-${file.originalname.replace(/\.[^/.]+$/, '')}`,
+    transformation: isDocument ? undefined : [
+      { width: 2000, height: 2000, crop: 'limit' },
+      { quality: 'auto' },
+      { fetch_format: 'auto' }
+    ]
+  };
+};
+
+router.post('/', auth, upload.single('file'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({
@@ -91,16 +129,19 @@ router.post('/', auth, upload.single('file'), (req, res) => {
       });
     }
 
+    const options = getUploadOptions(req, req.file);
+    const uploadResult = await uploadBuffer(req.file.buffer, options);
+
     res.json({
       success: true,
-      message: 'File uploaded successfully to Cloudinary',
+      message: 'File uploaded successfully',
       data: {
-        filename: req.file.filename,
+        filename: uploadResult.public_id,
         originalName: req.file.originalname,
         mimetype: req.file.mimetype,
         size: req.file.size,
-        url: req.file.path, // Cloudinary URL
-        publicId: req.file.filename,
+        url: uploadResult.secure_url,
+        publicId: uploadResult.public_id,
         cloudinary: true
       }
     });
@@ -114,54 +155,73 @@ router.post('/', auth, upload.single('file'), (req, res) => {
   }
 });
 
-// DELETE /api/upload/:type/:filename - Delete file (protected)
+/**
+ * @openapi
+ * /api/upload/{type}/{filename}:
+ *   delete:
+ *     tags:
+ *       - Upload
+ *     summary: Delete a file from Cloudinary
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: type
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Upload type such as profile, project, document, or cv.
+ *       - in: path
+ *         name: filename
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Stored filename or public ID segment.
+ *     responses:
+ *       "200":
+ *         description: File deleted successfully from Cloudinary
+ *       "401":
+ *         description: No token or invalid token
+ *       "404":
+ *         description: File not found on Cloudinary
+ *       "500":
+ *         description: Delete failed
+ */
 router.delete('/:type/:filename', auth, async (req, res) => {
   try {
     const { type, filename } = req.params;
-    
-    // Determine resource type for Cloudinary
     const resourceType = (type === 'document' || type === 'cv') ? 'raw' : 'image';
-    
-    // Extract public_id from filename or construct it
+
     let publicId = filename;
-    
-    // If filename contains the full path, extract just the public_id
-    if (filename.includes('/')) {
-      publicId = filename;
-    } else {
-      // Construct the public_id based on folder structure
+    if (!filename.includes('/')) {
       let folder = 'images';
-      switch (type) {
-        case 'project':
-          folder = 'projects';
-          break;
-        case 'profile':
-          folder = 'profile';
-          break;
-        case 'document':
-        case 'cv':
-          folder = 'documents';
-          break;
+      if (type === 'project') {
+        folder = 'projects';
+      } else if (type === 'profile') {
+        folder = 'profile';
+      } else if (type === 'document' || type === 'cv') {
+        folder = 'documents';
+      } else if (type === 'skill' || type === 'skills' || type === 'icon') {
+        folder = 'skills';
       }
+
       publicId = `portfolio/${folder}/${filename}`;
     }
-    
-    // Remove file extension from public_id if present
-    publicId = publicId.replace(/\.[^/.]+$/, '');
-    
-    const result = await deleteFromCloudinary(publicId, resourceType);
-    
+
+    const extractedPublicId = extractPublicId(publicId) || publicId;
+    const result = await deleteFromCloudinary(extractedPublicId.replace(/\.[^/.]+$/, ''), resourceType);
+
     if (result.result === 'ok' || result.result === 'not found') {
-      res.json({
+      return res.json({
         success: true,
         message: 'File deleted successfully from Cloudinary'
       });
-    } else {
-      res.status(404).json({
-        success: false,
-        message: 'File not found on Cloudinary'
-      });
     }
+
+    return res.status(404).json({
+      success: false,
+      message: 'File not found on Cloudinary'
+    });
   } catch (error) {
     console.error('Delete error:', error);
     res.status(500).json({
@@ -172,7 +232,6 @@ router.delete('/:type/:filename', auth, async (req, res) => {
   }
 });
 
-// Error handling middleware
 router.use((error, req, res, next) => {
   if (error instanceof multer.MulterError) {
     if (error.code === 'LIMIT_FILE_SIZE') {
@@ -182,7 +241,7 @@ router.use((error, req, res, next) => {
       });
     }
   }
-  
+
   res.status(400).json({
     success: false,
     message: error.message || 'Upload error'

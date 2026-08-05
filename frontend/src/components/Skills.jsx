@@ -1,24 +1,7 @@
 import { useRef, useEffect } from 'react';
 import { motion, useInView, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { usePortfolioData } from '../context/PortfolioContext';
-import {
-  FaReact, FaHtml5, FaCss3Alt, FaPython, FaNodeJs, FaGithub, FaFigma, FaCode, FaChartBar,
-} from 'react-icons/fa';
-import {
-  SiNextdotjs, SiTypescript, SiJavascript, SiTailwindcss, SiFramer,
-  SiDjango, SiPostman, SiPostgresql, SiMysql, SiVercel, SiFastapi,
-  SiTensorflow, SiPytorch, SiPandas, SiScikitlearn, SiNumpy, SiApachespark,
-  SiMongodb, SiFirebase, SiRedis, SiElasticsearch, SiInfluxdb, SiPlotly,
-} from 'react-icons/si';
-
-const iconMap = {
-  FaReact, FaHtml5, FaCss3Alt, FaPython, FaNodeJs, FaGithub, FaFigma, FaCode, FaChartBar,
-  SiNextdotjs, SiTypescript, SiJavascript, SiTailwindcss, SiFramer,
-  SiDjango, SiPostman, SiPostgresql, SiMysql, SiVercel, SiFastapi,
-  SiTensorflow, SiPytorch, SiPandas, SiScikitlearn, SiNumpy, SiApachespark,
-  SiMongodb, SiFirebase, SiRedis, SiElasticsearch, SiInfluxdb, SiPlotly,
-  SiVisualstudiocode: FaCode,
-};
+import SkillIcon from './SkillIcon';
 
 function Counter({ value }) {
   const ref = useRef(null);
@@ -35,8 +18,6 @@ function Counter({ value }) {
 }
 
 function SkillCard({ skill, index }) {
-  const Icon = iconMap[skill.icon];
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -58,12 +39,12 @@ function SkillCard({ skill, index }) {
           className="absolute inset-0 rounded-full blur-[24px] opacity-20 group-hover:opacity-50 transition-opacity duration-500 scale-150"
           style={{ background: skill.color }}
         />
-        {Icon && (
-          <Icon
-            className="w-11 h-11 relative z-10 transition-transform duration-500 group-hover:scale-110 drop-shadow-md"
-            style={{ color: skill.color }}
-          />
-        )}
+        <SkillIcon
+          skill={skill}
+          className="w-11 h-11 relative z-10 transition-transform duration-500 group-hover:scale-110 drop-shadow-md"
+          imageClassName="w-11 h-11 object-contain"
+          style={{ color: skill.color }}
+        />
       </div>
 
       {/* Skill Name */}

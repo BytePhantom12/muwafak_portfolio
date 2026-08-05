@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { HiCloudArrowUp, HiPhoto, HiDocument, HiTrash } from 'react-icons/hi2';
 
 export default function FileUpload({ 
@@ -12,6 +12,10 @@ export default function FileUpload({
   const [dragActive, setDragActive] = useState(false);
   const [preview, setPreview] = useState(value || null);
   const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    setPreview(value || null);
+  }, [value]);
 
   const handleDrag = (e) => {
     e.preventDefault();

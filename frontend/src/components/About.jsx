@@ -10,6 +10,7 @@ export default function About() {
   const isInView = useInView(ref, { once: true, margin: '-100px' });
   const { portfolioData, loading } = usePortfolioData();
   const { about } = portfolioData;
+  const profileImage = portfolioData.profile?.profileImage || '/profile.png';
 
   const facts = [
     { emoji: '📍', label: 'Location', value: about.location },
@@ -122,7 +123,7 @@ export default function About() {
                 {/* Inner Image Mask */}
                 <div className="relative rounded-[calc(1.5rem-2px)] overflow-hidden bg-[#DDDBD3] h-full w-full z-10">
                   <img
-                    src="/profile.png"
+                    src={profileImage}
                     alt="Muwafak Abubakar – About"
                     className="w-full h-auto object-cover object-top transition duration-500 group-hover:scale-[1.02]"
                     style={{ minHeight: '400px', objectPosition: 'top center' }}

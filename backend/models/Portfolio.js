@@ -8,18 +8,30 @@ const portfolioSchema = new mongoose.Schema({
     email: { type: String, required: false },
     phone: String,
     location: String,
+    languages: String,
+    availability: String,
     profileImage: String,
+    profileImagePublicId: String,
     resume: String
   },
   
   about: {
+    introHeading: String,
+    introHeadingHighlight: String,
+    introDescription: String,
+    yearsOfExperience: Number,
+    projectsDone: Number,
+    location: String,
+    role: String,
+    education: String,
+    languages: String,
     description: { type: String, required: false },
     highlights: [String]
   },
   
   skills: [{
     category: { type: String, required: false },
-    items: [String]
+    items: [mongoose.Schema.Types.Mixed]
   }],
   
   education: [{
@@ -46,6 +58,7 @@ const portfolioSchema = new mongoose.Schema({
     title: { type: String, required: false },
     description: { type: String, required: false },
     image: String,
+    imagePublicId: String,
     technologies: [String],
     liveUrl: String,
     githubUrl: String,
@@ -59,7 +72,9 @@ const portfolioSchema = new mongoose.Schema({
       linkedin: String,
       github: String,
       twitter: String,
-      website: String
+      website: String,
+      facebook: String,
+      whatsapp: String
     }
   }
 }, {

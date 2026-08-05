@@ -61,6 +61,7 @@ function useVisitorCount() {
 export default function Hero() {
   const { portfolioData, loading } = usePortfolioData();
   const visitorCount = useVisitorCount();
+  const profileImage = portfolioData.profile?.profileImage || '/profile.png';
 
   // Use portfolioData instead of PORTFOLIO_DATA
   const typingSequence = portfolioData.typingPhrases.flatMap(p => [p, 2000]);
@@ -168,7 +169,7 @@ export default function Hero() {
                 </button>
               </Link>
               <a
-                href={portfolioData.cvUrl ? `${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}${portfolioData.cvUrl}` : '#'}
+                href={portfolioData.cvUrl ? `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${portfolioData.cvUrl}` : '#'}
                 download
                 id="hero-download-cv"
                 className="btn-outline"
@@ -196,7 +197,7 @@ export default function Hero() {
               <div className="absolute inset-[-16px] rounded-full bg-gradient-to-br from-[#185FA5]/20 to-[#C2C0B8]/20 blur-xl animate-pulse-slow" />
               <div className="profile-ring" style={{ width: 280, height: 280 }}>
                 <img
-                  src="/profile.png"
+                  src={profileImage}
                   alt="Muwafak – Full-Stack Developer & Data Analyst"
                   className="w-full h-full rounded-full object-cover object-top"
                   style={{ width: '100%', height: '100%' }}

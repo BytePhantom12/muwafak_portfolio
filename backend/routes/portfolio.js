@@ -3,6 +3,46 @@ const router = express.Router();
 const Portfolio = require('../models/Portfolio');
 const auth = require('../middleware/auth');
 
+/**
+ * @openapi
+ * /api/portfolio:
+ *   get:
+ *     tags:
+ *       - Portfolio
+ *     summary: Get portfolio data
+ *     responses:
+ *       "200":
+ *         description: Portfolio returned successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 profile:
+ *                   type: object
+ *                 about:
+ *                   type: object
+ *                 skills:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                 education:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                 experience:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                 projects:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                 contact:
+ *                   type: object
+ *       "500":
+ *         description: Server error
+ */
 // GET /api/portfolio - Get portfolio data
 router.get('/', async (req, res) => {
   try {
@@ -12,10 +52,10 @@ router.get('/', async (req, res) => {
       // Create default portfolio if none exists
       portfolio = new Portfolio({
         profile: {
-          name: 'Your Name',
+          name: 'Muwafak Abubakar',
           title: 'Full Stack Developer',
           bio: 'Passionate developer creating amazing web experiences',
-          email: 'your.email@example.com'
+          email: 'muwafaqabubakr11@gmail.com'
         },
         about: {
           description: 'Add your about description here'
@@ -26,7 +66,7 @@ router.get('/', async (req, res) => {
         experience: [],
         projects: [],
         contact: {
-          email: 'your.email@example.com'
+          email: 'muwafaqabubakr11@gmail.com'
         }
       });
       await portfolio.save();
@@ -39,6 +79,53 @@ router.get('/', async (req, res) => {
   }
 });
 
+/**
+ * @openapi
+ * /api/portfolio:
+ *   put:
+ *     tags:
+ *       - Portfolio
+ *     summary: Update portfolio data
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             description: Partial or complete portfolio object matching the stored portfolio schema.
+ *             properties:
+ *               profile:
+ *                 type: object
+ *               about:
+ *                 type: object
+ *               skills:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *               education:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *               experience:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *               projects:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *               contact:
+ *                 type: object
+ *     responses:
+ *       "200":
+ *         description: Portfolio updated successfully
+ *       "401":
+ *         description: No token or invalid token
+ *       "500":
+ *         description: Server error
+ */
 // PUT /api/portfolio - Update portfolio data (protected)
 router.put('/', auth, async (req, res) => {
   try {
@@ -75,6 +162,41 @@ router.put('/', auth, async (req, res) => {
   }
 });
 
+/**
+ * @openapi
+ * /api/portfolio/section/{section}:
+ *   put:
+ *     tags:
+ *       - Portfolio
+ *     summary: Update a specific portfolio section
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: section
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Portfolio section key such as profile, about, skills, education, experience, projects, or contact.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             description: Section payload matching the selected section.
+ *     responses:
+ *       "200":
+ *         description: Section updated successfully
+ *       "400":
+ *         description: Invalid section
+ *       "404":
+ *         description: Portfolio not found
+ *       "401":
+ *         description: No token or invalid token
+ *       "500":
+ *         description: Server error
+ */
 // PUT /api/portfolio/section/:section - Update specific section
 router.put('/section/:section', auth, async (req, res) => {
   try {

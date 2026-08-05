@@ -5,6 +5,40 @@ require('dotenv').config();
 
 const app = express();
 
+const swaggerUi = require("swagger-ui-express");
+const swaggerJsdoc = require("swagger-jsdoc");
+
+const options = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Portfolio API",
+      version: "1.0.0",
+      description: "REST API for the MUWAFAK portfolio backend, including authentication, portfolio content, contact messages, and file uploads.",
+    },
+    servers: [
+      {
+        url: "http://localhost:5000",
+        description: "Local development server",
+      },
+    ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
+  },
+  apis: ["./routes/**/*.js"],
+   // or wherever your route annotations are
+};
+
+const specs = swaggerJsdoc(options);
+
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -24,13 +58,24 @@ app.get('/', (req, res) => {
 });
 
 // MongoDB connection
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => {
-    console.log('Connected to MongoDB Atlas');
-  })
-  .catch((error) => {
-    console.error('MongoDB connection error:', error);
-  });
+const mongoUri = process.env.MONGODB_URI || process.env.MONGODB_URL;
+
+if (mongoUri) {
+  mongoose.connect(mongoUri)
+    .then(() => {
+      console.log('Connected to MongoDB');
+    })
+    .catch((error) => {
+  console.error("MongoDB connection error:");
+  console.error(error);
+  console.error("Message:", error.message);
+  console.error("Name:", error.name);
+  console.error("Code:", error.code);
+  console.error("Cause:", error.cause);
+});
+} else {
+  console.warn('MONGODB_URI not set. Set it in your environment to enable database access.');
+}
 
 const PORT = process.env.PORT || 5000;
 
@@ -39,3 +84,4 @@ app.listen(PORT, () => {
 });
 
 module.exports = app;
+

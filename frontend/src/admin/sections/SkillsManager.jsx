@@ -1,9 +1,18 @@
 import { useState, useEffect } from 'react';
 import { HiPlus, HiPencil, HiTrash, HiCheck, HiXMark } from 'react-icons/hi2';
-import { portfolioAPI, uploadAPI } from '../../services/api';
+import { portfolioAPI } from '../../services/api';
 import Modal from '../../components/Modal';
-import FileUpload from '../../components/FileUpload';
+import IconPicker from '../../components/IconPicker';
+import SkillIcon from '../../components/SkillIcon';
 import { usePortfolioData } from '../../context/PortfolioContext';
+import {
+  SKILL_CATEGORY_OPTIONS,
+  getSkillCategoryConfig,
+  groupSkillsByCategory,
+  normalizeCategoryName,
+  normalizeSkillItem,
+  toBackendSkillSections,
+} from '../../utils/skillUtils';
 
 export default function SkillsManager() {
   const [skills, setSkills] = useState([]);
@@ -13,33 +22,28 @@ export default function SkillsManager() {
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
-    icon: '',
+    iconType: 'react',
+    icon: 'FaCode',
     level: 90,
     category: 'Frontend',
     color: '#00d4ff',
   });
 
-  const [uploadedIcon, setUploadedIcon] = useState(null);
   const { portfolioData, updateLocalPortfolio } = usePortfolioData();
 
-  const categories = [
-    { name: 'Frontend', color: '#00d4ff' },
-    { name: 'Backend', color: '#7c3aed' },
-    { name: 'Tools & Cloud', color: '#10b981' },
-  ];
+  const categories = SKILL_CATEGORY_OPTIONS.map((name) => ({
+    name,
+    ...getSkillCategoryConfig(name),
+  }));
 
   useEffect(() => {
     if (portfolioData?.skillCategories) {
       setLoading(false);
       const flatSkills = (portfolioData.skillCategories || []).flatMap((skillCategory, catIndex) =>
-        (skillCategory.skills || []).map((item, itemIndex) => ({
+        (skillCategory.skills || skillCategory.items || []).map((item, itemIndex) => ({
           _id: `${catIndex}-${itemIndex}`,
-          name: item.name || item,
-          icon: item.icon || '',
-          level: item.level || 90,
-          category: skillCategory.name || skillCategory.category,
-          categoryColor: skillCategory.color || '#00d4ff',
-          color: item.color || skillCategory.color || '#00d4ff',
+          ...normalizeSkillItem(item, normalizeCategoryName(skillCategory.name || skillCategory.category), skillCategory.color),
+          category: normalizeCategoryName(skillCategory.name || skillCategory.category),
         }))
       );
       setSkills(flatSkills);
@@ -49,22 +53,12 @@ export default function SkillsManager() {
   const saveSkills = async (updatedSkills) => {
     try {
       setSaving(true);
-      const skillsByCategory = {};
-      updatedSkills.forEach(skill => {
-        if (!skillsByCategory[skill.category]) {
-          skillsByCategory[skill.category] = [];
-        }
-        skillsByCategory[skill.category].push(skill.name);
-      });
-
-      const backendFormat = Object.entries(skillsByCategory).map(([category, items]) => ({
-        category,
-        items,
-      }));
+      const frontendFormat = groupSkillsByCategory(updatedSkills);
+      const backendFormat = toBackendSkillSections(updatedSkills);
 
       await portfolioAPI.updateSection('skills', backendFormat);
       setSkills(updatedSkills);
-      try { updateLocalPortfolio({ skillCategories: backendFormat }); } catch { }
+      try { updateLocalPortfolio({ skillCategories: frontendFormat }); } catch { }
       alert('Skills updated successfully!');
     } catch (error) {
       console.error('Error saving skills:', error);
@@ -74,35 +68,9 @@ export default function SkillsManager() {
     }
   };
 
-  const handleIconUpload = async (fileData) => {
-    if (!fileData) {
-      setUploadedIcon(null);
-      setFormData({ ...formData, icon: '' });
-      return;
-    }
-
-    try {
-      const response = await uploadAPI.uploadFile(fileData.file, 'icon');
-      setUploadedIcon(response.data);
-      setFormData({ ...formData, icon: response.data.url });
-    } catch (error) {
-      console.error('Error uploading icon:', error);
-      alert('Failed to upload icon: ' + error.message);
-    }
-  };
-
-  const getImageUrl = (iconPath) => {
-    if (!iconPath) return null;
-    if (iconPath.startsWith('/uploads')) {
-      return `${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}${iconPath}`;
-    }
-    return iconPath;
-  };
-
   const openAddModal = () => {
     setEditingId(null);
-    setFormData({ name: '', icon: '', level: 90, category: 'Frontend', color: '#00d4ff' });
-    setUploadedIcon(null);
+    setFormData({ name: '', iconType: 'react', icon: 'FaCode', level: 90, category: 'Frontend', color: '#00d4ff' });
     setShowModal(true);
   };
 
@@ -110,12 +78,12 @@ export default function SkillsManager() {
     setEditingId(skill._id);
     setFormData({
       name: skill.name,
+      iconType: skill.iconType || (skill.icon?.url || typeof skill.icon === 'string' && skill.icon.startsWith('http') ? 'image' : 'react'),
       icon: skill.icon,
       level: skill.level,
       category: skill.category,
       color: skill.color,
     });
-    setUploadedIcon(null);
     setShowModal(true);
   };
 
@@ -126,7 +94,7 @@ export default function SkillsManager() {
       setSaving(true);
       const newSkill = {
         ...formData,
-        categoryColor: categories.find(cat => cat.name === formData.category)?.color || '#00d4ff',
+        color: formData.color || categories.find((cat) => cat.name === formData.category)?.color || '#00d4ff',
       };
       const updatedSkills = [...skills, newSkill];
       await saveSkills(updatedSkills);
@@ -145,7 +113,7 @@ export default function SkillsManager() {
         skill._id === editingId ? {
           ...skill,
           ...formData,
-          categoryColor: categories.find(cat => cat.name === formData.category)?.color || '#00d4ff',
+          color: formData.color || categories.find((cat) => cat.name === formData.category)?.color || '#00d4ff',
         } : skill
       );
       await saveSkills(updatedSkills);
@@ -166,8 +134,7 @@ export default function SkillsManager() {
   const closeModal = () => {
     setShowModal(false);
     setEditingId(null);
-    setFormData({ name: '', icon: '', level: 90, category: 'Frontend', color: '#00d4ff' });
-    setUploadedIcon(null);
+    setFormData({ name: '', iconType: 'react', icon: 'FaCode', level: 90, category: 'Frontend', color: '#00d4ff' });
   };
 
   if (loading) {
@@ -211,13 +178,12 @@ export default function SkillsManager() {
           </div>
 
           <div>
-            <FileUpload
+            <IconPicker
               label="Skill Icon"
-              accept="image/*"
-              value={getImageUrl(formData.icon)}
-              onChange={handleIconUpload}
-              type="image"
-              placeholder="Upload skill icon (PNG, SVG, JPG)"
+              iconType={formData.iconType}
+              value={formData.icon}
+              onChange={(nextIcon) => setFormData((previous) => ({ ...previous, ...nextIcon }))}
+              placeholder="Search icon names like FaReact or SiFastapi"
             />
           </div>
 
@@ -261,11 +227,16 @@ export default function SkillsManager() {
                     className="w-10 h-10 rounded-xl flex items-center justify-center text-white text-sm font-bold"
                     style={{ backgroundColor: categories.find(c => c.name === formData.category)?.color || '#185FA5' }}
                   >
-                    {formData.icon ? (
-                      <img src={getImageUrl(formData.icon)} alt={formData.name} className="w-6 h-6 object-contain" />
-                    ) : (
-                      formData.name.slice(0, 2)
-                    )}
+                    <SkillIcon
+                      skill={{
+                        name: formData.name,
+                        iconType: formData.iconType,
+                        icon: formData.icon,
+                        color: categories.find((c) => c.name === formData.category)?.color || '#185FA5',
+                      }}
+                      className="w-6 h-6"
+                      imageClassName="w-6 h-6"
+                    />
                   </div>
                   <div>
                     <h4 className="font-semibold text-text-primary">{formData.name}</h4>
@@ -336,11 +307,11 @@ export default function SkillsManager() {
                         className="w-10 h-10 rounded-xl flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
                         style={{ backgroundColor: skill.color || category.color }}
                       >
-                        {skill.icon ? (
-                          <img src={getImageUrl(skill.icon)} alt={skill.name} className="w-6 h-6 object-contain" />
-                        ) : (
-                          skill.name.slice(0, 2)
-                        )}
+                        <SkillIcon
+                          skill={skill}
+                          className="w-6 h-6"
+                          imageClassName="w-6 h-6"
+                        />
                       </div>
                       <div className="min-w-0 flex-1">
                         <h4 className="font-semibold text-text-primary truncate">{skill.name}</h4>
