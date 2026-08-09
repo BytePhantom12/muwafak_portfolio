@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Portfolio = require('../models/Portfolio');
 const auth = require('../middleware/auth');
-const seedData = require('../shared/seedData');
+const seedData = require('../../shared/seedData.json');
 
 /**
  * @openapi

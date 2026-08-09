@@ -24,7 +24,7 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 const Portfolio = require('../models/Portfolio');
-const seedData = require('../shared/seedData');
+const seedData = require('../../shared/seedData.json');
 
 const MONGO_URI = process.env.MONGO_URI || process.env.MONGODB_URI;
 
