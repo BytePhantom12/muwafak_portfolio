@@ -40,7 +40,23 @@ const specs = swaggerJsdoc(options);
 
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
 // Middleware
-app.use(cors());
+const allowedOrigins = [
+  'https://muwafak-portfolio.vercel.app',
+  'http://localhost:5173',
+  'http://localhost:3000',
+  // Support additional origins via comma-separated env var (e.g. preview deployments)
+  ...(process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim()) : []),
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (e.g. mobile apps, curl, server-to-server)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    callback(new Error(`CORS: origin '${origin}' not allowed`));
+  },
+  credentials: true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
