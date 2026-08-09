@@ -74,24 +74,36 @@ app.get('/', (req, res) => {
 });
 
 // MongoDB connection
-const mongoUri = process.env.MONGODB_URI || process.env.MONGODB_URL;
+const mongoUri = process.env.MONGODB_URI || process.env.MONGODB_URL || process.env.MONGO_URI;
 
-if (mongoUri) {
-  mongoose.connect(mongoUri)
-    .then(() => {
-      console.log('Connected to MongoDB');
-    })
-    .catch((error) => {
-  console.error("MongoDB connection error:");
-  console.error(error);
-  console.error("Message:", error.message);
-  console.error("Name:", error.name);
-  console.error("Code:", error.code);
-  console.error("Cause:", error.cause);
+let isConnecting = false;
+const connectDB = async () => {
+  if (mongoose.connection.readyState >= 1) return;
+  if (isConnecting) return;
+  if (!mongoUri) {
+    console.warn('MONGODB_URI / MONGO_URI not set. Set it in your environment to enable database access.');
+    return;
+  }
+  try {
+    isConnecting = true;
+    await mongoose.connect(mongoUri);
+    console.log('Connected to MongoDB');
+  } catch (error) {
+    console.error("MongoDB connection error:", error.message);
+  } finally {
+    isConnecting = false;
+  }
+};
+
+connectDB();
+
+// Ensure DB is connected for incoming API requests (especially on serverless/Vercel)
+app.use(async (req, res, next) => {
+  if (mongoUri && mongoose.connection.readyState === 0) {
+    await connectDB();
+  }
+  next();
 });
-} else {
-  console.warn('MONGODB_URI not set. Set it in your environment to enable database access.');
-}
 
 const PORT = process.env.PORT || 5000;
 

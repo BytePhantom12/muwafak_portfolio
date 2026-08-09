@@ -7,6 +7,7 @@ const auth = require('../middleware/auth');
 
 // Session duration: configurable via env, default 24 hours
 const ADMIN_SESSION_DURATION = parseInt(process.env.ADMIN_SESSION_DURATION, 10) || 86400000;
+const getJwtSecret = () => process.env.JWT_SECRET || 'portfolio_jwt_secret_key_fallback_2026';
 /**
  * @openapi
  * /api/auth/register:
@@ -99,7 +100,7 @@ router.post('/register', async (req, res) => {
     // Generate JWT token with sessionId
     const token = jwt.sign(
       { userId: user._id, sessionId }, 
-      process.env.JWT_SECRET, 
+      getJwtSecret(), 
       { expiresIn: '7d' }
     );
     
@@ -115,7 +116,7 @@ router.post('/register', async (req, res) => {
     });
   } catch (error) {
     console.error('Registration error:', error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
 
@@ -186,6 +187,10 @@ router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
     
+    if (!username || !password) {
+      return res.status(400).json({ message: 'Please provide both username/email and password' });
+    }
+
     // Find user by username or email
     const user = await User.findOne({
       $or: [{ username }, { email: username }]
@@ -210,7 +215,7 @@ router.post('/login', async (req, res) => {
     // Generate JWT token with sessionId
     const token = jwt.sign(
       { userId: user._id, sessionId }, 
-      process.env.JWT_SECRET, 
+      getJwtSecret(), 
       { expiresIn: '7d' }
     );
     
@@ -226,7 +231,7 @@ router.post('/login', async (req, res) => {
     });
   } catch (error) {
     console.error('Login error:', error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
 
