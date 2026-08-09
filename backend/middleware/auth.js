@@ -16,6 +16,25 @@ const auth = async (req, res, next) => {
       return res.status(401).json({ message: 'Token is not valid' });
     }
     
+    // Validate session ID and expiration against MongoDB
+    if (!decoded.sessionId) {
+      return res.status(401).json({ message: 'Token is missing session identification', code: 'SESSION_INVALID' });
+    }
+
+    if (!user.activeSessionId || user.activeSessionId !== decoded.sessionId) {
+      return res.status(401).json({ 
+        message: 'Your session has ended because your account was signed in from another location.',
+        code: 'SESSION_REPLACED'
+      });
+    }
+
+    if (user.activeSessionExpiresAt && new Date(user.activeSessionExpiresAt) < new Date()) {
+      return res.status(401).json({ 
+        message: 'Session expired',
+        code: 'SESSION_EXPIRED'
+      });
+    }
+    
     req.userId = decoded.userId;
     req.user = user;
     next();

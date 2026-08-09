@@ -1,9 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const auth = require('../middleware/auth');
 
+// Session duration: configurable via env, default 24 hours
+const ADMIN_SESSION_DURATION = parseInt(process.env.ADMIN_SESSION_DURATION, 10) || 86400000;
 /**
  * @openapi
  * /api/auth/register:
@@ -86,11 +89,16 @@ router.post('/register', async (req, res) => {
     
     // Create new user
     const user = new User({ username, email, password });
+    
+    // Generate session
+    const sessionId = crypto.randomUUID();
+    user.activeSessionId = sessionId;
+    user.activeSessionExpiresAt = new Date(Date.now() + ADMIN_SESSION_DURATION);
     await user.save();
     
-    // Generate JWT token
+    // Generate JWT token with sessionId
     const token = jwt.sign(
-      { userId: user._id }, 
+      { userId: user._id, sessionId }, 
       process.env.JWT_SECRET, 
       { expiresIn: '7d' }
     );
@@ -193,9 +201,15 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
     
-    // Generate JWT token
+    // Generate new session — this invalidates any previous session
+    const sessionId = crypto.randomUUID();
+    user.activeSessionId = sessionId;
+    user.activeSessionExpiresAt = new Date(Date.now() + ADMIN_SESSION_DURATION);
+    await user.save();
+    
+    // Generate JWT token with sessionId
     const token = jwt.sign(
-      { userId: user._id }, 
+      { userId: user._id, sessionId }, 
       process.env.JWT_SECRET, 
       { expiresIn: '7d' }
     );
@@ -267,6 +281,36 @@ router.get('/me', auth, async (req, res) => {
     res.json(user);
   } catch (error) {
     console.error('Get user error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+/**
+ * @openapi
+ * /api/auth/logout:
+ *   post:
+ *     tags:
+ *       - Auth
+ *     summary: Logout user and invalidate active session
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       "200":
+ *         description: Logged out successfully
+ *       "401":
+ *         description: Unauthorized
+ */
+// POST /api/auth/logout - Logout current user and clear session
+router.post('/logout', auth, async (req, res) => {
+  try {
+    if (req.user) {
+      req.user.activeSessionId = null;
+      req.user.activeSessionExpiresAt = null;
+      await req.user.save();
+    }
+    res.json({ message: 'Logged out successfully' });
+  } catch (error) {
+    console.error('Logout error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });

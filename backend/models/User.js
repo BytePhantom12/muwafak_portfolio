@@ -24,6 +24,15 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['admin', 'user'],
     default: 'admin'
+  },
+  // Single-session tracking: only one active session allowed at a time
+  activeSessionId: {
+    type: String,
+    default: null
+  },
+  activeSessionExpiresAt: {
+    type: Date,
+    default: null
   }
 }, {
   timestamps: true

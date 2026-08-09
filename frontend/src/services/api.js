@@ -18,6 +18,12 @@ const handleResponse = async (response) => {
     
     // If unauthorized, clear token and prompt re-login
     if (response.status === 401) {
+      if (error.code === 'SESSION_REPLACED') {
+        alert('Your session has ended because your account was signed in from another location.');
+      } else if (error.code === 'SESSION_EXPIRED') {
+        alert('Your session has expired. Please log in again.');
+      }
+      
       localStorage.removeItem('admin_token');
       localStorage.removeItem('admin_user');
       sessionStorage.removeItem('admin_authenticated');
@@ -166,7 +172,20 @@ export const authAPI = {
   },
 
   // Logout
-  logout: () => {
+  logout: async () => {
+    const token = getAuthToken();
+    if (token) {
+      try {
+        await fetch(`${API_BASE_URL}/auth/logout`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+      } catch (err) {
+        console.error('Server logout error:', err);
+      }
+    }
     localStorage.removeItem('admin_token');
     localStorage.removeItem('admin_user');
     sessionStorage.removeItem('admin_authenticated');
