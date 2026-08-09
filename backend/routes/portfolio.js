@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Portfolio = require('../models/Portfolio');
 const auth = require('../middleware/auth');
+const seedData = require('../shared/seedData');
 
 /**
  * @openapi
@@ -49,26 +50,8 @@ router.get('/', async (req, res) => {
     let portfolio = await Portfolio.findOne();
     
     if (!portfolio) {
-      // Create default portfolio if none exists
-      portfolio = new Portfolio({
-        profile: {
-          name: 'Muwafak Abubakar',
-          title: 'Full Stack Developer',
-          bio: 'Passionate developer creating amazing web experiences',
-          email: 'muwafaqabubakr11@gmail.com'
-        },
-        about: {
-          description: 'Add your about description here'
-        },
-        skills: [],
-        techStack: [],
-        education: [],
-        experience: [],
-        projects: [],
-        contact: {
-          email: 'muwafaqabubakr11@gmail.com'
-        }
-      });
+      // Create default portfolio if none exists using shared seed helper
+      portfolio = new Portfolio(seedData);
       await portfolio.save();
     }
     
@@ -235,6 +218,182 @@ router.put('/section/:section', auth, async (req, res) => {
         message: error.errors[key].message
       })) : []
     });
+  }
+});
+
+/**
+ * @openapi
+ * /api/portfolio/projects:
+ *   post:
+ *     tags:
+ *       - Portfolio
+ *     summary: Add a new project
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       "201":
+ *         description: Project created successfully
+ */
+// POST /api/portfolio/projects - Add new project
+router.post('/projects', auth, async (req, res) => {
+  try {
+    const projectData = req.body;
+    let portfolio = await Portfolio.findOne();
+    if (!portfolio) {
+      return res.status(404).json({ message: 'Portfolio not found' });
+    }
+    
+    // Add validation to prevent duplicate project IDs
+    if (projectData._id && portfolio.projects.some(p => p._id.toString() === projectData._id.toString())) {
+      return res.status(400).json({ message: 'Duplicate project ID detected' });
+    }
+    
+    portfolio.projects.push(projectData);
+    await portfolio.save();
+    
+    const newProject = portfolio.projects[portfolio.projects.length - 1];
+    res.status(201).json({ message: 'Project created successfully', project: newProject, projects: portfolio.projects });
+  } catch (error) {
+    console.error('Error creating project:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+/**
+ * @openapi
+ * /api/portfolio/projects/{id}:
+ *   put:
+ *     tags:
+ *       - Portfolio
+ *     summary: Update a specific project
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       "200":
+ *         description: Project updated successfully
+ */
+// PUT /api/portfolio/projects/:id - Update a specific project
+router.put('/projects/:id', auth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedData = req.body;
+    
+    let portfolio = await Portfolio.findOne();
+    if (!portfolio) {
+      return res.status(404).json({ message: 'Portfolio not found' });
+    }
+    
+    const project = portfolio.projects.id(id);
+    if (!project) {
+      return res.status(404).json({ message: 'Project not found' });
+    }
+
+    // If the image is replaced, delete the OLD Cloudinary image for that project only
+    const oldPublicId = project.image?.public_id;
+    const newPublicId = updatedData.image?.public_id;
+
+    if (oldPublicId && oldPublicId !== newPublicId) {
+      // Check if any OTHER project in the database currently uses the same public_id to avoid deleting shared images
+      const otherProjectsWithSameImage = portfolio.projects.filter(p => p._id.toString() !== id && p.image?.public_id === oldPublicId);
+      if (otherProjectsWithSameImage.length === 0) {
+        try {
+          const { deleteFromCloudinary } = require('../config/cloudinary');
+          await deleteFromCloudinary(oldPublicId, 'image');
+          console.log(`Successfully deleted old Cloudinary image: ${oldPublicId}`);
+        } catch (cloudinaryErr) {
+          console.error(`Failed to delete old Cloudinary image ${oldPublicId}:`, cloudinaryErr);
+        }
+      } else {
+        console.log(`Skipped deleting old Cloudinary image ${oldPublicId} because it is referenced by other projects`);
+      }
+    }
+
+    // Update project fields
+    project.set(updatedData);
+    await portfolio.save();
+    
+    res.json({ message: 'Project updated successfully', project, projects: portfolio.projects });
+  } catch (error) {
+    console.error('Error updating project:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+/**
+ * @openapi
+ * /api/portfolio/projects/{id}:
+ *   delete:
+ *     tags:
+ *       - Portfolio
+ *     summary: Delete a specific project
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       "200":
+ *         description: Project deleted successfully
+ */
+// DELETE /api/portfolio/projects/:id - Delete a specific project
+router.delete('/projects/:id', auth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    let portfolio = await Portfolio.findOne();
+    if (!portfolio) {
+      return res.status(404).json({ message: 'Portfolio not found' });
+    }
+    
+    const project = portfolio.projects.id(id);
+    if (!project) {
+      return res.status(404).json({ message: 'Project not found' });
+    }
+
+    // Clean up its Cloudinary image if it exists and no other project references it
+    const publicId = project.image?.public_id;
+    if (publicId) {
+      const otherProjectsWithSameImage = portfolio.projects.filter(p => p._id.toString() !== id && p.image?.public_id === publicId);
+      if (otherProjectsWithSameImage.length === 0) {
+        try {
+          const { deleteFromCloudinary } = require('../config/cloudinary');
+          await deleteFromCloudinary(publicId, 'image');
+          console.log(`Successfully deleted Cloudinary image on project deletion: ${publicId}`);
+        } catch (cloudinaryErr) {
+          console.error(`Failed to delete Cloudinary image ${publicId}:`, cloudinaryErr);
+        }
+      }
+    }
+
+    // Remove subdocument
+    project.deleteOne();
+    await portfolio.save();
+    
+    res.json({ message: 'Project deleted successfully', projects: portfolio.projects });
+  } catch (error) {
+    console.error('Error deleting project:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
 

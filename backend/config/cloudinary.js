@@ -10,22 +10,36 @@ cloudinary.config({
 const uploadBuffer = (buffer, options = {}) => {
   return new Promise((resolve, reject) => {
     const uploadOptions = {
-      resource_type: options.resource_type || options.resourceType || 'auto',
+      resource_type: options.resourceType || 'image',
       folder: options.folder,
-      public_id: options.public_id || options.publicId,
-      transformation: options.transformation
+      public_id: options.publicId
     };
 
-    const uploadStream = cloudinary.uploader.upload_stream(uploadOptions, (error, result) => {
-      if (error) {
-        reject(error);
-        return;
-      }
+    if (options.transformation) {
+      uploadOptions.transformation = options.transformation;
+    }
 
-      resolve(result);
+    console.log('Cloudinary upload options:', {
+      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+      api_key: process.env.CLOUDINARY_API_KEY ? 'SET' : 'MISSING',
+      api_secret: process.env.CLOUDINARY_API_SECRET ? 'SET' : 'MISSING',
+      resource_type: uploadOptions.resource_type,
+      folder: uploadOptions.folder,
+      public_id: uploadOptions.public_id,
+      transformation: uploadOptions.transformation
     });
 
-    uploadStream.end(buffer);
+    cloudinary.uploader.upload_stream(
+      uploadOptions,
+      (error, result) => {
+        if (error) {
+          reject(error);
+          return;
+        }
+
+        resolve(result);
+      }
+    ).end(buffer);
   });
 };
 

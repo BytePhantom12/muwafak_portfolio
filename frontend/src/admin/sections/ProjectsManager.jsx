@@ -8,20 +8,15 @@ import FileUpload from '../../components/FileUpload';
 // Helper function to get image URL
 const getImageUrl = (imagePath) => {
   if (!imagePath) return null;
+  const url = typeof imagePath === 'object' ? (imagePath.secure_url || imagePath.url || imagePath.secureUrl) : imagePath;
+  if (!url) return null;
 
   // If it starts with /uploads, it's an uploaded file
-  if (imagePath.startsWith('/uploads')) {
-    return `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${imagePath}`;
+  if (url.startsWith('/uploads')) {
+    return `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${url}`;
   }
 
-  // If it's just a filename, use our imported images
-  const filename = imagePath.split('/').pop();
-  if (projectImages[filename]) {
-    return projectImages[filename];
-  }
-
-  // Otherwise, use the path as-is
-  return imagePath;
+  return url;
 };
 
 export default function ProjectsManager() {
@@ -37,14 +32,14 @@ export default function ProjectsManager() {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    image: '',
+    image: null,
     tags: [''],
     liveUrl: '',
     githubUrl: '',
   });
 
   const [uploadedImage, setUploadedImage] = useState(null);
-  const { updateLocalPortfolio, portfolioData } = usePortfolioData();
+  const { updateLocalPortfolio, portfolioData, refreshPortfolio } = usePortfolioData();
 
   useEffect(() => {
     // keep in sync if portfolioData changes
@@ -52,30 +47,12 @@ export default function ProjectsManager() {
     setLoading(false);
   }, [portfolioData]);
 
-  const saveProjects = async (updatedProjects) => {
-    try {
-      setSaving(true);
-      await portfolioAPI.updateSection('projects', updatedProjects);
-      setProjects(updatedProjects);
-      try {
-        // update shared context so homepage reflects changes immediately
-        updateLocalPortfolio({ projects: updatedProjects });
-      } catch { }
-      alert('Projects updated successfully!');
-    } catch (error) {
-      console.error('Error saving projects:', error);
-      alert('Failed to save projects: ' + error.message);
-    } finally {
-      setSaving(false);
-    }
-  };
-
   const openModal = (mode, project = null) => {
     setModalMode(mode);
     setEditingProject(project);
 
     if (mode === 'add') {
-      setFormData({ title: '', description: '', image: '', tags: [''], liveUrl: '', githubUrl: '' });
+      setFormData({ title: '', description: '', image: null, tags: [''], liveUrl: '', githubUrl: '' });
       setUploadedImage(null);
     } else if (mode === 'edit' && project) {
       setFormData({
@@ -105,21 +82,28 @@ export default function ProjectsManager() {
     setShowModal(false);
     setModalMode('add');
     setEditingProject(null);
-    setFormData({ title: '', description: '', image: '', tags: [''], liveUrl: '', githubUrl: '' });
+    setFormData({ title: '', description: '', image: null, tags: [''], liveUrl: '', githubUrl: '' });
     setUploadedImage(null);
   };
 
   const handleImageUpload = async (fileData) => {
     if (!fileData) {
       setUploadedImage(null);
-      setFormData({ ...formData, image: '' });
+      setFormData({ ...formData, image: null });
       return;
     }
 
     try {
       const response = await uploadAPI.uploadFile(fileData.file, 'project');
-      setUploadedImage(response.data);
-      setFormData({ ...formData, image: response.data.url });
+      const imgData = {
+        secure_url: response.data.url || response.data.secure_url,
+        public_id: response.data.publicId || response.data.public_id,
+        width: response.data.width || null,
+        height: response.data.height || null,
+        format: response.data.format || null
+      };
+      setUploadedImage(imgData);
+      setFormData({ ...formData, image: imgData });
     } catch (error) {
       console.error('Error uploading image:', error);
       alert('Failed to upload image: ' + error.message);
@@ -140,10 +124,15 @@ export default function ProjectsManager() {
         githubUrl: formData.githubUrl,
         featured: false,
       };
-      const updatedProjects = [...projects, newProject];
-      await saveProjects(updatedProjects);
+      
+      await portfolioAPI.createProject(newProject);
+      await refreshPortfolio();
+      alert('Project added successfully!');
       closeModal();
     } catch (error) {
+      console.error('Error adding project:', error);
+      alert('Failed to add project: ' + error.message);
+    } finally {
       setSaving(false);
     }
   };
@@ -153,20 +142,23 @@ export default function ProjectsManager() {
 
     try {
       setSaving(true);
-      const updatedProjects = projects.map(project =>
-        project._id === editingProject._id ? {
-          ...project,
-          title: formData.title,
-          description: formData.description,
-          image: formData.image,
-          technologies: formData.tags.filter(t => t.trim() !== ''),
-          liveUrl: formData.liveUrl,
-          githubUrl: formData.githubUrl,
-        } : project
-      );
-      await saveProjects(updatedProjects);
+      const projectData = {
+        title: formData.title,
+        description: formData.description,
+        image: formData.image,
+        technologies: formData.tags.filter(t => t.trim() !== ''),
+        liveUrl: formData.liveUrl,
+        githubUrl: formData.githubUrl,
+      };
+
+      await portfolioAPI.updateProject(editingProject._id, projectData);
+      await refreshPortfolio();
+      alert('Project updated successfully!');
       closeModal();
     } catch (error) {
+      console.error('Error updating project:', error);
+      alert('Failed to update project: ' + error.message);
+    } finally {
       setSaving(false);
     }
   };
@@ -174,8 +166,17 @@ export default function ProjectsManager() {
   const handleDelete = async (id) => {
     if (saving) return; // Prevent duplicate operations
     if (confirm('Are you sure you want to delete this project?')) {
-      const updatedProjects = projects.filter(project => project._id !== id);
-      await saveProjects(updatedProjects);
+      try {
+        setSaving(true);
+        await portfolioAPI.deleteProject(id);
+        await refreshPortfolio();
+        alert('Project deleted successfully!');
+      } catch (error) {
+        console.error('Error deleting project:', error);
+        alert('Failed to delete project: ' + error.message);
+      } finally {
+        setSaving(false);
+      }
     }
   };
 
@@ -219,7 +220,7 @@ export default function ProjectsManager() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {projects.map((project) => (
           <div key={project._id} className="glass-card rounded-2xl overflow-hidden">
-            {project.image ? (
+            {getImageUrl(project.image) ? (
               <div className="h-48 bg-gradient-to-br from-accent/10 to-accent-dark/10 flex items-center justify-center overflow-hidden">
                 <img
                   src={getImageUrl(project.image)}

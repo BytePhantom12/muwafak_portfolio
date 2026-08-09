@@ -8,11 +8,13 @@ import { usePortfolioData } from '../context/PortfolioContext';
 // Helper function to get image URL
 const getImageUrl = (imagePath) => {
   if (!imagePath) return null;
-  if (imagePath.startsWith('http')) return imagePath;
-  if (imagePath.startsWith('/uploads')) {
-    return `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${imagePath}`;
+  const url = typeof imagePath === 'object' ? (imagePath.secure_url || imagePath.url || imagePath.secureUrl) : imagePath;
+  if (!url) return null;
+  if (url.startsWith('http')) return url;
+  if (url.startsWith('/uploads')) {
+    return `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${url}`;
   }
-  return imagePath;
+  return url;
 };
 
 function ProjectSlideshow({ images, title, hovered }) {

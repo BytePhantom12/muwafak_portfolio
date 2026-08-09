@@ -61,7 +61,8 @@ function useVisitorCount() {
 export default function Hero() {
   const { portfolioData, loading } = usePortfolioData();
   const visitorCount = useVisitorCount();
-  const profileImage = portfolioData.profile?.profileImage || '/profile.png';
+  const profileImgRaw = portfolioData.profile?.profileImage;
+  const profileImage = (typeof profileImgRaw === 'object' ? profileImgRaw?.secure_url || profileImgRaw?.url : profileImgRaw) || '/profile.png';
 
   // Use portfolioData instead of PORTFOLIO_DATA
   const typingSequence = portfolioData.typingPhrases.flatMap(p => [p, 2000]);

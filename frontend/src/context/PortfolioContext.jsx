@@ -1,212 +1,21 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { portfolioAPI } from '../services/api';
 import { getSkillCategoryConfig, normalizeCategoryName, normalizeSkillItem } from '../utils/skillUtils';
-
-// ─── FALLBACK DATA (Used while loading or if API fails) ────────────────────
-// This data is used as a fallback if the API is not available
-
-const FALLBACK_DATA = {
-  // Hero
-  name: 'Muwafak Abubakar',
-  role: 'Full-Stack Developer & Data Analyst',
-  typingPhrases: [
-    'Full-Stack Web Developer',
-    'Data Analyst'
-  ],
-  heroDescription:
-    'I build full-stack web applications and turn data into actionable insights.',
-  cvUrl: '/muwafak-cv.pdf',
-
-  // About
-  about: {
-    introHeading: 'Full-Stack Developer & Data Analyst',
-    introHeadingHighlight: 'Creative Problem Solver',
-    introDescription:
-      "I am a Full-Stack Developer and Data Analyst specializing in building end-to-end web applications and turning complex datasets into actionable insights. I design robust backend systems, implement scalable REST APIs, and construct highly responsive user interfaces. By bridging the gap between software engineering and data analysis, I create intelligent, high-performance systems that drive smarter, data-driven decisions.",
-    yearsOfExperience: 2,
-    projectsDone: 6,
-    location: 'Malaysia (Available Remotely)',
-    role: 'Full-Stack Developer & Data Analyst',
-    education: "Bachelor's in Computer Science",
-    languages: 'English, Arabic. Hausa',
-    highlights: [
-      'Building end-to-end applications from database to UI',
-      'Designing and implementing scalable REST APIs',
-      'Analyzing complex data pipelines and creating dashboards',
-      'Bridging the gap between engineering and data insights',
-    ],
-  },
-
-  // Social Links
-  socials: [
-    { id: 'github', label: 'GitHub', href: 'https://github.com/BytePhantom12', icon: 'FaGithub' },
-    { id: 'linkedin', label: 'LinkedIn', href: 'https://www.linkedin.com/in/muwafak-abubakar-8504822a1/', icon: 'FaLinkedinIn' },
-    { id: 'facebook', label: 'Facebook', href: '', icon: 'FaFacebookF' },
-    { id: 'whatsapp', label: 'WhatsApp', href: 'https://wa.me/+60179591694', icon: 'FaWhatsapp' },
-  ],
-
-  // Contact
-  contact: {
-    email: 'muwafaqabubakr11@gmail.com',
-    phone: '+60 17-959 1694',
-    location: 'Malaysia (Available Remotely)',
-  },
-
-  // Skills
-  skillCategories: [
-    {
-      name: 'Frontend',
-      color: '#185FA5',
-      emoji: '🎨',
-      skills: [
-        { name: 'React', level: 90, iconType: 'react', icon: 'FaReact', color: '#61dafb' },
-        { name: 'Next.js', level: 85, iconType: 'react', icon: 'SiNextdotjs', color: '#1C1B19' },
-        { name: 'JavaScript', level: 92, iconType: 'react', icon: 'SiJavascript', color: '#f7df1e' },
-        { name: 'HTML5', level: 95, iconType: 'react', icon: 'FaHtml5', color: '#e34f26' },
-        { name: 'CSS3', level: 90, iconType: 'react', icon: 'FaCss3Alt', color: '#1572b6' },
-        { name: 'Tailwind CSS', level: 88, iconType: 'react', icon: 'SiTailwindcss', color: '#06b6d4' },
-      ],
-    },
-    {
-      name: 'Backend',
-      color: '#626058',
-      emoji: '⚙️',
-      skills: [
-        { name: 'Python', level: 80, iconType: 'react', icon: 'FaPython', color: '#3776ab' },
-        { name: 'Django', level: 75, iconType: 'react', icon: 'SiDjango', color: '#44b78b' },
-        { name: 'FastAPI', level: 80, iconType: 'react', icon: 'SiFastapi', color: '#009688' },
-        { name: 'REST API', level: 72, iconType: 'react', icon: 'SiPostman', color: '#ff6c37' },
-      ],
-    },
-    {
-      name: 'Database',
-      color: '#10b981',
-      emoji: '🗄️',
-      skills: [
-        { name: 'PostgreSQL', level: 80, iconType: 'react', icon: 'SiPostgresql', color: '#336791' },
-        { name: 'MySQL', level: 78, iconType: 'react', icon: 'SiMysql', color: '#4479a1' },
-      ]
-    },
-    {
-      name: 'Data Analysis',
-      color: '#f59e0b',
-      emoji: '📊',
-      skills: [
-        { name: 'Pandas', level: 85, iconType: 'react', icon: 'SiPandas', color: '#150458' },
-        { name: 'NumPy', level: 80, iconType: 'react', icon: 'SiNumpy', color: '#013243' },
-        { name: 'Scikit-learn', level: 78, iconType: 'react', icon: 'SiScikitlearn', color: '#f7931e' },
-        { name: 'Matplotlib', level: 75, iconType: 'react', icon: 'FaChartBar', color: '#3b82f6' }
-      ]
-    },
-
-    {
-      name: 'Tools & Cloud',
-      color: '#10b981',
-      emoji: '🛠️',
-      skills: [
-        { name: 'Git', level: 88, iconType: 'react', icon: 'FaGithub', color: '#f54d27' },
-        { name: 'VS Code', level: 95, iconType: 'react', icon: 'SiVisualstudiocode', color: '#007acc' },
-        { name: 'Vercel', level: 85, iconType: 'react', icon: 'SiVercel', color: '#1C1B19' },
-      ],
-    },
-  ],
-
-  projects: [
-    {
-      id: 1,
-      title: 'Portfolio & Admin Dashboard',
-      description: 'Full-stack portfolio website with admin dashboard for managing projects, skills, education, and experience. Features real-time updates and responsive design.',
-      image: null,
-      tags: 'React, FastAPI, PostgreSQL, Tailwind CSS',
-      githubUrl: 'https://github.com/BytePhantom12',
-      liveUrl: 'https://muwafak-portfolio.vercel.app',
-      isFeatured: true,
-      gradientStart: '#185FA5',
-      gradientEnd: '#C2C0B8',
-      accentColor: '#185FA5',
-      emoji: '🎨',
-    },
-    {
-      id: 2,
-      title: 'Data Analytics Dashboard',
-      description: 'Interactive data visualization platform built with React and Python. Analyzes complex datasets and provides actionable insights through dynamic charts and metrics.',
-      image: null,
-      tags: 'React, Python, Pandas, Matplotlib',
-      githubUrl: 'https://github.com/BytePhantom12',
-      liveUrl: '',
-      isFeatured: true,
-      gradientStart: '#378ADD',
-      gradientEnd: '#185FA5',
-      accentColor: '#378ADD',
-      emoji: '📊',
-    },
-    {
-      id: 3,
-      title: 'RESTful API Service',
-      description: 'Scalable REST API built with FastAPI for managing complex business logic. Includes authentication, role-based access control, and comprehensive documentation.',
-      image: null,
-      tags: 'FastAPI, Python, PostgreSQL, JWT',
-      githubUrl: 'https://github.com/BytePhantom12',
-      liveUrl: '',
-      isFeatured: false,
-      gradientStart: '#85B7EB',
-      gradientEnd: '#378ADD',
-      accentColor: '#378ADD',
-      emoji: '⚙️',
-    },
-    {
-      id: 4,
-      title: 'E-Commerce Platform',
-      description: 'Full-stack e-commerce solution with product catalog, shopping cart, payment integration, and order management system.',
-      image: null,
-      tags: 'React, Node.js, MongoDB, Stripe',
-      githubUrl: 'https://github.com/BytePhantom12',
-      liveUrl: '',
-      isFeatured: false,
-      gradientStart: '#B5D4F4',
-      gradientEnd: '#85B7EB',
-      accentColor: '#185FA5',
-      emoji: '🛒',
-    },
-    {
-      id: 5,
-      title: 'Real-time Chat Application',
-      description: 'WebSocket-based messaging platform with real-time notifications, user presence detection, and message history persistence.',
-      image: null,
-      tags: 'React, Socket.io, Node.js, MongoDB',
-      githubUrl: 'https://github.com/BytePhantom12',
-      liveUrl: '',
-      isFeatured: false,
-      gradientStart: '#626058',
-      gradientEnd: '#8B8680',
-      accentColor: '#626058',
-      emoji: '💬',
-    },
-    {
-      id: 6,
-      title: 'Machine Learning Model',
-      description: 'Predictive analytics model using scikit-learn and TensorFlow. Processes large datasets and generates forecasts with high accuracy.',
-      image: null,
-      tags: 'Python, Scikit-learn, TensorFlow, Pandas',
-      githubUrl: 'https://github.com/BytePhantom12',
-      liveUrl: '',
-      isFeatured: false,
-      gradientStart: '#f59e0b',
-      gradientEnd: '#f97316',
-      accentColor: '#f59e0b',
-      emoji: '🤖',
-    },
-  ],
-};
+import rawSeedData from '@shared/seedData.json';
 
 const extractMediaUrl = (value) => {
   if (!value) return null;
   if (typeof value === 'string') return value;
-  return value.url || value.secureUrl || value.secure_url || null;
+  return value.secure_url || value.secureUrl || value.url || null;
+};
+
+const extractPublicId = (value) => {
+  if (!value) return null;
+  if (typeof value === 'string') return value;
+  return value.public_id || value.publicId || null;
 };
 
 const buildSocialLinks = (dbData) => {
-  const fallbackSocials = FALLBACK_DATA.socials;
   const dbSocials = dbData?.socials;
   if (Array.isArray(dbSocials) && dbSocials.length > 0) {
     return dbSocials;
@@ -214,7 +23,7 @@ const buildSocialLinks = (dbData) => {
 
   const social = dbData?.contact?.social;
   if (!social) {
-    return fallbackSocials;
+    return rawSeedData.socials || [];
   }
 
   return [
@@ -227,54 +36,54 @@ const buildSocialLinks = (dbData) => {
 
 // Transform database data to match frontend format
 const transformPortfolioData = (dbData) => {
-  if (!dbData) return FALLBACK_DATA;
+  const source = dbData || rawSeedData;
 
   return {
     // Hero
-    name: dbData.profile?.name || FALLBACK_DATA.name,
-    role: dbData.profile?.title || FALLBACK_DATA.role,
-    typingPhrases: FALLBACK_DATA.typingPhrases, // Keep static for now
-    heroDescription: dbData.profile?.bio || FALLBACK_DATA.heroDescription,
-    cvUrl: dbData.profile?.resume || FALLBACK_DATA.cvUrl,
+    name: source.profile?.name || rawSeedData.profile.name,
+    role: source.profile?.title || rawSeedData.profile.title,
+    typingPhrases: source.typingPhrases || rawSeedData.typingPhrases,
+    heroDescription: source.profile?.bio || rawSeedData.profile.bio,
+    cvUrl: source.profile?.resume || rawSeedData.profile.resume,
 
     // Profile
     profile: {
-      name: dbData.profile?.name || FALLBACK_DATA.name,
-      title: dbData.profile?.title || FALLBACK_DATA.role,
-      profileImage: extractMediaUrl(dbData.profile?.profileImage),
-      profileImagePublicId: dbData.profile?.profileImagePublicId || dbData.profile?.profileImage?.publicId || null,
-      email: dbData.profile?.email || FALLBACK_DATA.contact.email,
-      location: dbData.profile?.location || null,
-      languages: dbData.profile?.languages || null,
-      availability: dbData.profile?.availability || null,
+      name: source.profile?.name || rawSeedData.profile.name,
+      title: source.profile?.title || rawSeedData.profile.title,
+      profileImage: extractMediaUrl(source.profile?.profileImage),
+      profileImagePublicId: extractPublicId(source.profile?.profileImage),
+      email: source.profile?.email || rawSeedData.contact.email,
+      location: source.profile?.location || rawSeedData.profile.location || null,
+      languages: source.profile?.languages || rawSeedData.profile.languages || null,
+      availability: source.profile?.availability || rawSeedData.profile.availability || null,
     },
 
     // About
     about: {
-      introHeading: dbData.about?.introHeading || dbData.profile?.title || FALLBACK_DATA.about.introHeading,
-      introHeadingHighlight: dbData.about?.introHeadingHighlight || FALLBACK_DATA.about.introHeadingHighlight,
-      introDescription: dbData.about?.introDescription || dbData.about?.description || FALLBACK_DATA.about.introDescription,
-      yearsOfExperience: dbData.about?.yearsOfExperience ?? (dbData.experience?.filter(exp => exp.current).length || 1),
-      projectsDone: dbData.about?.projectsDone ?? (dbData.projects?.length || 0),
-      location: dbData.about?.location || dbData.profile?.location || FALLBACK_DATA.about.location,
-      role: dbData.about?.role || dbData.profile?.title || FALLBACK_DATA.about.role,
-      education: dbData.about?.education || dbData.education?.[0]?.degree || FALLBACK_DATA.about.education,
-      languages: dbData.about?.languages || dbData.profile?.languages || FALLBACK_DATA.about.languages,
-      highlights: dbData.about?.highlights || FALLBACK_DATA.about.highlights,
+      introHeading: source.about?.introHeading || source.profile?.title || rawSeedData.about.introHeading,
+      introHeadingHighlight: source.about?.introHeadingHighlight || rawSeedData.about.introHeadingHighlight,
+      introDescription: source.about?.introDescription || source.about?.description || rawSeedData.about.introDescription,
+      yearsOfExperience: source.about?.yearsOfExperience ?? rawSeedData.about.yearsOfExperience,
+      projectsDone: source.about?.projectsDone ?? (source.projects?.length || rawSeedData.about.projectsDone),
+      location: source.about?.location || source.profile?.location || rawSeedData.about.location,
+      role: source.about?.role || source.profile?.title || rawSeedData.about.role,
+      education: source.about?.education || source.education?.[0]?.degree || rawSeedData.about.education,
+      languages: source.about?.languages || source.profile?.languages || rawSeedData.about.languages,
+      highlights: source.about?.highlights || rawSeedData.about.highlights,
     },
 
-    // Social Links - Keep static for now
-    socials: buildSocialLinks(dbData),
+    // Social Links
+    socials: buildSocialLinks(source),
 
     // Contact
     contact: {
-      email: dbData.contact?.email || FALLBACK_DATA.contact.email,
-      phone: dbData.contact?.phone || FALLBACK_DATA.contact.phone,
-      location: dbData.profile?.location || FALLBACK_DATA.contact.location,
+      email: source.contact?.email || rawSeedData.contact.email,
+      phone: source.contact?.phone || rawSeedData.contact.phone,
+      location: source.profile?.location || source.contact?.location || rawSeedData.contact.location || rawSeedData.profile.location,
     },
 
     // Skills - Transform from database format
-    skillCategories: dbData.skills?.length > 0 ? dbData.skills.map((skillCategory) => {
+    skillCategories: (source.skills?.length > 0 ? source.skills : rawSeedData.skills).map((skillCategory) => {
       const categoryName = normalizeCategoryName(skillCategory.category || skillCategory.name || 'Frontend');
       const categoryConfig = getSkillCategoryConfig(categoryName);
       const rawItems = skillCategory.items || skillCategory.skills || [];
@@ -285,26 +94,35 @@ const transformPortfolioData = (dbData) => {
         emoji: categoryConfig.emoji,
         skills: rawItems.map((item) => normalizeSkillItem(item, categoryName, categoryConfig.color)),
       };
-    }) : FALLBACK_DATA.skillCategories,
+    }),
 
     // Projects - Transform from database format
-    projects: dbData.projects?.map((project, index) => ({
+    projects: (source.projects?.length > 0 ? source.projects : rawSeedData.projects).map((project, index) => ({
+      _id: project._id || null,
       id: project._id || index + 1,
       title: project.title,
       description: project.description,
       gradientStart: '#185FA5',
       gradientEnd: '#C2C0B8',
       accentColor: project.featured ? '#185FA5' : '#626058',
-      tags: project.technologies?.join(', ') || '',
+      tags: Array.isArray(project.technologies) ? project.technologies.join(', ') : (project.technologies || ''),
       githubUrl: project.githubUrl || '',
       liveUrl: project.liveUrl || '',
-      image: extractMediaUrl(project.image),
-      imagePublicId: project.imagePublicId || project.image?.publicId || null,
+      image: project.image && typeof project.image === 'object' ? {
+        secure_url: project.image.secure_url || null,
+        public_id: project.image.public_id || null,
+        width: project.image.width || null,
+        height: project.image.height || null,
+        format: project.image.format || null
+      } : (project.image || null),
+      imagePublicId: extractPublicId(project.image),
       emoji: '🚀',
       isFeatured: project.featured || false,
-    })) || FALLBACK_DATA.projects,
+    })),
   };
 };
+
+const FALLBACK_DATA = transformPortfolioData(rawSeedData);
 
 const deepMerge = (target, partial) => {
   if (typeof target !== 'object' || target === null) return partial;

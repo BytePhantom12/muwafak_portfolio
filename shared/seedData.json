@@ -1,0 +1,183 @@
+{
+  "profile": {
+    "name": "Muwafak Abubakar",
+    "title": "Full-Stack Developer & Data Analyst",
+    "bio": "I build full-stack web applications and turn data into actionable insights.",
+    "email": "muwafaqabubakr11@gmail.com",
+    "phone": "+60 17-959 1694",
+    "location": "Malaysia (Available Remotely)",
+    "languages": "English, Arabic. Hausa",
+    "availability": "Available for work",
+    "profileImage": {
+      "secure_url": null,
+      "public_id": null,
+      "width": null,
+      "height": null,
+      "format": null
+    },
+    "resume": "/muwafak-cv.pdf"
+  },
+
+  "about": {
+    "introHeading": "Full-Stack Developer & Data Analyst",
+    "introHeadingHighlight": "Creative Problem Solver",
+    "introDescription": "I am a Full-Stack Developer and Data Analyst specializing in building end-to-end web applications and turning complex datasets into actionable insights. I design robust backend systems, implement scalable REST APIs, and construct highly responsive user interfaces. By bridging the gap between software engineering and data analysis, I create intelligent, high-performance systems that drive smarter, data-driven decisions.",
+    "yearsOfExperience": 2,
+    "projectsDone": 6,
+    "location": "Malaysia (Available Remotely)",
+    "role": "Full-Stack Developer & Data Analyst",
+    "education": "Bachelor's in Computer Science",
+    "languages": "English, Arabic. Hausa",
+    "highlights": [
+      "Building end-to-end applications from database to UI",
+      "Designing and implementing scalable REST APIs",
+      "Analyzing complex data pipelines and creating dashboards",
+      "Bridging the gap between engineering and data insights"
+    ]
+  },
+
+  "skills": [
+    {
+      "category": "Frontend",
+      "items": [
+        { "name": "React", "level": 90, "iconType": "react", "icon": "FaReact", "color": "#61dafb" },
+        { "name": "Next.js", "level": 85, "iconType": "react", "icon": "SiNextdotjs", "color": "#1C1B19" },
+        { "name": "JavaScript", "level": 92, "iconType": "react", "icon": "SiJavascript", "color": "#f7df1e" },
+        { "name": "HTML5", "level": 95, "iconType": "react", "icon": "FaHtml5", "color": "#e34f26" },
+        { "name": "CSS3", "level": 90, "iconType": "react", "icon": "FaCss3Alt", "color": "#1572b6" },
+        { "name": "Tailwind CSS", "level": 88, "iconType": "react", "icon": "SiTailwindcss", "color": "#06b6d4" }
+      ]
+    },
+    {
+      "category": "Backend",
+      "items": [
+        { "name": "Python", "level": 80, "iconType": "react", "icon": "FaPython", "color": "#3776ab" },
+        { "name": "Django", "level": 75, "iconType": "react", "icon": "SiDjango", "color": "#44b78b" },
+        { "name": "FastAPI", "level": 80, "iconType": "react", "icon": "SiFastapi", "color": "#009688" },
+        { "name": "REST API", "level": 72, "iconType": "react", "icon": "SiPostman", "color": "#ff6c37" }
+      ]
+    },
+    {
+      "category": "Database",
+      "items": [
+        { "name": "PostgreSQL", "level": 80, "iconType": "react", "icon": "SiPostgresql", "color": "#336791" },
+        { "name": "MySQL", "level": 78, "iconType": "react", "icon": "SiMysql", "color": "#4479a1" }
+      ]
+    },
+    {
+      "category": "Data Analysis",
+      "items": [
+        { "name": "Pandas", "level": 85, "iconType": "react", "icon": "SiPandas", "color": "#150458" },
+        { "name": "NumPy", "level": 80, "iconType": "react", "icon": "SiNumpy", "color": "#013243" },
+        { "name": "Scikit-learn", "level": 78, "iconType": "react", "icon": "SiScikitlearn", "color": "#f7931e" },
+        { "name": "Matplotlib", "level": 75, "iconType": "react", "icon": "FaChartBar", "color": "#3b82f6" }
+      ]
+    },
+    {
+      "category": "Tools & Cloud",
+      "items": [
+        { "name": "Git", "level": 88, "iconType": "react", "icon": "FaGithub", "color": "#f54d27" },
+        { "name": "VS Code", "level": 95, "iconType": "react", "icon": "SiVisualstudiocode", "color": "#007acc" },
+        { "name": "Vercel", "level": 85, "iconType": "react", "icon": "SiVercel", "color": "#1C1B19" }
+      ]
+    }
+  ],
+
+  "projects": [
+    {
+      "title": "Portfolio & Admin Dashboard",
+      "description": "Full-stack portfolio website with admin dashboard for managing projects, skills, education, and experience. Features real-time updates and responsive design.",
+      "image": { "secure_url": null, "public_id": null, "width": null, "height": null, "format": null },
+      "technologies": ["React", "FastAPI", "PostgreSQL", "Tailwind CSS"],
+      "liveUrl": "https://muwafak-portfolio.vercel.app",
+      "githubUrl": "https://github.com/BytePhantom12",
+      "featured": true
+    },
+    {
+      "title": "Data Analytics Dashboard",
+      "description": "Interactive data visualization platform built with React and Python. Analyzes complex datasets and provides actionable insights through dynamic charts and metrics.",
+      "image": { "secure_url": null, "public_id": null, "width": null, "height": null, "format": null },
+      "technologies": ["React", "Python", "Pandas", "Matplotlib"],
+      "liveUrl": "",
+      "githubUrl": "https://github.com/BytePhantom12",
+      "featured": true
+    },
+    {
+      "title": "RESTful API Service",
+      "description": "Scalable REST API built with FastAPI for managing complex business logic. Includes authentication, role-based access control, and comprehensive documentation.",
+      "image": { "secure_url": null, "public_id": null, "width": null, "height": null, "format": null },
+      "technologies": ["FastAPI", "Python", "PostgreSQL", "JWT"],
+      "liveUrl": "",
+      "githubUrl": "https://github.com/BytePhantom12",
+      "featured": false
+    },
+    {
+      "title": "E-Commerce Platform",
+      "description": "Full-stack e-commerce solution with product catalog, shopping cart, payment integration, and order management system.",
+      "image": { "secure_url": null, "public_id": null, "width": null, "height": null, "format": null },
+      "technologies": ["React", "Node.js", "MongoDB", "Stripe"],
+      "liveUrl": "",
+      "githubUrl": "https://github.com/BytePhantom12",
+      "featured": false
+    },
+    {
+      "title": "Real-time Chat Application",
+      "description": "WebSocket-based messaging platform with real-time notifications, user presence detection, and message history persistence.",
+      "image": { "secure_url": null, "public_id": null, "width": null, "height": null, "format": null },
+      "technologies": ["React", "Socket.io", "Node.js", "MongoDB"],
+      "liveUrl": "",
+      "githubUrl": "https://github.com/BytePhantom12",
+      "featured": false
+    },
+    {
+      "title": "Machine Learning Model",
+      "description": "Predictive analytics model using scikit-learn and TensorFlow. Processes large datasets and generates forecasts with high accuracy.",
+      "image": { "secure_url": null, "public_id": null, "width": null, "height": null, "format": null },
+      "technologies": ["Python", "Scikit-learn", "TensorFlow", "Pandas"],
+      "liveUrl": "",
+      "githubUrl": "https://github.com/BytePhantom12",
+      "featured": false
+    }
+  ],
+
+  "experience": [],
+
+  "education": [
+    {
+      "institution": "University",
+      "degree": "Bachelor's in Computer Science",
+      "field": "Computer Science",
+      "description": ""
+    }
+  ],
+
+  "contact": {
+    "email": "muwafaqabubakr11@gmail.com",
+    "phone": "+60 17-959 1694",
+    "social": {
+      "github": "https://github.com/BytePhantom12",
+      "linkedin": "https://www.linkedin.com/in/muwafak-abubakar-8504822a1/",
+      "facebook": "",
+      "whatsapp": "https://wa.me/+60179591694"
+    }
+  },
+
+  "socials": [
+    { "id": "github", "label": "GitHub", "href": "https://github.com/BytePhantom12", "icon": "FaGithub" },
+    { "id": "linkedin", "label": "LinkedIn", "href": "https://www.linkedin.com/in/muwafak-abubakar-8504822a1/", "icon": "FaLinkedinIn" },
+    { "id": "facebook", "label": "Facebook", "href": "", "icon": "FaFacebookF" },
+    { "id": "whatsapp", "label": "WhatsApp", "href": "https://wa.me/+60179591694", "icon": "FaWhatsapp" }
+  ],
+
+  "typingPhrases": [
+    "Full-Stack Web Developer",
+    "Data Analyst"
+  ],
+
+  "statistics": {
+    "yearsOfExperience": 2,
+    "projectsDone": 6,
+    "technologies": "5+",
+    "dedication": "100%"
+  }
+}

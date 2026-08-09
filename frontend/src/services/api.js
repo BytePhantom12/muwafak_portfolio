@@ -68,6 +68,43 @@ export const portfolioAPI = {
       body: JSON.stringify(data)
     });
     return handleResponse(response);
+  },
+
+  // Create new project
+  createProject: async (projectData) => {
+    const response = await fetch(`${API_BASE_URL}/portfolio/projects`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getAuthToken()}`
+      },
+      body: JSON.stringify(projectData)
+    });
+    return handleResponse(response);
+  },
+
+  // Update specific project
+  updateProject: async (projectId, projectData) => {
+    const response = await fetch(`${API_BASE_URL}/portfolio/projects/${projectId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getAuthToken()}`
+      },
+      body: JSON.stringify(projectData)
+    });
+    return handleResponse(response);
+  },
+
+  // Delete specific project
+  deleteProject: async (projectId) => {
+    const response = await fetch(`${API_BASE_URL}/portfolio/projects/${projectId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${getAuthToken()}`
+      }
+    });
+    return handleResponse(response);
   }
 };
 

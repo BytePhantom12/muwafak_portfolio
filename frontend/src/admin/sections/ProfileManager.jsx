@@ -174,7 +174,9 @@ export default function ProfileManager() {
     });
   };
 
-  const getFileUrl = (url) => {
+  const getFileUrl = (urlValue) => {
+    if (!urlValue) return null;
+    const url = typeof urlValue === 'object' ? (urlValue.secure_url || urlValue.url || urlValue.secureUrl) : urlValue;
     if (!url) return null;
     
     // If it's already a full URL (Cloudinary or external), return as is

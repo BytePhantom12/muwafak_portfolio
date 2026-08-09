@@ -1,5 +1,13 @@
 const mongoose = require('mongoose');
 
+const cloudinaryImageSchema = new mongoose.Schema({
+  secure_url: { type: String, default: null },
+  public_id: { type: String, default: null },
+  width: { type: Number, default: null },
+  height: { type: Number, default: null },
+  format: { type: String, default: null }
+}, { _id: false });
+
 const portfolioSchema = new mongoose.Schema({
   profile: {
     name: { type: String, required: false },
@@ -10,8 +18,7 @@ const portfolioSchema = new mongoose.Schema({
     location: String,
     languages: String,
     availability: String,
-    profileImage: String,
-    profileImagePublicId: String,
+    profileImage: { type: cloudinaryImageSchema, default: () => ({}) },
     resume: String
   },
   
@@ -57,8 +64,7 @@ const portfolioSchema = new mongoose.Schema({
   projects: [{
     title: { type: String, required: false },
     description: { type: String, required: false },
-    image: String,
-    imagePublicId: String,
+    image: { type: cloudinaryImageSchema, default: () => ({}) },
     technologies: [String],
     liveUrl: String,
     githubUrl: String,
@@ -76,7 +82,13 @@ const portfolioSchema = new mongoose.Schema({
       facebook: String,
       whatsapp: String
     }
-  }
+  },
+
+  socials: [mongoose.Schema.Types.Mixed],
+
+  typingPhrases: [String],
+
+  statistics: mongoose.Schema.Types.Mixed
 }, {
   timestamps: true
 });

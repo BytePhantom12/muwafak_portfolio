@@ -108,10 +108,13 @@ const getUploadOptions = (req, file) => {
     folder = 'portfolio/skills';
   }
 
+  const rawName = file.originalname.replace(/\.[^/.]+$/, '');
+  const sanitizedFileName = rawName.replace(/[^a-zA-Z0-9_-]/g, '_');
+
   return {
     folder,
     resourceType: isDocument ? 'raw' : 'image',
-    public_id: `${Date.now()}-${file.originalname.replace(/\.[^/.]+$/, '')}`,
+    publicId: `${Date.now()}-${sanitizedFileName}`,
     transformation: isDocument ? undefined : [
       { width: 2000, height: 2000, crop: 'limit' },
       { quality: 'auto' },
@@ -141,7 +144,12 @@ router.post('/', auth, upload.single('file'), async (req, res) => {
         mimetype: req.file.mimetype,
         size: req.file.size,
         url: uploadResult.secure_url,
+        secure_url: uploadResult.secure_url,
         publicId: uploadResult.public_id,
+        public_id: uploadResult.public_id,
+        width: uploadResult.width,
+        height: uploadResult.height,
+        format: uploadResult.format,
         cloudinary: true
       }
     });

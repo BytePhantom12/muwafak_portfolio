@@ -10,7 +10,8 @@ export default function About() {
   const isInView = useInView(ref, { once: true, margin: '-100px' });
   const { portfolioData, loading } = usePortfolioData();
   const { about } = portfolioData;
-  const profileImage = portfolioData.profile?.profileImage || '/profile.png';
+  const profileImgRaw = portfolioData.profile?.profileImage;
+  const profileImage = (typeof profileImgRaw === 'object' ? profileImgRaw?.secure_url || profileImgRaw?.url : profileImgRaw) || '/profile.png';
 
   const facts = [
     { emoji: '📍', label: 'Location', value: about.location },
