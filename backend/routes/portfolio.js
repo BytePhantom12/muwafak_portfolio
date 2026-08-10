@@ -3,7 +3,7 @@ const router = express.Router();
 const Portfolio = require('../models/Portfolio');
 const auth = require('../middleware/auth');
 const seedData = require('../../shared/seedData.json');
-const { deleteFromCloudinary } = require('../config/cloudinary');
+const { cloudinary, deleteFromCloudinary } = require('../config/cloudinary');
 
 const EDITABLE_SECTIONS = new Set([
   'profile', 'about', 'skills', 'education', 'experience', 'projects',
@@ -69,7 +69,7 @@ router.get('/', async (req, res) => {
 });
 
 // GET /api/portfolio/cv/download - Download the current CV with a usable filename
-router.get('/cv/download', async (req, res) => {
+router.get(['/cv/download', '/cv/download/:downloadName'], async (req, res) => {
   try {
     const portfolio = await Portfolio.findOne().select('profile.resume profile.name');
     const resumeUrl = portfolio?.profile?.resume;
@@ -82,7 +82,20 @@ router.get('/cv/download', async (req, res) => {
       return res.status(400).json({ message: 'Invalid CV URL' });
     }
 
-    const upstream = await fetch(parsedUrl);
+    let upstream = await fetch(parsedUrl);
+    if (upstream.status === 401 || upstream.status === 403) {
+      const publicIdMatch = parsedUrl.pathname.match(/\/raw\/upload\/v\d+\/(.+)$/);
+      const publicId = publicIdMatch?.[1];
+      if (!publicId) return res.status(502).json({ message: 'CV download is unavailable' });
+
+      const resource = await cloudinary.api.resource(publicId, { resource_type: 'raw' });
+      const signedUrl = cloudinary.utils.private_download_url(publicId, resource.format || '', {
+        resource_type: 'raw',
+        type: 'upload',
+        expires_at: Math.floor(Date.now() / 1000) + 60,
+      });
+      upstream = await fetch(signedUrl);
+    }
     if (!upstream.ok) {
       return res.status(502).json({ message: 'CV download is unavailable' });
     }

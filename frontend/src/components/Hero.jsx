@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-scroll';
-import { TypeAnimation } from 'react-type-animation';
 import { useEffect, useState } from 'react';
 import { HiArrowDownTray, HiChartBar, HiEnvelope } from 'react-icons/hi2';
 import { FaGithub, FaLinkedinIn, FaFacebookF, FaInstagram, FaWhatsapp } from 'react-icons/fa';
@@ -32,6 +31,32 @@ const orbitSkills = [
   { name: 'MySQL', Icon: SiMysql, color: '#4479A1', position: 'bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2' },
   { name: 'Matplotlib', Icon: HiChartBar, color: '#11557C', position: 'top-1/2 left-0 -translate-x-1/2 -translate-y-1/2' },
 ];
+
+function RotatingRole({ phrases, role }) {
+  const availablePhrases = phrases.length > 0 ? phrases : [role].filter(Boolean);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    setActiveIndex(0);
+    if (availablePhrases.length < 2) return undefined;
+    const intervalId = window.setInterval(() => {
+      setActiveIndex((currentIndex) => (currentIndex + 1) % availablePhrases.length);
+    }, 2600);
+    return () => window.clearInterval(intervalId);
+  }, [availablePhrases.length]);
+
+  return (
+    <motion.span
+      key={`${activeIndex}-${availablePhrases[activeIndex]}`}
+      initial={{ opacity: 0, y: 5 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25 }}
+      className="inline-block text-gradient"
+    >
+      {availablePhrases[activeIndex]}
+    </motion.span>
+  );
+}
 
 // Counter namespace — unique to this portfolio
 const COUNTER_NS = 'muwafak-portfolio';
@@ -71,9 +96,6 @@ export default function Hero() {
   const _visitorCount = useVisitorCount();
   const profileImgRaw = portfolioData.profile?.profileImage;
   const profileImage = (typeof profileImgRaw === 'object' ? profileImgRaw?.secure_url || profileImgRaw?.url : profileImgRaw) || '/profile.png';
-
-  // Use portfolioData instead of PORTFOLIO_DATA
-  const typingSequence = portfolioData.typingPhrases.flatMap(p => [p, 2000]);
 
   const stats = [
     { value: `${portfolioData.about.yearsOfExperience}+`, label: 'Years Experience' },
@@ -129,13 +151,7 @@ export default function Hero() {
               className="mb-5 min-h-14 max-w-full break-words font-display text-lg font-semibold text-[#1C1B19] sm:text-2xl md:text-3xl [&_span]:whitespace-normal"
             >
               I'm a{' '}
-              <TypeAnimation
-                sequence={typingSequence}
-                wrapper="span"
-                speed={50}
-                repeat={Infinity}
-                className="text-gradient"
-              />
+              <RotatingRole phrases={portfolioData.typingPhrases} role={portfolioData.role} />
             </motion.div>
 
             <motion.p
@@ -183,7 +199,7 @@ export default function Hero() {
               </Link>
               {portfolioData.cvUrl && <a
                 href={getDownloadUrl(portfolioData.cvUrl) || '#'}
-                download
+                download="Muwafak-Abubakar-CV.pdf"
                 id="hero-download-cv"
                 className="btn-outline w-full sm:w-auto"
               >
@@ -267,20 +283,6 @@ export default function Hero() {
                 backgroundSize: '32px 32px',
                 backgroundPosition: 'center center'
               }}
-            />
-
-            {/* Animated Data Streams (Vertical & Horizontal scanning lines) */}
-            <motion.div
-              className="absolute w-full h-[1px] shadow-[0_0_15px_#185FA5]"
-              style={{ background: 'linear-gradient(90deg, transparent, #185FA5, transparent)' }}
-              animate={{ top: ['-10%', '110%'] }}
-              transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-            />
-            <motion.div
-              className="absolute h-full w-[1px] shadow-[0_0_15px_#C2C0B8]"
-              style={{ background: 'linear-gradient(180deg, transparent, #185FA5, transparent)' }}
-              animate={{ left: ['-10%', '110%'] }}
-              transition={{ duration: 4, repeat: Infinity, ease: 'linear', delay: 1.5 }}
             />
 
             {/* Corner HUD Markers */}

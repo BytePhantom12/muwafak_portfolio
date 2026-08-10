@@ -98,9 +98,7 @@ const getUploadOptions = (req, file) => {
   return {
     folder,
     resourceType: isDocument ? 'raw' : 'image',
-    publicId: isDocument
-      ? `${Date.now()}-${sanitizedFileName}.${file.originalname.split('.').pop().toLowerCase()}`
-      : `${Date.now()}-${sanitizedFileName}`,
+    publicId: `${Date.now()}-${sanitizedFileName}`,
     transformation: isDocument ? undefined : [
       { width: 2000, height: 2000, crop: 'limit' },
       { quality: 'auto' },

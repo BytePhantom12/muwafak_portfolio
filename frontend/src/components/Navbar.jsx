@@ -62,7 +62,7 @@ export default function Navbar() {
                 <span className="text-white font-bold text-sm font-display">{firstName.charAt(0)}</span>
               </div>
               <span className="truncate text-[#1C1B19] font-display font-extrabold text-lg sm:text-xl lg:text-2xl">
-                <span className="text-gradient font-extrabold">{firstName}</span>
+                <span className="font-extrabold text-[#1C1B19]">{firstName}</span>
               </span>
             </motion.div>
 
@@ -107,7 +107,7 @@ export default function Navbar() {
               </RouterLink>
               {portfolioData.cvUrl && <a
                 href={getDownloadUrl(portfolioData.cvUrl) || '#'}
-                download
+                download="Muwafak-Abubakar-CV.pdf"
                 id="nav-download-cv"
                 className="btn-primary text-sm py-2.5 px-5"
               >
@@ -187,7 +187,7 @@ export default function Navbar() {
                   <HiCog6Tooth className="w-4 h-4" />
                   Admin Panel
                 </RouterLink>
-                {portfolioData.cvUrl && <a href={getDownloadUrl(portfolioData.cvUrl) || '#'} download id="mobile-download-cv" className="btn-primary w-full justify-center">
+                {portfolioData.cvUrl && <a href={getDownloadUrl(portfolioData.cvUrl) || '#'} download="Muwafak-Abubakar-CV.pdf" id="mobile-download-cv" className="btn-primary w-full justify-center">
                   <HiArrowDownTray className="w-4 h-4" />
                   Download CV
                 </a>}

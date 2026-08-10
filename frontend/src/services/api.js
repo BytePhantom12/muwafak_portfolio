@@ -27,7 +27,7 @@ export const resolveBackendUrl = (value) => {
 export const getDownloadUrl = (value) => {
   const resolvedUrl = resolveBackendUrl(value);
   if (!resolvedUrl) return null;
-  return `${API_BASE_URL}/portfolio/cv/download`;
+  return `${API_BASE_URL}/portfolio/cv/download/Muwafak-Abubakar-CV.pdf`;
 };
 
 // Helper function to get auth token

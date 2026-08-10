@@ -11,7 +11,8 @@
     "test:integration": "node scripts/test-integration.js",
     "seed": "node scripts/seed.js",
     "cleanup:projects": "node scripts/cleanup-projects.js",
-    "cleanup:skill-proficiency": "node scripts/remove-skill-proficiency.js"
+    "cleanup:skill-proficiency": "node scripts/remove-skill-proficiency.js",
+    "repair:cv-delivery": "node scripts/repair-cv-delivery.js"
   },
   "keywords": [
     "portfolio",
