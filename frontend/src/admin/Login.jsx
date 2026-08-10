@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { HiLockClosed, HiUser, HiEye, HiEyeSlash, HiHome } from 'react-icons/hi2';
+import { HiLockClosed, HiEye, HiEyeSlash, HiHome } from 'react-icons/hi2';
 import { authAPI } from '../services/api';
 
 export default function Login({ onLogin }) {

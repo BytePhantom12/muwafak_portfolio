@@ -19,16 +19,6 @@ const uploadBuffer = (buffer, options = {}) => {
       uploadOptions.transformation = options.transformation;
     }
 
-    console.log('Cloudinary upload options:', {
-      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-      api_key: process.env.CLOUDINARY_API_KEY ? 'SET' : 'MISSING',
-      api_secret: process.env.CLOUDINARY_API_SECRET ? 'SET' : 'MISSING',
-      resource_type: uploadOptions.resource_type,
-      folder: uploadOptions.folder,
-      public_id: uploadOptions.public_id,
-      transformation: uploadOptions.transformation
-    });
-
     cloudinary.uploader.upload_stream(
       uploadOptions,
       (error, result) => {

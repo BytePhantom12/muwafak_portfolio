@@ -18,18 +18,17 @@ require('dotenv').config();
 
 const Portfolio = require('../models/Portfolio');
 const seedData = require('../../shared/seedData.json');
+const { connectDB } = require('../config/database');
 
 async function seed() {
-  const mongoUri = process.env.MONGODB_URI || process.env.MONGODB_URL;
-
-  if (!mongoUri) {
+  if (!process.env.MONGODB_URI) {
     console.error('❌  MONGODB_URI is not set. Add it to your .env file.');
     process.exit(1);
   }
 
   try {
     console.log('🔗  Connecting to MongoDB…');
-    await mongoose.connect(mongoUri);
+    await connectDB();
     console.log('✅  Connected to MongoDB');
 
     // ── Preserve users (no action needed — we only touch Portfolio) ──

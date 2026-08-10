@@ -66,6 +66,7 @@ const portfolioSchema = new mongoose.Schema({
     description: { type: String, required: false },
     image: { type: cloudinaryImageSchema, default: () => ({}) },
     technologies: [String],
+    features: [String],
     liveUrl: String,
     githubUrl: String,
     featured: { type: Boolean, default: false }

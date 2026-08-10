@@ -86,11 +86,30 @@
   "projects": [
     {
       "title": "Portfolio & Admin Dashboard",
-      "description": "Full-stack portfolio website with admin dashboard for managing projects, skills, education, and experience. Features real-time updates and responsive design.",
-      "image": { "secure_url": null, "public_id": null, "width": null, "height": null, "format": null },
-      "technologies": ["React", "FastAPI", "PostgreSQL", "Tailwind CSS"],
+      "description": "Full-stack personal portfolio with a responsive React and Vite public site and a JWT-protected admin dashboard for managing profile, about, skills, projects, experience, education, and contact content through an Express REST API. MongoDB and Mongoose provide persistent storage, while Cloudinary stores uploaded portfolio media.",
+      "image": {
+        "secure_url": "https://res.cloudinary.com/avwszr15/image/upload/v1786369857/portfolio/projects/1786369853707-portfolio-admin-dashboard-preview.jpg",
+        "public_id": "portfolio/projects/1786369853707-portfolio-admin-dashboard-preview",
+        "width": 1672,
+        "height": 941,
+        "format": "jpg"
+      },
+      "technologies": ["React", "Vite", "Node.js", "Express", "MongoDB", "Mongoose", "Cloudinary", "JWT", "REST API", "Tailwind CSS"],
+      "features": [
+        "Public portfolio website",
+        "Protected admin authentication",
+        "Portfolio section management",
+        "Project CRUD",
+        "Skills management",
+        "Experience and education management",
+        "Contact management",
+        "Cloudinary media uploads",
+        "MongoDB persistence",
+        "REST API",
+        "Responsive UI"
+      ],
       "liveUrl": "https://muwafak-portfolio.vercel.app",
-      "githubUrl": "https://github.com/BytePhantom12",
+      "githubUrl": "https://github.com/BytePhantom12/muwafak_portfolio",
       "featured": true
     },
     {

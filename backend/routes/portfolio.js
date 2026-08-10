@@ -3,6 +3,12 @@ const router = express.Router();
 const Portfolio = require('../models/Portfolio');
 const auth = require('../middleware/auth');
 const seedData = require('../../shared/seedData.json');
+const { deleteFromCloudinary } = require('../config/cloudinary');
+
+const EDITABLE_SECTIONS = new Set([
+  'profile', 'about', 'skills', 'education', 'experience', 'projects',
+  'contact', 'socials', 'typingPhrases', 'statistics'
+]);
 
 /**
  * @openapi
@@ -112,16 +118,12 @@ router.get('/', async (req, res) => {
 // PUT /api/portfolio - Update portfolio data (protected)
 router.put('/', auth, async (req, res) => {
   try {
-    console.log('Updating entire portfolio');
-    console.log('Update data:', JSON.stringify(req.body, null, 2));
-    
     let portfolio = await Portfolio.findOne();
+    const oldProfileImageId = portfolio?.profile?.profileImage?.public_id;
     
     if (!portfolio) {
-      console.log('Creating new portfolio');
       portfolio = new Portfolio(req.body);
     } else {
-      console.log('Updating existing portfolio');
       // Deep merge to preserve existing data
       Object.keys(req.body).forEach(key => {
         if (typeof req.body[key] === 'object' && !Array.isArray(req.body[key]) && req.body[key] !== null) {
@@ -133,14 +135,23 @@ router.put('/', auth, async (req, res) => {
     }
     
     await portfolio.save();
-    console.log('Portfolio updated successfully');
+
+    const newProfileImageId = portfolio.profile?.profileImage?.public_id;
+    const oldProfileImageIsShared = oldProfileImageId && portfolio.projects.some(
+      project => project.image?.public_id === oldProfileImageId
+    );
+    if (oldProfileImageId && oldProfileImageId !== newProfileImageId && !oldProfileImageIsShared) {
+      try {
+        await deleteFromCloudinary(oldProfileImageId, 'image');
+      } catch (cloudinaryErr) {
+        console.error(`Old profile image cleanup failed (${oldProfileImageId}):`, cloudinaryErr.message);
+      }
+    }
     res.json(portfolio);
   } catch (error) {
     console.error('Error updating portfolio:', error);
-    console.error('Error details:', error.message);
     res.status(500).json({ 
-      message: 'Server error',
-      error: error.message 
+      message: error.name === 'ValidationError' ? 'Invalid portfolio data' : 'Server error'
     });
   }
 });
@@ -186,37 +197,24 @@ router.put('/section/:section', auth, async (req, res) => {
     const { section } = req.params;
     const updateData = req.body;
     
-    console.log(`Updating section: ${section}`);
-    console.log('Update data:', JSON.stringify(updateData, null, 2));
-    
     let portfolio = await Portfolio.findOne();
     if (!portfolio) {
-      console.log('Portfolio not found, creating new one');
       return res.status(404).json({ message: 'Portfolio not found' });
     }
     
     // Validate section exists in schema
-    if (!(section in portfolio.toObject())) {
-      console.log(`Invalid section: ${section}`);
+    if (!EDITABLE_SECTIONS.has(section)) {
       return res.status(400).json({ message: `Invalid section: ${section}` });
     }
     
     portfolio[section] = updateData;
     await portfolio.save();
     
-    console.log(`Section ${section} updated successfully`);
     res.json(portfolio);
   } catch (error) {
     console.error('Error updating section:', error);
-    console.error('Error details:', error.message);
-    console.error('Error stack:', error.stack);
     res.status(500).json({ 
-      message: 'Server error', 
-      error: error.message,
-      details: error.errors ? Object.keys(error.errors).map(key => ({
-        field: key,
-        message: error.errors[key].message
-      })) : []
+      message: error.name === 'ValidationError' ? 'Invalid section data' : 'Server error'
     });
   }
 });
@@ -310,25 +308,22 @@ router.put('/projects/:id', auth, async (req, res) => {
     const oldPublicId = project.image?.public_id;
     const newPublicId = updatedData.image?.public_id;
 
-    if (oldPublicId && oldPublicId !== newPublicId) {
-      // Check if any OTHER project in the database currently uses the same public_id to avoid deleting shared images
-      const otherProjectsWithSameImage = portfolio.projects.filter(p => p._id.toString() !== id && p.image?.public_id === oldPublicId);
-      if (otherProjectsWithSameImage.length === 0) {
-        try {
-          const { deleteFromCloudinary } = require('../config/cloudinary');
-          await deleteFromCloudinary(oldPublicId, 'image');
-          console.log(`Successfully deleted old Cloudinary image: ${oldPublicId}`);
-        } catch (cloudinaryErr) {
-          console.error(`Failed to delete old Cloudinary image ${oldPublicId}:`, cloudinaryErr);
-        }
-      } else {
-        console.log(`Skipped deleting old Cloudinary image ${oldPublicId} because it is referenced by other projects`);
-      }
-    }
+    const oldImageIsShared = oldPublicId && portfolio.projects.some(
+      p => p._id.toString() !== id && p.image?.public_id === oldPublicId
+    );
 
     // Update project fields
     project.set(updatedData);
     await portfolio.save();
+
+    // Delete only after MongoDB safely references the replacement.
+    if (oldPublicId && oldPublicId !== newPublicId && !oldImageIsShared) {
+      try {
+        await deleteFromCloudinary(oldPublicId, 'image');
+      } catch (cloudinaryErr) {
+        console.error(`Old project image cleanup failed (${oldPublicId}):`, cloudinaryErr.message);
+      }
+    }
     
     res.json({ message: 'Project updated successfully', project, projects: portfolio.projects });
   } catch (error) {
@@ -371,24 +366,22 @@ router.delete('/projects/:id', auth, async (req, res) => {
       return res.status(404).json({ message: 'Project not found' });
     }
 
-    // Clean up its Cloudinary image if it exists and no other project references it
     const publicId = project.image?.public_id;
-    if (publicId) {
-      const otherProjectsWithSameImage = portfolio.projects.filter(p => p._id.toString() !== id && p.image?.public_id === publicId);
-      if (otherProjectsWithSameImage.length === 0) {
-        try {
-          const { deleteFromCloudinary } = require('../config/cloudinary');
-          await deleteFromCloudinary(publicId, 'image');
-          console.log(`Successfully deleted Cloudinary image on project deletion: ${publicId}`);
-        } catch (cloudinaryErr) {
-          console.error(`Failed to delete Cloudinary image ${publicId}:`, cloudinaryErr);
-        }
-      }
-    }
+    const imageIsShared = publicId && portfolio.projects.some(
+      p => p._id.toString() !== id && p.image?.public_id === publicId
+    );
 
     // Remove subdocument
     project.deleteOne();
     await portfolio.save();
+
+    if (publicId && !imageIsShared) {
+      try {
+        await deleteFromCloudinary(publicId, 'image');
+      } catch (cloudinaryErr) {
+        console.error(`Deleted project image cleanup failed (${publicId}):`, cloudinaryErr.message);
+      }
+    }
     
     res.json({ message: 'Project deleted successfully', projects: portfolio.projects });
   } catch (error) {

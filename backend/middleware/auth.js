@@ -9,12 +9,18 @@ const auth = async (req, res, next) => {
       return res.status(401).json({ message: 'No token, authorization denied' });
     }
     
-    const secret = process.env.JWT_SECRET || 'portfolio_jwt_secret_key_fallback_2026';
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+      return res.status(503).json({ message: 'Authentication service is not configured' });
+    }
     const decoded = jwt.verify(token, secret);
     const user = await User.findById(decoded.userId).select('-password');
     
     if (!user) {
       return res.status(401).json({ message: 'Token is not valid' });
+    }
+    if (user.status !== 'active' || user.role !== 'admin') {
+      return res.status(403).json({ message: 'Administrator access required' });
     }
     
     // Validate session ID and expiration against MongoDB
@@ -40,7 +46,7 @@ const auth = async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    console.error('Auth middleware error:', error);
+    console.error('Auth middleware error:', error.message);
     res.status(401).json({ message: 'Token is not valid' });
   }
 };

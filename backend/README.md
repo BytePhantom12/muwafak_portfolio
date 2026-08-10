@@ -21,20 +21,21 @@ npm install
 
 2. Configure environment variables in `.env`:
 ```
-MONGODB_URI=your_mongodb_connection_string
+MONGODB_URI=mongodb+srv://username:password@cluster.example.mongodb.net/portfolio
+MONGODB_DB_NAME=portfolio
 PORT=5000
 JWT_SECRET=your_jwt_secret
 NODE_ENV=development
 
 # Cloudinary Configuration
-CLOUDINARY_CLOUD_NAME=dua4vifmt
-CLOUDINARY_API_KEY=346515697169613
-CLOUDINARY_API_SECRET=BgySUE0G_0EGp0xOXLDtSnM_pg0
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
 ```
 
 3. Test Cloudinary connection:
 ```bash
-node test-cloudinary.js
+npm run test:cloudinary
 ```
 
 4. Start the server:

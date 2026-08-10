@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { HiPlus, HiPencil, HiTrash, HiCheck, HiXMark, HiEye } from 'react-icons/hi2';
-import { portfolioAPI, uploadAPI } from '../../services/api';
-import { usePortfolioData } from '../../context/PortfolioContext';
+import { portfolioAPI, uploadAPI, resolveBackendUrl } from '../../services/api';
+import { usePortfolioData } from '../../context/usePortfolioData';
 import Modal from '../../components/Modal';
 import FileUpload from '../../components/FileUpload';
 
@@ -13,7 +13,7 @@ const getImageUrl = (imagePath) => {
 
   // If it starts with /uploads, it's an uploaded file
   if (url.startsWith('/uploads')) {
-    return `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${url}`;
+    return resolveBackendUrl(url);
   }
 
   return url;
@@ -38,8 +38,8 @@ export default function ProjectsManager() {
     githubUrl: '',
   });
 
-  const [uploadedImage, setUploadedImage] = useState(null);
-  const { updateLocalPortfolio, portfolioData, refreshPortfolio } = usePortfolioData();
+  const [_uploadedImage, setUploadedImage] = useState(null);
+  const { portfolioData, refreshPortfolio } = usePortfolioData();
 
   useEffect(() => {
     // keep in sync if portfolioData changes
@@ -59,7 +59,9 @@ export default function ProjectsManager() {
         title: project.title,
         description: project.description,
         image: project.image,
-        tags: project.technologies || [''],
+        tags: Array.isArray(project.technologies)
+          ? project.technologies
+          : (project.tags ? project.tags.split(',').map((tag) => tag.trim()) : ['']),
         liveUrl: project.liveUrl,
         githubUrl: project.githubUrl,
       });
@@ -69,7 +71,9 @@ export default function ProjectsManager() {
         title: project.title,
         description: project.description,
         image: project.image,
-        tags: project.technologies || [''],
+        tags: Array.isArray(project.technologies)
+          ? project.technologies
+          : (project.tags ? project.tags.split(',').map((tag) => tag.trim()) : ['']),
         liveUrl: project.liveUrl,
         githubUrl: project.githubUrl,
       });
@@ -149,6 +153,7 @@ export default function ProjectsManager() {
         technologies: formData.tags.filter(t => t.trim() !== ''),
         liveUrl: formData.liveUrl,
         githubUrl: formData.githubUrl,
+        featured: editingProject.isFeatured ?? editingProject.featured ?? false,
       };
 
       await portfolioAPI.updateProject(editingProject._id, projectData);

@@ -5,8 +5,8 @@ import {
   HiEnvelope, HiPhone, HiMapPin, HiPaperAirplane, HiCheckCircle,
 } from 'react-icons/hi2';
 import { FaGithub, FaLinkedinIn, FaFacebookF, FaInstagram, FaWhatsapp } from 'react-icons/fa';
-import { usePortfolioData } from '../context/PortfolioContext';
-import { API_BASE_URL } from '../services/api';
+import { usePortfolioData } from '../context/usePortfolioData';
+import { contactAPI } from '../services/api';
 
 const iconMap = { FaGithub, FaLinkedinIn, FaFacebookF, FaInstagram, FaWhatsapp };
 
@@ -33,15 +33,7 @@ export default function Contact() {
     setLoading(true);
     try {
       // Save to our database first
-      const dbResponse = await fetch(`${API_BASE_URL}/contact`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-
-      if (!dbResponse.ok) {
-        throw new Error('Failed to save message');
-      }
+      await contactAPI.submitMessage(formData);
 
       // Also send via Web3Forms for email notification
       await fetch('https://api.web3forms.com/submit', {

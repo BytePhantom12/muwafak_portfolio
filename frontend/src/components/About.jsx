@@ -3,12 +3,12 @@ import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { HiCheckBadge } from 'react-icons/hi2';
 import { Link } from 'react-scroll';
-import { usePortfolioData } from '../context/PortfolioContext';
+import { usePortfolioData } from '../context/usePortfolioData';
 
 export default function About() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
-  const { portfolioData, loading } = usePortfolioData();
+  const { portfolioData } = usePortfolioData();
   const { about } = portfolioData;
   const profileImgRaw = portfolioData.profile?.profileImage;
   const profileImage = (typeof profileImgRaw === 'object' ? profileImgRaw?.secure_url || profileImgRaw?.url : profileImgRaw) || '/profile.png';

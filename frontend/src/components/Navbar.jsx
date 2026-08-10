@@ -4,7 +4,7 @@ import { Link } from 'react-scroll';
 import { Link as RouterLink } from 'react-router-dom';
 import { HiMenuAlt3, HiX } from 'react-icons/hi';
 import { HiArrowDownTray, HiCog6Tooth } from 'react-icons/hi2';
-import { usePortfolioData } from '../context/PortfolioContext';
+import { usePortfolioData } from '../context/usePortfolioData';
 
 const navLinks = [
   { label: 'Home', to: 'home' },

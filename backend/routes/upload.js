@@ -5,6 +5,16 @@ const auth = require('../middleware/auth');
 const { uploadBuffer, deleteFromCloudinary, extractPublicId } = require('../config/cloudinary');
 
 const storage = multer.memoryStorage();
+const IMAGE_TYPES = new Map([
+  ['jpg', ['image/jpeg']], ['jpeg', ['image/jpeg']], ['png', ['image/png']],
+  ['gif', ['image/gif']], ['webp', ['image/webp']], ['svg', ['image/svg+xml']]
+]);
+const DOCUMENT_TYPES = new Map([
+  ['pdf', ['application/pdf']], ['doc', ['application/msword']],
+  ['docx', ['application/vnd.openxmlformats-officedocument.wordprocessingml.document']],
+  ['odt', ['application/vnd.oasis.opendocument.text']],
+  ['rtf', ['application/rtf', 'text/rtf']], ['txt', ['text/plain']]
+]);
 
 /**
  * @openapi
@@ -44,35 +54,9 @@ const storage = multer.memoryStorage();
  *         description: Upload failed
  */
 const fileFilter = (req, file, cb) => {
-  const documentMimeTypes = [
-    'application/pdf',
-    'application/msword',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'application/vnd.oasis.opendocument.text',
-    'application/rtf',
-    'text/plain',
-    'text/rtf'
-  ];
-
-  if (file.mimetype.startsWith('image/')) {
-    const allowedImageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
-    const extension = file.originalname.split('.').pop()?.toLowerCase();
-
-    if (allowedImageExtensions.includes(extension)) {
-      cb(null, true);
-      return;
-    }
-  }
-
-  if (documentMimeTypes.includes(file.mimetype)) {
-    const allowedDocumentExtensions = ['pdf', 'doc', 'docx', 'odt', 'rtf', 'txt'];
-    const extension = file.originalname.split('.').pop()?.toLowerCase();
-
-    if (allowedDocumentExtensions.includes(extension)) {
-      cb(null, true);
-      return;
-    }
-  }
+  const extension = file.originalname.split('.').pop()?.toLowerCase();
+  const allowedMimes = IMAGE_TYPES.get(extension) || DOCUMENT_TYPES.get(extension);
+  if (allowedMimes?.includes(file.mimetype)) return cb(null, true);
 
   cb(new Error('Only images (jpg, jpeg, png, gif, webp, svg) and documents (pdf, doc, docx, odt, rtf, txt) are allowed'));
 };
@@ -154,11 +138,11 @@ router.post('/', auth, upload.single('file'), async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Upload error:', error);
+    console.error('Upload error:', error.message);
     res.status(500).json({
       success: false,
       message: 'Upload failed',
-      error: error.message
+      error: 'The media provider rejected the upload'
     });
   }
 });
@@ -237,6 +221,26 @@ router.delete('/:type/:filename', auth, async (req, res) => {
       message: 'Delete failed',
       error: error.message
     });
+  }
+});
+
+// Canonical deletion API. The public ID is sent in JSON so folder separators
+// are preserved and never reconstructed from a delivery URL.
+router.delete('/', auth, async (req, res) => {
+  try {
+    const { public_id: publicId, resource_type: resourceType = 'image' } = req.body;
+    if (typeof publicId !== 'string' || !/^portfolio\/[a-z0-9/_-]+$/i.test(publicId)) {
+      return res.status(400).json({ success: false, message: 'A valid portfolio public_id is required' });
+    }
+    if (!['image', 'raw'].includes(resourceType)) {
+      return res.status(400).json({ success: false, message: 'Invalid resource_type' });
+    }
+
+    const result = await deleteFromCloudinary(publicId, resourceType);
+    res.json({ success: true, result: result.result });
+  } catch (error) {
+    console.error('Delete error:', error.message);
+    res.status(502).json({ success: false, message: 'Media deletion failed' });
   }
 });
 

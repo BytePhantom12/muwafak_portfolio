@@ -1,13 +1,7 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import { portfolioAPI } from '../services/api';
 import { getSkillCategoryConfig, normalizeCategoryName, normalizeSkillItem } from '../utils/skillUtils';
 import rawSeedData from '@shared/seedData.json';
-
-const extractMediaUrl = (value) => {
-  if (!value) return null;
-  if (typeof value === 'string') return value;
-  return value.secure_url || value.secureUrl || value.url || null;
-};
 
 const extractPublicId = (value) => {
   if (!value) return null;
@@ -50,7 +44,7 @@ const transformPortfolioData = (dbData) => {
     profile: {
       name: source.profile?.name || rawSeedData.profile.name,
       title: source.profile?.title || rawSeedData.profile.title,
-      profileImage: extractMediaUrl(source.profile?.profileImage),
+      profileImage: source.profile?.profileImage || null,
       profileImagePublicId: extractPublicId(source.profile?.profileImage),
       email: source.profile?.email || rawSeedData.contact.email,
       location: source.profile?.location || rawSeedData.profile.location || null,
@@ -106,6 +100,7 @@ const transformPortfolioData = (dbData) => {
       gradientEnd: '#C2C0B8',
       accentColor: project.featured ? '#185FA5' : '#626058',
       tags: Array.isArray(project.technologies) ? project.technologies.join(', ') : (project.technologies || ''),
+      features: Array.isArray(project.features) ? project.features : [],
       githubUrl: project.githubUrl || '',
       liveUrl: project.liveUrl || '',
       image: project.image && typeof project.image === 'object' ? {
@@ -151,15 +146,7 @@ const deepMerge = (target, partial) => {
 };
 
 // Context
-const PortfolioContext = createContext(null);
-
-export const usePortfolioData = () => {
-  const context = useContext(PortfolioContext);
-  if (!context) {
-    throw new Error('usePortfolioData must be used within PortfolioProvider');
-  }
-  return context;
-};
+export const PortfolioContext = createContext(null);
 
 export const PortfolioProvider = ({ children }) => {
   const [portfolioData, setPortfolioData] = useState(FALLBACK_DATA);
@@ -192,18 +179,6 @@ export const PortfolioProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const storedSnapshot = localStorage.getItem('portfolio_snapshot');
-    if (storedSnapshot) {
-      try {
-        const parsedSnapshot = JSON.parse(storedSnapshot);
-        if (parsedSnapshot && typeof parsedSnapshot === 'object') {
-          setPortfolioData(parsedSnapshot);
-        }
-      } catch (err) {
-        console.warn('Unable to parse stored portfolio snapshot', err);
-      }
-    }
-
     const fetchPortfolioData = async () => {
       try {
         setLoading(true);

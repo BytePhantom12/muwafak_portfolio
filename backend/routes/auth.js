@@ -7,7 +7,8 @@ const auth = require('../middleware/auth');
 
 // Session duration: configurable via env, default 24 hours
 const ADMIN_SESSION_DURATION = parseInt(process.env.ADMIN_SESSION_DURATION, 10) || 86400000;
-const getJwtSecret = () => process.env.JWT_SECRET || 'portfolio_jwt_secret_key_fallback_2026';
+const JWT_EXPIRES_IN_SECONDS = Math.max(60, Math.floor(ADMIN_SESSION_DURATION / 1000));
+const getJwtSecret = () => process.env.JWT_SECRET;
 /**
  * @openapi
  * /api/auth/register:
@@ -76,6 +77,17 @@ const getJwtSecret = () => process.env.JWT_SECRET || 'portfolio_jwt_secret_key_f
 router.post('/register', async (req, res) => {
   try {
     const { username, email, password } = req.body;
+
+    if (!username || !email || !password || password.length < 8) {
+      return res.status(400).json({ message: 'Username, email, and a password of at least 8 characters are required' });
+    }
+
+    // Bootstrap the first account only. Further registration requires an
+    // out-of-band secret so this public route cannot mint arbitrary admins.
+    const userCount = await User.countDocuments();
+    if (userCount > 0 && (!process.env.REGISTRATION_SECRET || req.get('x-registration-secret') !== process.env.REGISTRATION_SECRET)) {
+      return res.status(403).json({ message: 'Registration is disabled' });
+    }
     
     // Check if user already exists
     const existingUser = await User.findOne({ 
@@ -101,7 +113,7 @@ router.post('/register', async (req, res) => {
     const token = jwt.sign(
       { userId: user._id, sessionId }, 
       getJwtSecret(), 
-      { expiresIn: '7d' }
+      { expiresIn: JWT_EXPIRES_IN_SECONDS }
     );
     
     res.status(201).json({
@@ -116,7 +128,7 @@ router.post('/register', async (req, res) => {
     });
   } catch (error) {
     console.error('Registration error:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
@@ -199,6 +211,9 @@ router.post('/login', async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
+    if (user.status !== 'active') {
+      return res.status(403).json({ message: 'Account is disabled' });
+    }
     
     // Check password
     const isMatch = await user.comparePassword(password);
@@ -216,7 +231,7 @@ router.post('/login', async (req, res) => {
     const token = jwt.sign(
       { userId: user._id, sessionId }, 
       getJwtSecret(), 
-      { expiresIn: '7d' }
+      { expiresIn: JWT_EXPIRES_IN_SECONDS }
     );
     
     res.json({
@@ -231,7 +246,7 @@ router.post('/login', async (req, res) => {
     });
   } catch (error) {
     console.error('Login error:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ message: 'Server error' });
   }
 });
 

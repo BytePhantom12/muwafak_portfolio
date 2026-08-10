@@ -4,22 +4,27 @@ const contactMessageSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
+    maxlength: 100
   },
   email: {
     type: String,
     required: true,
     trim: true,
-    lowercase: true
+    lowercase: true,
+    maxlength: 254,
+    match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   },
   subject: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
+    maxlength: 200
   },
   message: {
     type: String,
-    required: true
+    required: true,
+    maxlength: 5000
   },
   read: {
     type: Boolean,

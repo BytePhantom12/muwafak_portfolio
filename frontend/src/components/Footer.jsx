@@ -1,6 +1,6 @@
 import { FaGithub, FaLinkedinIn, FaFacebookF, FaInstagram, FaWhatsapp } from 'react-icons/fa';
 import { Link } from 'react-scroll';
-import { usePortfolioData } from '../context/PortfolioContext';
+import { usePortfolioData } from '../context/usePortfolioData';
 
 const iconMap = { FaGithub, FaLinkedinIn, FaFacebookF, FaInstagram, FaWhatsapp };
 

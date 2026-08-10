@@ -1,7 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
+const { connectDB, requireDatabase } = require('./config/database');
 
 const app = express();
 
@@ -32,8 +34,7 @@ const options = {
       },
     },
   },
-  apis: ["./routes/**/*.js"],
-   // or wherever your route annotations are
+  apis: [path.join(__dirname, 'routes', '*.js').replace(/\\/g, '/')],
 };
 
 const specs = swaggerJsdoc(options);
@@ -57,10 +58,20 @@ app.use(cors({
   },
   credentials: true,
 }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.disable('x-powered-by');
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  next();
+});
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
 // Note: Removed static file serving - now using Cloudinary for all uploads
+
+// All API routes depend on MongoDB. Fail quickly instead of buffering queries.
+app.use('/api', requireDatabase);
 
 // Routes
 app.use('/api/portfolio', require('./routes/portfolio'));
@@ -73,43 +84,23 @@ app.get('/', (req, res) => {
   res.json({ message: 'Portfolio Backend API is running!' });
 });
 
-// MongoDB connection
-const mongoUri = process.env.MONGODB_URI || process.env.MONGODB_URL || process.env.MONGO_URI;
-
-let isConnecting = false;
-const connectDB = async () => {
-  if (mongoose.connection.readyState >= 1) return;
-  if (isConnecting) return;
-  if (!mongoUri) {
-    console.warn('MONGODB_URI / MONGO_URI not set. Set it in your environment to enable database access.');
-    return;
-  }
-  try {
-    isConnecting = true;
-    await mongoose.connect(mongoUri);
-    console.log('Connected to MongoDB');
-  } catch (error) {
-    console.error("MongoDB connection error:", error.message);
-  } finally {
-    isConnecting = false;
-  }
-};
-
-connectDB();
-
-// Ensure DB is connected for incoming API requests (especially on serverless/Vercel)
-app.use(async (req, res, next) => {
-  if (mongoUri && mongoose.connection.readyState === 0) {
-    await connectDB();
-  }
-  next();
-});
-
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+if (require.main === module) {
+  if (!process.env.JWT_SECRET) {
+    console.error('JWT_SECRET is required');
+    process.exit(1);
+  }
+
+  connectDB()
+    .then(() => {
+      app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+    })
+    .catch((error) => {
+      console.error('MongoDB connection failed:', error.message);
+      process.exit(1);
+    });
+}
 
 module.exports = app;
 

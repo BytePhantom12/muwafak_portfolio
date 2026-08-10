@@ -5,7 +5,8 @@ import { useEffect, useState } from 'react';
 import { HiArrowDownTray, HiEnvelope } from 'react-icons/hi2';
 import { FaGithub, FaLinkedinIn, FaFacebookF, FaInstagram, FaWhatsapp } from 'react-icons/fa';
 import { SiFastapi } from 'react-icons/si';
-import { usePortfolioData } from '../context/PortfolioContext';
+import { usePortfolioData } from '../context/usePortfolioData';
+import { resolveBackendUrl } from '../services/api';
 
 const containerVariants = {
   hidden: {},
@@ -60,7 +61,7 @@ function useVisitorCount() {
 
 export default function Hero() {
   const { portfolioData, loading } = usePortfolioData();
-  const visitorCount = useVisitorCount();
+  const _visitorCount = useVisitorCount();
   const profileImgRaw = portfolioData.profile?.profileImage;
   const profileImage = (typeof profileImgRaw === 'object' ? profileImgRaw?.secure_url || profileImgRaw?.url : profileImgRaw) || '/profile.png';
 
@@ -111,7 +112,7 @@ export default function Hero() {
               <span className="section-badge">👋 Welcome to my portfolio</span>
             </motion.div> */}
 
-            
+
             <motion.div
               variants={itemVariants}
               className="text-xl sm:text-2xl md:text-3xl font-display font-semibold text-[#1C1B19] mb-6 h-10"
@@ -170,7 +171,7 @@ export default function Hero() {
                 </button>
               </Link>
               <a
-                href={portfolioData.cvUrl ? `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${portfolioData.cvUrl}` : '#'}
+                href={resolveBackendUrl(portfolioData.cvUrl) || '#'}
                 download
                 id="hero-download-cv"
                 className="btn-outline"

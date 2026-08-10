@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { motion, useInView, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { usePortfolioData } from '../context/PortfolioContext';
+import { usePortfolioData } from '../context/usePortfolioData';
 import SkillIcon from './SkillIcon';
 
 function Counter({ value }) {

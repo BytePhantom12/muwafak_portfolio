@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { HiPencil, HiCheck, HiXMark, HiPlus, HiTrash, HiEye } from 'react-icons/hi2';
-import { portfolioAPI, uploadAPI } from '../../services/api';
-import { usePortfolioData } from '../../context/PortfolioContext';
+import { portfolioAPI, uploadAPI, resolveBackendUrl } from '../../services/api';
+import { usePortfolioData } from '../../context/usePortfolioData';
 import Modal from '../../components/Modal';
 import FileUpload from '../../components/FileUpload';
 
@@ -90,7 +90,13 @@ export default function ProfileManager() {
       if (type === 'cv') {
         setFormData({ ...formData, cvUrl: response.data.url });
       } else if (type === 'profileImage') {
-        setFormData({ ...formData, profileImage: response.data.url });
+        setFormData({ ...formData, profileImage: {
+          secure_url: response.data.secure_url,
+          public_id: response.data.public_id,
+          width: response.data.width ?? null,
+          height: response.data.height ?? null,
+          format: response.data.format ?? null,
+        } });
       }
     } catch (error) {
       console.error(`Error uploading ${type}:`, error);
@@ -126,6 +132,7 @@ export default function ProfileManager() {
             return acc;
           }, {}),
         },
+        socials: formData.socials,
       };
 
       await portfolioAPI.updatePortfolio(updateData);
@@ -142,7 +149,7 @@ export default function ProfileManager() {
           highlights: [formData.shortDescription],
         },
         contact: updateData.contact,
-        socials: updateData.contact.social,
+        socials: formData.socials,
       });
       alert('Profile updated successfully!');
       closeModal();
@@ -186,7 +193,7 @@ export default function ProfileManager() {
     
     // Legacy local uploads - convert to backend URL
     if (url.startsWith('/uploads')) {
-      return `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${url}`;
+      return resolveBackendUrl(url);
     }
     
     return url;

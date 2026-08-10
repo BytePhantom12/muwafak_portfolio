@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { HiPencil, HiCheck, HiXMark } from 'react-icons/hi2';
 import { portfolioAPI } from '../../services/api';
-import { usePortfolioData } from '../../context/PortfolioContext';
+import { usePortfolioData } from '../../context/usePortfolioData';
 import Modal from '../../components/Modal';
 
 export default function AboutManager() {

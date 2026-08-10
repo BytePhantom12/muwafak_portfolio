@@ -1,9 +1,28 @@
-// API Configuration
-// The Express backend exposes routes under /api, so the frontend should target that prefix.
-const rawApiUrl = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '');
+// API Configuration. Vite supplies mode-specific values from .env.development
+// and .env.production. Refuse to start a development client pointed at a
+// non-local server, even if .env.local accidentally overrides the mode file.
+const configuredApiUrl = import.meta.env.VITE_API_URL?.trim();
+
+if (!configuredApiUrl) {
+  throw new Error('VITE_API_URL is required for this Vite mode');
+}
+
+const rawApiUrl = configuredApiUrl.replace(/\/$/, '');
+const configuredHostname = new URL(rawApiUrl).hostname;
+
+if (import.meta.env.DEV && !['localhost', '127.0.0.1', '::1'].includes(configuredHostname)) {
+  throw new Error('Development VITE_API_URL must point to the local backend');
+}
 
 export const BACKEND_BASE_URL = rawApiUrl.endsWith('/api') ? rawApiUrl.replace(/\/api$/, '') : rawApiUrl;
 export const API_BASE_URL = rawApiUrl.endsWith('/api') ? rawApiUrl : `${rawApiUrl}/api`;
+
+export const resolveBackendUrl = (value) => {
+  if (!value || typeof value !== 'string') return value || null;
+  if (/^(https?:)?\/\//i.test(value) || value.startsWith('data:') || value.startsWith('blob:')) return value;
+  if (!value.startsWith('/')) return value;
+  return `${BACKEND_BASE_URL}${value}`;
+};
 
 // Helper function to get auth token
 const getAuthToken = () => {
@@ -256,7 +275,7 @@ export const contactAPI = {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${getAuthToken()}`
       },
-      body: JSON.stringify({ reply: replyMessage })
+      body: JSON.stringify({ replyMessage })
     });
     return handleResponse(response);
   },
@@ -329,12 +348,14 @@ export const uploadAPI = {
   },
 
   // Delete file
-  deleteFile: async (type, filename) => {
-    const response = await fetch(`${API_BASE_URL}/upload/${type}/${filename}`, {
+  deleteFile: async (publicId, resourceType = 'image') => {
+    const response = await fetch(`${API_BASE_URL}/upload`, {
       method: 'DELETE',
       headers: {
+        'Content-Type': 'application/json',
         'Authorization': `Bearer ${getAuthToken()}`
-      }
+      },
+      body: JSON.stringify({ public_id: publicId, resource_type: resourceType })
     });
     return handleResponse(response);
   }

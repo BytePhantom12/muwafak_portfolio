@@ -4,7 +4,7 @@ import { portfolioAPI } from '../../services/api';
 import Modal from '../../components/Modal';
 import IconPicker from '../../components/IconPicker';
 import SkillIcon from '../../components/SkillIcon';
-import { usePortfolioData } from '../../context/PortfolioContext';
+import { usePortfolioData } from '../../context/usePortfolioData';
 import {
   SKILL_CATEGORY_OPTIONS,
   getSkillCategoryConfig,

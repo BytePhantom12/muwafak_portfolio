@@ -133,6 +133,8 @@ router.post('/', async (req, res) => {
 router.get('/', auth, async (req, res) => {
   try {
     const { read, limit = 50, skip = 0 } = req.query;
+    const safeLimit = Math.min(Math.max(Number.parseInt(limit, 10) || 50, 1), 100);
+    const safeSkip = Math.max(Number.parseInt(skip, 10) || 0, 0);
     
     const query = {};
     if (read !== undefined) {
@@ -141,8 +143,8 @@ router.get('/', auth, async (req, res) => {
     
     const messages = await ContactMessage.find(query)
       .sort({ createdAt: -1 })
-      .limit(parseInt(limit))
-      .skip(parseInt(skip));
+      .limit(safeLimit)
+      .skip(safeSkip);
     
     const total = await ContactMessage.countDocuments(query);
     const unreadCount = await ContactMessage.countDocuments({ read: false });
@@ -152,9 +154,9 @@ router.get('/', auth, async (req, res) => {
       data: messages,
       pagination: {
         total,
-        limit: parseInt(limit),
-        skip: parseInt(skip),
-        hasMore: total > parseInt(skip) + parseInt(limit)
+        limit: safeLimit,
+        skip: safeSkip,
+        hasMore: total > safeSkip + safeLimit
       },
       unreadCount
     });

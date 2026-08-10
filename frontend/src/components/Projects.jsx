@@ -3,7 +3,8 @@ import { useInView } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
 import { FaGithub } from 'react-icons/fa';
 import { HiArrowTopRightOnSquare } from 'react-icons/hi2';
-import { usePortfolioData } from '../context/PortfolioContext';
+import { usePortfolioData } from '../context/usePortfolioData';
+import { resolveBackendUrl } from '../services/api';
 
 // Helper function to get image URL
 const getImageUrl = (imagePath) => {
@@ -12,7 +13,7 @@ const getImageUrl = (imagePath) => {
   if (!url) return null;
   if (url.startsWith('http')) return url;
   if (url.startsWith('/uploads')) {
-    return `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${url}`;
+    return resolveBackendUrl(url);
   }
   return url;
 };
@@ -261,7 +262,7 @@ function ProjectCard({ project, index }) {
 
 export default function Projects() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const _isInView = useInView(ref, { once: true, margin: '-100px' });
   const { portfolioData, loading } = usePortfolioData();
 
   if (loading) {

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { HiPencil, HiCheck, HiXMark, HiEnvelope, HiPhone, HiMapPin, HiTrash, HiEye, HiChatBubbleLeftRight } from 'react-icons/hi2';
 import { portfolioAPI, contactAPI } from '../../services/api';
-import { usePortfolioData } from '../../context/PortfolioContext';
+import { usePortfolioData } from '../../context/usePortfolioData';
 
 export default function ContactManager() {
   const { updateLocalPortfolio } = usePortfolioData();
@@ -46,8 +46,8 @@ export default function ContactManager() {
   const fetchMessages = async () => {
     try {
       setMessagesLoading(true);
-      const messages = await contactAPI.getMessages();
-      setMessages(Array.isArray(messages) ? messages : []);
+      const response = await contactAPI.getMessages();
+      setMessages(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error('Error fetching messages:', error);
       alert('Failed to load messages');
@@ -118,9 +118,9 @@ export default function ContactManager() {
 
   const viewMessage = (message) => {
     setSelectedMessage(message);
-    setReplyText(message.reply || '');
-    if (!message.isRead) {
-      toggleMessageRead(message._id, message.isRead);
+    setReplyText(message.replyMessage || '');
+    if (!message.read) {
+      toggleMessageRead(message._id, message.read);
     }
   };
 
@@ -131,7 +131,7 @@ export default function ContactManager() {
       await contactAPI.addReply(selectedMessage._id, replyText);
       setMessages(messages.map(msg => 
         msg._id === selectedMessage._id 
-          ? { ...msg, reply: replyText } 
+          ? { ...msg, replyMessage: replyText, replied: true, read: true }
           : msg
       ));
       alert('Reply saved successfully!');
@@ -143,7 +143,7 @@ export default function ContactManager() {
     }
   };
 
-  const unreadCount = messages.filter(msg => !msg.isRead).length;
+  const unreadCount = messages.filter(msg => !msg.read).length;
 
   if (loading) {
     return (
@@ -277,7 +277,7 @@ export default function ContactManager() {
               <div
                 key={msg._id}
                 className={`p-4 rounded-xl border transition-all ${
-                  msg.isRead
+                  msg.read
                     ? 'bg-border-base/10 border-border-base/20'
                     : 'bg-accent/5 border-accent/20'
                 }`}
@@ -286,7 +286,7 @@ export default function ContactManager() {
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <h4 className="font-semibold text-text-primary">{msg.name}</h4>
-                      {msg.reply && (
+                      {msg.replied && (
                         <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400">
                           Replied
                         </span>
@@ -307,14 +307,14 @@ export default function ContactManager() {
                       <HiEye className="w-4 h-4" />
                     </button>
                     <button
-                      onClick={() => toggleMessageRead(msg._id, msg.isRead)}
+                      onClick={() => toggleMessageRead(msg._id, msg.read)}
                       className={`text-xs px-2 py-1 rounded-lg transition-colors ${
-                        msg.isRead
+                        msg.read
                           ? 'bg-border-base/20 text-text-muted hover:bg-border-base/40 hover:text-text-primary'
                           : 'bg-accent/10 text-accent hover:bg-accent/20 border border-accent/20'
                       }`}
                     >
-                      {msg.isRead ? 'Mark Unread' : 'Mark Read'}
+                      {msg.read ? 'Mark Unread' : 'Mark Read'}
                     </button>
                     <button
                       onClick={() => deleteMessage(msg._id)}
@@ -358,19 +358,19 @@ export default function ContactManager() {
               <p className="text-sm text-text-primary whitespace-pre-wrap">{selectedMessage.message}</p>
             </div>
 
-            {selectedMessage.reply && (
+            {selectedMessage.replied && selectedMessage.replyMessage && (
               <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4 mb-4">
                 <div className="flex items-center gap-2 mb-2">
                   <HiChatBubbleLeftRight className="w-4 h-4 text-emerald-400" />
                   <span className="text-sm font-semibold text-emerald-400">Your Reply</span>
                 </div>
-                <p className="text-sm text-text-primary whitespace-pre-wrap">{selectedMessage.reply}</p>
+                <p className="text-sm text-text-primary whitespace-pre-wrap">{selectedMessage.replyMessage}</p>
               </div>
             )}
 
             <div className="space-y-3">
               <label className="block text-sm font-medium text-text-primary">
-                {selectedMessage.reply ? 'Update Reply' : 'Add Reply'}
+                {selectedMessage.replied ? 'Update Reply' : 'Add Reply'}
               </label>
               <textarea
                 value={replyText}

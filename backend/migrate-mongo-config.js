@@ -2,8 +2,8 @@ require("dotenv").config();
 
 const config = {
   mongodb: {
-    url: process.env.MONGODB_URI || process.env.MONGODB_URL,
-    databaseName: "portfolio",
+    url: process.env.MONGODB_URI,
+    databaseName: process.env.MONGODB_DB_NAME || "portfolio",
   },
 
   migrationsDir: "migrations",

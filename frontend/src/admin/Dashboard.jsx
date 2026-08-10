@@ -4,7 +4,7 @@ import {
   HiUser, HiAcademicCap, HiCodeBracket, HiBriefcase,
   HiRectangleStack, HiEnvelope, HiArrowRightOnRectangle,
   HiChartBar, HiBars3, HiXMark, HiChevronLeft, HiChevronRight,
-  HiHome, HiUserCircle, HiCpuChip
+  HiHome, HiUserCircle
 } from 'react-icons/hi2';
 import { Link } from 'react-router-dom';
 import AboutManager from './sections/AboutManager';

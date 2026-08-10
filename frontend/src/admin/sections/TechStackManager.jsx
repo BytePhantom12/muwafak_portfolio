@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { HiPlus, HiPencil, HiTrash, HiCheck, HiXMark } from 'react-icons/hi2';
-import { portfolioAPI, uploadAPI } from '../../services/api';
+import { portfolioAPI, uploadAPI, resolveBackendUrl } from '../../services/api';
 import Modal from '../../components/Modal';
 import FileUpload from '../../components/FileUpload';
-import { usePortfolioData } from '../../context/PortfolioContext';
+import { usePortfolioData } from '../../context/usePortfolioData';
 
 export default function TechStackManager() {
   const [techStack, setTechStack] = useState([]);
@@ -18,21 +18,8 @@ export default function TechStackManager() {
     category: 'Frontend'
   });
 
-  const [uploadedIcon, setUploadedIcon] = useState(null);
+  const [_uploadedIcon, setUploadedIcon] = useState(null);
   const { portfolioData, updateLocalPortfolio } = usePortfolioData();
-
-  const fetchTechStack = async () => {
-    try {
-      setLoading(true);
-      const data = await portfolioAPI.getPortfolio();
-      setTechStack(data.techStack || []);
-    } catch (error) {
-      console.error('Error fetching tech stack:', error);
-      alert('Failed to load tech stack');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
     if (portfolioData?.techStack) {
@@ -76,7 +63,7 @@ export default function TechStackManager() {
   const getImageUrl = (iconPath) => {
     if (!iconPath) return null;
     if (iconPath.startsWith('/uploads')) {
-      return `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${iconPath}`;
+      return resolveBackendUrl(iconPath);
     }
     return iconPath;
   };
