@@ -226,7 +226,7 @@ export default function SkillsManager() {
           )}
         </div>
 
-        <div className="flex gap-3 justify-end mt-6">
+        <div className="mt-6 grid grid-cols-1 gap-3 min-[430px]:grid-cols-2">
           <button onClick={closeModal} className="btn-outline text-sm" disabled={saving}>
             <HiXMark className="w-4 h-4" />
             Cancel

@@ -250,7 +250,7 @@ export default function ExperienceManager() {
             </div>
           </div>
 
-          <div className="flex gap-3 justify-end pt-4">
+          <div className="grid grid-cols-1 gap-3 pt-4 min-[430px]:grid-cols-2">
             <button onClick={closeModal} className="btn-outline text-sm" disabled={saving}>
               <HiXMark className="w-4 h-4" />
               Cancel
@@ -280,12 +280,12 @@ export default function ExperienceManager() {
       <div className="space-y-4">
         {experience.map((item) => (
           <div key={item._id} className="glass-card p-4 sm:p-6 rounded-2xl">
-            <div className="flex items-start justify-between mb-3">
-              <div>
+            <div className="mb-3 flex flex-col gap-2 min-[430px]:flex-row min-[430px]:items-start min-[430px]:justify-between">
+              <div className="min-w-0">
                 <h3 className="text-lg font-semibold text-text-primary">{item.position}</h3>
                 <p className="text-sm text-accent">{item.company}</p>
               </div>
-              <div className="flex gap-2">
+              <div className="flex shrink-0 gap-2">
                 <button
                   onClick={() => handleEdit(item)}
                   className="p-2 rounded-lg hover:bg-border-base/30 text-text-muted hover:text-accent transition-colors"

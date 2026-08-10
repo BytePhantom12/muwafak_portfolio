@@ -6,7 +6,7 @@ import { HiArrowDownTray, HiChartBar, HiEnvelope } from 'react-icons/hi2';
 import { FaGithub, FaLinkedinIn, FaFacebookF, FaInstagram, FaWhatsapp } from 'react-icons/fa';
 import { SiFastapi, SiMysql, SiReact } from 'react-icons/si';
 import { usePortfolioData } from '../context/usePortfolioData';
-import { resolveBackendUrl } from '../services/api';
+import { getDownloadUrl } from '../services/api';
 
 const containerVariants = {
   hidden: {},
@@ -182,7 +182,7 @@ export default function Hero() {
                 </button>
               </Link>
               {portfolioData.cvUrl && <a
-                href={resolveBackendUrl(portfolioData.cvUrl) || '#'}
+                href={getDownloadUrl(portfolioData.cvUrl) || '#'}
                 download
                 id="hero-download-cv"
                 className="btn-outline w-full sm:w-auto"

@@ -92,7 +92,7 @@ export default function Footer() {
             <a
               href={`mailto:${contact.email}`}
               id="footer-email"
-              className="text-[#185FA5] text-sm font-medium hover:underline transition-all"
+              className="break-all text-sm font-medium text-[#185FA5] transition-all hover:underline"
             >
               {contact.email}
             </a>

@@ -280,21 +280,21 @@ export default function ContactManager() {
                     : 'bg-accent/5 border-accent/20'
                 }`}
               >
-                <div className="flex items-start justify-between mb-2">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h4 className="font-semibold text-text-primary">{msg.name}</h4>
+                <div className="mb-2 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="min-w-0 flex-1">
+                    <div className="mb-1 flex flex-wrap items-center gap-2">
+                      <h4 className="break-words font-semibold text-text-primary">{msg.name}</h4>
                       {msg.replied && (
                         <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400">
                           Replied
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-text-muted">{msg.email}</p>
-                    <p className="text-sm text-text-primary font-medium mt-1">{msg.subject}</p>
+                    <p className="break-all text-xs text-text-muted">{msg.email}</p>
+                    <p className="mt-1 break-words text-sm font-medium text-text-primary">{msg.subject}</p>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-text-muted">
+                  <div className="flex flex-wrap items-center gap-2 sm:justify-end">
+                    <span className="mr-auto text-xs text-text-muted sm:mr-0">
                       {new Date(msg.createdAt).toLocaleDateString()}
                     </span>
                     <button
@@ -332,12 +332,12 @@ export default function ContactManager() {
 
       {/* Message Detail Modal */}
       {selectedMessage && (
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="glass-card rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex items-start justify-between mb-4">
-              <div>
-                <h3 className="text-xl font-bold text-text-primary">{selectedMessage.subject}</h3>
-                <p className="text-sm text-text-muted mt-1">
+        <div className="fixed inset-0 z-50 flex items-end bg-black/30 p-0 backdrop-blur-sm sm:items-center sm:justify-center sm:p-4">
+          <div className="glass-card max-h-[100dvh] w-full max-w-2xl overflow-y-auto rounded-b-none rounded-t-2xl p-4 sm:max-h-[90vh] sm:rounded-2xl sm:p-6">
+            <div className="mb-4 flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <h3 className="break-words text-lg font-bold text-text-primary sm:text-xl">{selectedMessage.subject}</h3>
+                <p className="mt-1 break-words text-sm text-text-muted">
                   From: {selectedMessage.name} ({selectedMessage.email})
                 </p>
                 <p className="text-xs text-text-muted/80 mt-1">
@@ -377,7 +377,7 @@ export default function ContactManager() {
                 className="form-input resize-none"
                 placeholder="Type your reply here..."
               />
-              <div className="flex gap-2">
+              <div className="grid grid-cols-1 gap-2 min-[430px]:grid-cols-2">
                 <button
                   onClick={saveReply}
                   className="btn-primary text-sm"

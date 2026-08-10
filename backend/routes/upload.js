@@ -98,7 +98,9 @@ const getUploadOptions = (req, file) => {
   return {
     folder,
     resourceType: isDocument ? 'raw' : 'image',
-    publicId: `${Date.now()}-${sanitizedFileName}`,
+    publicId: isDocument
+      ? `${Date.now()}-${sanitizedFileName}.${file.originalname.split('.').pop().toLowerCase()}`
+      : `${Date.now()}-${sanitizedFileName}`,
     transformation: isDocument ? undefined : [
       { width: 2000, height: 2000, crop: 'limit' },
       { quality: 'auto' },
@@ -107,8 +109,12 @@ const getUploadOptions = (req, file) => {
   };
 };
 
-router.post('/', auth, upload.single('file'), async (req, res) => {
+router.post('/', auth, async (req, res) => {
   try {
+    await new Promise((resolve, reject) => {
+      upload.single('file')(req, res, (error) => error ? reject(error) : resolve());
+    });
+
     if (!req.file) {
       return res.status(400).json({
         success: false,
@@ -139,10 +145,11 @@ router.post('/', auth, upload.single('file'), async (req, res) => {
     });
   } catch (error) {
     console.error('Upload error:', error.message);
-    res.status(500).json({
+    const isClientError = error instanceof multer.MulterError || error.message.startsWith('Only images');
+    res.status(isClientError ? 400 : 500).json({
       success: false,
-      message: 'Upload failed',
-      error: 'The media provider rejected the upload'
+      message: error.code === 'LIMIT_FILE_SIZE' ? 'The file must be 10MB or smaller' : error.message,
+      error: isClientError ? 'Invalid upload' : 'The media provider rejected the upload'
     });
   }
 });

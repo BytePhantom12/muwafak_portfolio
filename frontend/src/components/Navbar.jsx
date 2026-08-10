@@ -5,7 +5,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { HiMenuAlt3, HiX } from 'react-icons/hi';
 import { HiArrowDownTray, HiCog6Tooth } from 'react-icons/hi2';
 import { usePortfolioData } from '../context/usePortfolioData';
-import { resolveBackendUrl } from '../services/api';
+import { getDownloadUrl } from '../services/api';
 
 const navLinks = [
   { label: 'Home', to: 'home' },
@@ -20,7 +20,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const { portfolioData } = usePortfolioData();
-  const [firstName = '', ...remainingNames] = portfolioData.name.trim().split(/\s+/);
+  const [firstName = ''] = portfolioData.name.trim().split(/\s+/);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -62,8 +62,7 @@ export default function Navbar() {
                 <span className="text-white font-bold text-sm font-display">{firstName.charAt(0)}</span>
               </div>
               <span className="truncate text-[#1C1B19] font-display font-extrabold text-lg sm:text-xl lg:text-2xl">
-                {firstName}{remainingNames.length > 0 && ' '}
-                <span className="text-gradient font-extrabold">{remainingNames.join(' ')}</span>
+                <span className="text-gradient font-extrabold">{firstName}</span>
               </span>
             </motion.div>
 
@@ -107,7 +106,7 @@ export default function Navbar() {
                 <HiCog6Tooth className="w-4 h-4" />
               </RouterLink>
               {portfolioData.cvUrl && <a
-                href={resolveBackendUrl(portfolioData.cvUrl) || '#'}
+                href={getDownloadUrl(portfolioData.cvUrl) || '#'}
                 download
                 id="nav-download-cv"
                 className="btn-primary text-sm py-2.5 px-5"
@@ -131,6 +130,15 @@ export default function Navbar() {
           </div>
         </div>
       </motion.nav>
+
+      {menuOpen && (
+        <button
+          type="button"
+          className="fixed inset-0 z-30 bg-black/20 md:hidden"
+          onClick={() => setMenuOpen(false)}
+          aria-label="Close navigation menu"
+        />
+      )}
 
       {/* Mobile Menu */}
       <AnimatePresence>
@@ -179,10 +187,10 @@ export default function Navbar() {
                   <HiCog6Tooth className="w-4 h-4" />
                   Admin Panel
                 </RouterLink>
-                <a href={resolveBackendUrl(portfolioData.cvUrl) || '#'} download id="mobile-download-cv" className="btn-primary w-full justify-center">
+                {portfolioData.cvUrl && <a href={getDownloadUrl(portfolioData.cvUrl) || '#'} download id="mobile-download-cv" className="btn-primary w-full justify-center">
                   <HiArrowDownTray className="w-4 h-4" />
                   Download CV
-                </a>
+                </a>}
               </motion.div>
             </div>
           </motion.div>

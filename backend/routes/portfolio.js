@@ -68,6 +68,52 @@ router.get('/', async (req, res) => {
   }
 });
 
+// GET /api/portfolio/cv/download - Download the current CV with a usable filename
+router.get('/cv/download', async (req, res) => {
+  try {
+    const portfolio = await Portfolio.findOne().select('profile.resume profile.name');
+    const resumeUrl = portfolio?.profile?.resume;
+    if (!resumeUrl || typeof resumeUrl !== 'string') {
+      return res.status(404).json({ message: 'CV not found' });
+    }
+
+    const parsedUrl = new URL(resumeUrl);
+    if (parsedUrl.protocol !== 'https:' || parsedUrl.hostname !== 'res.cloudinary.com') {
+      return res.status(400).json({ message: 'Invalid CV URL' });
+    }
+
+    const upstream = await fetch(parsedUrl);
+    if (!upstream.ok) {
+      return res.status(502).json({ message: 'CV download is unavailable' });
+    }
+
+    const fileBuffer = Buffer.from(await upstream.arrayBuffer());
+    let extension = parsedUrl.pathname.match(/\.(pdf|doc|docx|odt|rtf|txt)$/i)?.[1]?.toLowerCase();
+    if (!extension && fileBuffer.subarray(0, 4).toString() === '%PDF') extension = 'pdf';
+    if (!extension && fileBuffer.subarray(0, 4).equals(Buffer.from([0xd0, 0xcf, 0x11, 0xe0]))) extension = 'doc';
+    if (!extension && fileBuffer.subarray(0, 2).toString() === 'PK') extension = 'docx';
+    if (!extension && fileBuffer.subarray(0, 5).toString() === '{\\rtf') extension = 'rtf';
+    if (!extension) extension = 'txt';
+
+    const contentTypes = {
+      pdf: 'application/pdf',
+      doc: 'application/msword',
+      docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      odt: 'application/vnd.oasis.opendocument.text',
+      rtf: 'application/rtf',
+      txt: 'text/plain',
+    };
+    const safeName = (portfolio.profile?.name || 'portfolio').replace(/[^a-zA-Z0-9_-]+/g, '-');
+    res.setHeader('Content-Type', contentTypes[extension]);
+    res.setHeader('Content-Disposition', `attachment; filename="${safeName}-CV.${extension}"`);
+    res.setHeader('Content-Length', fileBuffer.length);
+    return res.send(fileBuffer);
+  } catch (error) {
+    console.error('CV download error:', error.message);
+    return res.status(500).json({ message: 'CV download failed' });
+  }
+});
+
 /**
  * @openapi
  * /api/portfolio:

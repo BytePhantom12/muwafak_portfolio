@@ -24,6 +24,12 @@ export const resolveBackendUrl = (value) => {
   return `${BACKEND_BASE_URL}${value}`;
 };
 
+export const getDownloadUrl = (value) => {
+  const resolvedUrl = resolveBackendUrl(value);
+  if (!resolvedUrl) return null;
+  return `${API_BASE_URL}/portfolio/cv/download`;
+};
+
 // Helper function to get auth token
 const getAuthToken = () => {
   return localStorage.getItem('admin_token');

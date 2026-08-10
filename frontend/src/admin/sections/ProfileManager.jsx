@@ -206,7 +206,7 @@ export default function ProfileManager() {
     <div className="max-w-4xl mx-auto">
       <div className="flex flex-col gap-3 min-[430px]:flex-row min-[430px]:items-center min-[430px]:justify-between mb-6">
         <h2 className="text-2xl font-bold font-display text-gradient">Profile Management</h2>
-        <div className="flex gap-2">
+        <div className="grid w-full grid-cols-2 gap-2 min-[430px]:flex min-[430px]:w-auto">
           <button 
             onClick={() => openModal('view')} 
             className="btn-outline text-sm"
@@ -226,8 +226,8 @@ export default function ProfileManager() {
 
       {/* Profile Summary Card */}
       <div className="glass-card p-4 sm:p-6 rounded-2xl">
-        <div className="flex items-start gap-6">
-          <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-accent/20 to-accent-dark/20 flex items-center justify-center overflow-hidden">
+        <div className="flex flex-col gap-4 min-[430px]:flex-row min-[430px]:items-start sm:gap-6">
+          <div className="h-24 w-24 shrink-0 self-center overflow-hidden rounded-2xl bg-gradient-to-br from-accent/20 to-accent-dark/20 min-[430px]:self-auto">
             <img
               src={getFileUrl(formData.profileImage) || '/profile.png'}
               alt={formData.name ? `${formData.name} profile` : 'Portfolio profile'}
@@ -237,11 +237,11 @@ export default function ProfileManager() {
               onError={(event) => { event.currentTarget.src = '/profile.png'; }}
             />
           </div>
-          <div className="flex-1">
+          <div className="min-w-0 flex-1 text-center min-[430px]:text-left">
             <h3 className="text-xl font-bold text-text-primary mb-1">{formData.name}</h3>
             <p className="text-accent mb-2">{formData.role}</p>
             <p className="text-sm text-text-muted mb-3">{formData.heroDescription}</p>
-            <div className="flex flex-wrap gap-4 text-xs text-text-muted">
+            <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-xs text-text-muted min-[430px]:justify-start">
               {formData.location && <span>📍 {formData.location}</span>}
               {formData.education && <span>🎓 {formData.education}</span>}
               {formData.languages && <span>🌍 {formData.languages}</span>}
@@ -414,7 +414,7 @@ export default function ProfileManager() {
 
           {/* Social Media */}
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-3 min-[430px]:flex-row min-[430px]:items-center min-[430px]:justify-between">
               <h3 className="text-lg font-semibold text-text-primary">Social Media Handles</h3>
               {modalMode === 'edit' && (
                 <button onClick={addSocial} className="btn-outline text-sm">
@@ -488,7 +488,7 @@ export default function ProfileManager() {
 
           {/* Action Buttons */}
           {modalMode === 'edit' && (
-            <div className="flex gap-3 pt-4">
+            <div className="grid grid-cols-1 gap-3 pt-4 min-[430px]:grid-cols-2">
               <button
                 onClick={handleSave}
                 className="btn-primary flex-1"

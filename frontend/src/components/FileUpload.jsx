@@ -78,20 +78,13 @@ export default function FileUpload({
     setPreview(url);
     setSelectedFile(file);
     
-    // Convert to base64 for storage
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const base64 = e.target.result;
-      onChange({
-        file,
-        url,
-        base64,
-        name: file.name,
-        size: file.size,
-        type: file.type
-      });
-    };
-    reader.readAsDataURL(file);
+    onChange({
+      file,
+      url,
+      name: file.name,
+      size: file.size,
+      type: file.type
+    });
   };
 
   const handleRemove = () => {
@@ -162,7 +155,7 @@ export default function FileUpload({
               <div className="relative z-20 flex items-center gap-3 rounded-lg bg-[#E8E6DE] p-3 pointer-events-none">
                 <Icon className="w-8 h-8 text-[#185FA5]" />
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-slate-200">
+                  <p className="break-all text-sm font-medium text-[#1C1B19]">
                     {selectedFile?.name || 'File selected'}
                   </p>
                   <p className="text-xs text-slate-500">

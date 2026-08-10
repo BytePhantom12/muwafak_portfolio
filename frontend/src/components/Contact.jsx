@@ -106,7 +106,7 @@ export default function Contact() {
               {contactInfo.map(({ icon: Icon, label, value, href, color }) => (
                 <motion.div
                   key={label}
-                  className="glass-card rounded-2xl p-4 flex items-center gap-4 group hover:border-[#C2C0B8]/60 transition-all duration-300"
+                  className="glass-card group flex min-w-0 items-center gap-3 rounded-2xl p-4 transition-all duration-300 hover:border-[#C2C0B8]/60 sm:gap-4"
                   whileHover={{ x: 4 }}
                 >
                   <div
@@ -115,14 +115,14 @@ export default function Contact() {
                   >
                     <Icon className="w-5 h-5" style={{ color }} />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <span className="text-xs text-[#626058] uppercase tracking-wider block mb-0.5">{label}</span>
                     {href ? (
-                      <a href={href} className="text-sm text-[#1C1B19] font-medium hover:text-[#185FA5] transition-colors">
+                      <a href={href} className="break-all text-sm font-medium text-[#1C1B19] transition-colors hover:text-[#185FA5]">
                         {value}
                       </a>
                     ) : (
-                      <span className="text-sm text-[#1C1B19] font-medium">{value}</span>
+                      <span className="break-words text-sm font-medium text-[#1C1B19]">{value}</span>
                     )}
                   </div>
                 </motion.div>
@@ -132,7 +132,7 @@ export default function Contact() {
             {/* Social Links */}
             <div>
               <p className="text-sm text-[#626058] mb-4">Follow me on social media</p>
-              <div className="flex gap-3">
+              <div className="flex flex-wrap gap-3">
                 {socials.map(({ id, label, href, icon }) => {
                   const Icon = iconMap[icon];
                   return (

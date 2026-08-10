@@ -236,10 +236,10 @@ export default function ProjectsManager() {
             ) : (
               <div className="h-48 bg-gradient-to-br from-accent/10 to-accent-dark/10" aria-hidden="true" />
             )}
-            <div className="p-5">
-              <div className="flex items-start justify-between mb-3">
-                <h3 className="text-lg font-semibold text-text-primary">{project.title}</h3>
-                <div className="flex gap-1">
+            <div className="p-4 sm:p-5">
+              <div className="mb-3 flex flex-col gap-2 min-[430px]:flex-row min-[430px]:items-start min-[430px]:justify-between">
+                <h3 className="min-w-0 break-words text-lg font-semibold text-text-primary">{project.title}</h3>
+                <div className="flex shrink-0 gap-1">
                   <button
                     onClick={() => openModal('view', project)}
                     className="p-1.5 rounded-lg hover:bg-border-base/30 text-text-muted hover:text-accent transition-colors"
