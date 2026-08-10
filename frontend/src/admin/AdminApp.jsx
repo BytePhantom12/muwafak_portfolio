@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react';
 import Login from './Login';
 import Dashboard from './Dashboard';
 import { authAPI } from '../services/api';
+import { usePortfolioData } from '../context/usePortfolioData';
 
 export default function AdminApp() {
+  const { portfolioData } = usePortfolioData();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -30,16 +32,16 @@ export default function AdminApp() {
   useEffect(() => {
     // Update document title based on authentication status
     if (isAuthenticated) {
-      document.title = 'Admin Dashboard - Muwafak Portfolio';
+      document.title = `Admin Dashboard - ${portfolioData.name}`;
     } else {
-      document.title = 'Admin Login - Muwafak Portfolio';
+      document.title = `Admin Login - ${portfolioData.name}`;
     }
 
     // Cleanup: restore original title when component unmounts
     return () => {
-      document.title = 'Muwafak Abubakar - Full-Stack Developer & Data Analyst';
+      document.title = `${portfolioData.name} - ${portfolioData.role}`;
     };
-  }, [isAuthenticated]);
+  }, [isAuthenticated, portfolioData.name, portfolioData.role]);
 
   const handleLogin = () => {
     sessionStorage.setItem('admin_authenticated', 'true');

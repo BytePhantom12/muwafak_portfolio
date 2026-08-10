@@ -16,6 +16,7 @@ export default function Footer() {
   const year = new Date().getFullYear();
   const { portfolioData } = usePortfolioData();
   const { contact, socials } = portfolioData;
+  const [firstName = '', ...remainingNames] = portfolioData.name.trim().split(/\s+/);
 
   return (
     <footer className="relative border-t border-[#C2C0B8]/20 bg-[#DDDBD3] overflow-hidden">
@@ -28,15 +29,15 @@ export default function Footer() {
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#185FA5] to-[#C2C0B8] flex items-center justify-center shadow-[0_0_15px_rgba(24,95,165,0.2)]">
-                <span className="text-white font-bold font-display">M</span>
+                <span className="text-white font-bold font-display">{firstName.charAt(0)}</span>
               </div>
               <span className="text-[#1C1B19] font-display font-extrabold text-xl">
-                Muwafak <span className="text-gradient font-extrabold text-xl">Abubakar</span>
+                {firstName}{remainingNames.length > 0 && ' '}
+                <span className="text-gradient font-extrabold text-xl">{remainingNames.join(' ')}</span>
               </span>
             </div>
             <p className="text-[#626058] text-sm leading-relaxed max-w-xs">
-              Building modern, high-performance web experiences. Available for freelance
-              projects and full-time opportunities.
+              {portfolioData.heroDescription}
             </p>
             <div className="flex gap-3">
               {socials.map(({ id, label, href, icon }) => {
@@ -95,12 +96,12 @@ export default function Footer() {
             >
               {contact.email}
             </a>
-            <div className="mt-4">
+            {portfolioData.profile?.availability && <div className="mt-4">
               <div className="inline-flex items-center gap-2 text-xs text-[#626058]">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                Available for hire
+                {portfolioData.profile?.availability}
               </div>
-            </div>
+            </div>}
           </div>
         </div>
 
@@ -108,7 +109,7 @@ export default function Footer() {
         <div className="border-t border-[#C2C0B8]/20 pt-8">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-[#626058] text-xs">
-              © {year} Muwafak. All rights reserved.
+              © {year} {portfolioData.name}. All rights reserved.
             </p>
             <p className="text-[#626058] text-xs">
               Built with React &amp; Tailwind CSS

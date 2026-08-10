@@ -209,7 +209,7 @@ export default function ProjectsManager() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col gap-3 min-[430px]:flex-row min-[430px]:items-center min-[430px]:justify-between mb-6">
         <h2 className="text-2xl font-bold font-display text-gradient">Projects</h2>
         <button
           onClick={() => openModal('add')}
@@ -234,12 +234,7 @@ export default function ProjectsManager() {
                 />
               </div>
             ) : (
-              <div className="h-48 bg-gradient-to-br from-accent/10 to-accent-dark/10 flex items-center justify-center">
-                <div className="text-center text-text-muted">
-                  <div className="text-4xl mb-2">📷</div>
-                  <div className="text-sm">No image</div>
-                </div>
-              </div>
+              <div className="h-48 bg-gradient-to-br from-accent/10 to-accent-dark/10" aria-hidden="true" />
             )}
             <div className="p-5">
               <div className="flex items-start justify-between mb-3">

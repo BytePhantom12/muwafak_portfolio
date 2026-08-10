@@ -94,7 +94,7 @@ export default function AboutManager() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col gap-3 min-[430px]:flex-row min-[430px]:items-center min-[430px]:justify-between mb-6">
         <h2 className="text-2xl font-bold font-display text-gradient">About Section</h2>
         <button onClick={openModal} className="btn-primary text-sm" disabled={loading}>
           <HiPencil className="w-4 h-4" />
@@ -103,7 +103,7 @@ export default function AboutManager() {
       </div>
 
       {/* Display Card */}
-      <div className="glass-card p-6 rounded-2xl space-y-6">
+      <div className="glass-card p-4 sm:p-6 rounded-2xl space-y-6">
         {/* Intro Heading */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>

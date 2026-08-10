@@ -25,7 +25,7 @@ function SkillCard({ skill, index }) {
       viewport={{ once: true, margin: '-20px' }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       whileHover={{ y: -8, scale: 1.02 }}
-      className="bg-[#DDDBD3] border border-[#C2C0B8]/30 hover:border-[#C2C0B8]/60 transition-colors rounded-[1.25rem] p-6 pb-5 flex flex-col items-center gap-5 relative overflow-hidden group w-full"
+      className="bg-[#DDDBD3] border border-[#C2C0B8]/30 hover:border-[#C2C0B8]/60 transition-colors rounded-[1.25rem] p-6 flex flex-col items-center gap-4 relative overflow-hidden group w-full"
       style={{ '--skill-color': skill.color }}
     >
       <div
@@ -52,22 +52,6 @@ function SkillCard({ skill, index }) {
         {skill.name}
       </span>
 
-      {/* Progress Bar & Percentage */}
-      <div className="w-full mt-auto pt-2 flex flex-col items-center gap-3">
-        <div className="w-full h-1.5 bg-[#C2C0B8]/60 rounded-full overflow-hidden relative">
-          <motion.div
-            className="absolute top-0 left-0 h-full rounded-full"
-            style={{
-              background: skill.color,
-              boxShadow: `0 0 10px ${skill.color}80`
-            }}
-            initial={{ width: 0 }}
-            whileInView={{ width: `${skill.level}%` }}
-            transition={{ duration: 1.2, delay: 0.2 + index * 0.1, ease: 'easeOut' }}
-            viewport={{ once: true }}
-          />
-        </div>
-      </div>
     </motion.div>
   );
 }
@@ -90,7 +74,7 @@ export default function Skills() {
   }
 
   return (
-    <section id="skills" className="py-24 md:py-32 relative overflow-hidden bg-[#E8E6DE]">
+    <section id="skills" className="section-space relative overflow-hidden bg-[#E8E6DE]">
       {/* Subtle Background Elements */}
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#C2C0B8]/20 to-transparent" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#DDDBD3]/40 via-[#E8E6DE] to-[#E8E6DE] pointer-events-none" />
@@ -98,27 +82,27 @@ export default function Skills() {
       <div className="container-custom relative z-10">
 
         {/* Header Section */}
-        <div className="mb-20 flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8">
+        <div className="mb-12 flex flex-col justify-between gap-6 sm:mb-16 lg:mb-20 lg:flex-row lg:items-end lg:gap-8">
           <div className="max-w-2xl">
-            <h2 className="text-4xl md:text-[2.75rem] font-bold text-[#1C1B19] leading-tight mb-5">
+            <h2 className="section-title mb-5">
               Skills & <span className="text-[#185FA5]">Technologies</span>
             </h2>
-            <p className="text-[#626058] text-lg">
+            <p className="section-subtitle mx-0">
               Tools and technologies I work with to bring ideas to life.
             </p>
           </div>
 
           {/* Top Right Stats */}
-          <div className="flex flex-wrap gap-4 select-none">
-            <div className="bg-[#DDDBD3] border border-[#C2C0B8]/30 rounded-2xl px-6 py-4 flex flex-col items-center hover:border-[#C2C0B8]/60 transition-colors">
+          <div className="grid w-full grid-cols-3 gap-2 select-none sm:flex sm:w-auto sm:gap-4">
+            <div className="bg-[#DDDBD3] border border-[#C2C0B8]/30 rounded-xl px-2 py-3 sm:rounded-2xl sm:px-6 sm:py-4 flex flex-col items-center hover:border-[#C2C0B8]/60 transition-colors">
               <span className="text-2xl font-bold text-[#1C1B19] mb-1"><Counter value={portfolioData.about.yearsOfExperience} />+</span>
               <span className="text-[10px] text-[#626058] uppercase tracking-widest font-semibold">Years Exp</span>
             </div>
-            <div className="bg-[#DDDBD3] border border-[#C2C0B8]/30 rounded-2xl px-6 py-4 flex flex-col items-center hover:border-[#C2C0B8]/60 transition-colors">
+            <div className="bg-[#DDDBD3] border border-[#C2C0B8]/30 rounded-xl px-2 py-3 sm:rounded-2xl sm:px-6 sm:py-4 flex flex-col items-center hover:border-[#C2C0B8]/60 transition-colors">
               <span className="text-2xl font-bold text-[#1C1B19] mb-1"><Counter value={portfolioData.projects.length} /></span>
               <span className="text-[10px] text-[#626058] uppercase tracking-widest font-semibold">Projects</span>
             </div>
-            <div className="bg-[#DDDBD3] border border-[#C2C0B8]/30 rounded-2xl px-6 py-4 flex flex-col items-center hover:border-[#C2C0B8]/60 transition-colors">
+            <div className="bg-[#DDDBD3] border border-[#C2C0B8]/30 rounded-xl px-2 py-3 sm:rounded-2xl sm:px-6 sm:py-4 flex flex-col items-center hover:border-[#C2C0B8]/60 transition-colors">
               <span className="text-2xl font-bold text-[#1C1B19] mb-1"><Counter value={portfolioData.skillCategories.reduce((acc, cat) => acc + cat.skills.length, 0)} />+</span>
               <span className="text-[10px] text-[#626058] uppercase tracking-widest font-semibold">Tech Stack</span>
             </div>
@@ -126,7 +110,7 @@ export default function Skills() {
         </div>
 
         {/* All Categories Sequential List */}
-        <div className="flex flex-col gap-16 md:gap-20">
+        <div className="flex flex-col gap-12 md:gap-20">
           {categories.map((cat, catIdx) => (
             <div key={cat.name} className="flex flex-col gap-8">
 
@@ -146,7 +130,7 @@ export default function Skills() {
                     style={{ backgroundColor: cat.color, boxShadow: `0 0 12px ${cat.color}` }}
                   />
                 </div>
-                <h3 className="text-2xl md:text-3xl font-bold text-[#1C1B19] tracking-wide shrink-0">
+                <h3 className="min-w-0 break-words text-xl sm:text-2xl md:text-3xl font-bold text-[#1C1B19] tracking-wide">
                   {cat.name}
                 </h3>
 
@@ -196,7 +180,7 @@ export default function Skills() {
               </motion.div>
 
               {/* Skills Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-5 md:gap-6">
+              <div className="grid grid-cols-1 gap-4 min-[430px]:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 md:gap-5 xl:grid-cols-6">
                 {cat.skills.map((skill, index) => (
                   <SkillCard key={skill.name} skill={skill} index={index} />
                 ))}

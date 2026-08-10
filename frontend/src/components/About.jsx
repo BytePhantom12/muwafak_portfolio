@@ -21,14 +21,14 @@ export default function About() {
   ];
 
   return (
-    <section id="about" className="py-24 md:py-32 relative overflow-hidden">
+    <section id="about" className="section-space relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-[#E8E6DE] via-[#DDDBD3] to-[#E8E6DE]" />
       <div className="blob w-[400px] h-[400px] bg-[#185FA5] top-0 right-0 opacity-[0.05]" />
 
       <div className="container-custom relative z-10" ref={ref}>
         {/* Section Header */}
         <motion.div
-          className="text-center mb-16"
+          className="mb-10 text-center sm:mb-14 lg:mb-16"
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
@@ -41,7 +41,7 @@ export default function About() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-20">
 
           {/* Left Column: Text & Content */}
           <motion.div
@@ -50,7 +50,7 @@ export default function About() {
             transition={{ duration: 0.7, delay: 0.3 }}
             className="flex flex-col items-start text-left"
           >
-            <h3 className="text-2xl md:text-3xl font-bold font-display text-[#1C1B19] mb-4">
+            <h3 className="text-[clamp(1.5rem,5vw,2rem)] font-bold font-display text-[#1C1B19] mb-4 leading-tight">
               {about.introHeading}{' '}
               &amp;{' '}
               <span className="text-gradient">{about.introHeadingHighlight}</span>
@@ -77,19 +77,19 @@ export default function About() {
             </div>
 
             {/* Quick Facts Grid */}
-            <div className="grid grid-cols-2 gap-4 mb-8 w-full">
+            <div className="grid w-full grid-cols-1 gap-3 min-[430px]:grid-cols-2 sm:gap-4 mb-8">
               {facts.map(({ emoji, label, value }) => (
-                <div key={label} className="glass-card p-4 rounded-xl flex items-center gap-3">
+                <div key={label} className="glass-card min-w-0 p-4 rounded-xl flex items-center gap-3">
                   <span className="text-2xl">{emoji}</span>
                   <div>
                     <span className="text-[10px] text-[#626058] uppercase tracking-wider block">{label}</span>
-                    <span className="text-sm text-[#1C1B19] font-medium">{value}</span>
+                    <span className="block break-words text-sm text-[#1C1B19] font-medium">{value}</span>
                   </div>
                 </div>
               ))}
             </div>
 
-            <div className="flex gap-4 flex-wrap">
+            <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:gap-4 [&>*]:w-full sm:[&>*]:w-auto [&_button]:w-full sm:[&_button]:w-auto">
               <Link to="contact" smooth={true} duration={600} offset={-80}>
                 <button id="about-hire-btn" className="btn-primary">Let's Work Together</button>
               </Link>
@@ -106,10 +106,10 @@ export default function About() {
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.2 }}
           >
-            <div className="relative">
+            <div className="relative w-full max-w-[360px] px-3 sm:px-0">
 
               {/* Main Image Container with Spinning Tech Border */}
-              <div className="relative w-[300px] sm:w-[360px] rounded-3xl p-[2px] overflow-hidden group shadow-[0_0_40px_rgba(24,95,165,0.15)] bg-[#E8E6DE]">
+              <div className="relative w-full rounded-3xl p-[2px] overflow-hidden group shadow-[0_0_40px_rgba(24,95,165,0.15)] bg-[#E8E6DE]">
 
                 {/* Techno Spinning Laser Background */}
                 <motion.div
@@ -125,9 +125,12 @@ export default function About() {
                 <div className="relative rounded-[calc(1.5rem-2px)] overflow-hidden bg-[#DDDBD3] h-full w-full z-10">
                   <img
                     src={profileImage}
-                    alt="Muwafak Abubakar – About"
+                    alt={portfolioData.name ? `${portfolioData.name} about profile` : 'Portfolio profile'}
                     className="w-full h-auto object-cover object-top transition duration-500 group-hover:scale-[1.02]"
-                    style={{ minHeight: '400px', objectPosition: 'top center' }}
+                    style={{ minHeight: 'min(400px, 110vw)', objectPosition: 'top center' }}
+                    width={360}
+                    height={400}
+                    onError={(event) => { event.currentTarget.src = '/profile.png'; }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#E8E6DE]/80 via-[#E8E6DE]/20 to-transparent pointer-events-none" />
 
@@ -142,7 +145,7 @@ export default function About() {
 
               {/* Floating card - Experience */}
               <motion.div
-                className="absolute -bottom-6 -right-6 glass-card px-5 py-4 rounded-2xl shadow-[0_0_30px_rgba(0,0,0,0.1)] z-20 border border-[#C2C0B8]/30"
+                className="absolute -bottom-4 right-0 hidden glass-card px-5 py-4 rounded-2xl shadow-[0_0_30px_rgba(0,0,0,0.1)] z-20 border border-[#C2C0B8]/30 sm:block sm:-right-6"
                 initial={{ opacity: 0, y: 20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.6 }}
@@ -153,7 +156,7 @@ export default function About() {
 
               {/* Floating card - Projects */}
               <motion.div
-                className="absolute -top-6 -left-6 glass-card px-5 py-4 rounded-2xl shadow-[0_0_30px_rgba(0,0,0,0.1)] z-20 border border-[#C2C0B8]/30"
+                className="absolute -top-6 -left-6 hidden glass-card px-5 py-4 rounded-2xl shadow-[0_0_30px_rgba(0,0,0,0.1)] z-20 border border-[#C2C0B8]/30 sm:block"
                 initial={{ opacity: 0, y: -20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.7 }}

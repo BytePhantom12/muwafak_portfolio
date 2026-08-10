@@ -24,6 +24,7 @@
 
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
     scrollbar-width: thin;
     scrollbar-color: #185FA5 #DDDBD3;
   }
@@ -47,15 +48,37 @@
     font-family: 'Inter', sans-serif;
     overflow-x: hidden;
     line-height: 1.6;
-    text-align: justify;
+    min-width: 320px;
+    text-align: left;
+    -webkit-font-smoothing: antialiased;
   }
 
   p {
-    text-align: justify;
+    text-align: left;
+    text-wrap: pretty;
   }
 
   section {
     position: relative;
+    scroll-margin-top: 5rem;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  button,
+  a,
+  input,
+  textarea,
+  select {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :focus-visible {
+    outline: 3px solid rgba(24, 95, 165, 0.45);
+    outline-offset: 3px;
   }
 }
 
@@ -76,7 +99,7 @@
   }
 
   .btn-primary {
-    @apply inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 cursor-pointer select-none;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 px-5 sm:px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 cursor-pointer select-none;
     background: #185FA5;
     color: #E6F1FB;
     box-shadow: 0 0 20px rgba(24, 95, 165, 0.25);
@@ -88,7 +111,7 @@
   }
 
   .btn-outline {
-    @apply inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 cursor-pointer select-none;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 px-5 sm:px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 cursor-pointer select-none;
     border: 0.5px solid #C2C0B8;
     color: #626058;
     background: transparent;
@@ -102,11 +125,14 @@
   }
 
   .section-title {
-    @apply text-4xl md:text-5xl font-bold font-display mb-4 text-[#1C1B19];
+    @apply font-bold font-display mb-4 text-[#1C1B19];
+    font-size: clamp(2rem, 6vw, 3rem);
+    line-height: 1.1;
   }
 
   .section-subtitle {
-    @apply text-[#626058] text-lg max-w-2xl mx-auto;
+    @apply text-[#626058] max-w-2xl mx-auto;
+    font-size: clamp(1rem, 2vw, 1.125rem);
   }
 
   .section-badge {
@@ -216,7 +242,8 @@
   color: #1C1B19;
   width: 100%;
   font-family: 'Inter', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
+  min-height: 46px;
   transition: all 0.3s ease;
   outline: none;
 }
@@ -295,7 +322,7 @@
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 max(1rem, env(safe-area-inset-left));
 }
 
 @media (min-width: 640px) {
@@ -307,5 +334,32 @@
 @media (min-width: 1024px) {
   .container-custom {
     padding: 0 2rem;
+  }
+}
+
+.section-space {
+  padding-block: clamp(4rem, 8vw, 8rem);
+}
+
+.touch-target {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+@media (hover: none) {
+  .project-card:hover,
+  .btn-primary:hover,
+  .btn-outline:hover {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }

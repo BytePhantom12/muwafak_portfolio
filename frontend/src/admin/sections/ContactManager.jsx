@@ -158,8 +158,8 @@ export default function ContactManager() {
       <h2 className="text-2xl font-bold font-display text-gradient mb-6">Contact Management</h2>
 
       {/* Contact Information */}
-      <div className="glass-card p-6 rounded-2xl mb-6">
-        <div className="flex items-center justify-between mb-6">
+      <div className="glass-card p-4 sm:p-6 rounded-2xl mb-6">
+        <div className="flex flex-col gap-3 min-[430px]:flex-row min-[430px]:items-center min-[430px]:justify-between mb-6">
           <h3 className="text-lg font-semibold text-text-primary">Contact Information</h3>
           {!isEditing ? (
             <button onClick={() => setIsEditing(true)} className="btn-primary text-sm" disabled={loading}>
@@ -246,8 +246,8 @@ export default function ContactManager() {
       </div>
 
       {/* Messages Inbox */}
-      <div className="glass-card p-6 rounded-2xl">
-        <div className="flex items-center justify-between mb-6">
+      <div className="glass-card p-4 sm:p-6 rounded-2xl">
+        <div className="flex flex-col gap-3 min-[430px]:flex-row min-[430px]:items-center min-[430px]:justify-between mb-6">
           <h3 className="text-lg font-semibold text-text-primary">
             Messages Inbox
             {unreadCount > 0 && (
@@ -269,9 +269,7 @@ export default function ContactManager() {
           <div className="flex items-center justify-center py-12">
             <div className="w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin"></div>
           </div>
-        ) : messages.length === 0 ? (
-          <p className="text-center text-text-muted py-8">No messages yet</p>
-        ) : (
+        ) : messages.length > 0 && (
           <div className="space-y-3">
             {messages.map((msg) => (
               <div

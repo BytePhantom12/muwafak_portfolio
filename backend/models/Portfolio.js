@@ -8,6 +8,14 @@ const cloudinaryImageSchema = new mongoose.Schema({
   format: { type: String, default: null }
 }, { _id: false });
 
+const skillItemSchema = new mongoose.Schema({
+  name: { type: String, required: false },
+  category: { type: String, required: false },
+  color: String,
+  iconType: { type: String, enum: ['react', 'image'], required: false },
+  icon: mongoose.Schema.Types.Mixed
+}, { _id: false });
+
 const portfolioSchema = new mongoose.Schema({
   profile: {
     name: { type: String, required: false },
@@ -38,7 +46,7 @@ const portfolioSchema = new mongoose.Schema({
   
   skills: [{
     category: { type: String, required: false },
-    items: [mongoose.Schema.Types.Mixed]
+    items: [skillItemSchema]
   }],
   
   education: [{

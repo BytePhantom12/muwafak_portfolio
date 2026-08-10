@@ -16,6 +16,7 @@ export default function Contact() {
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   const { portfolioData } = usePortfolioData();
   const { contact, socials } = portfolioData;
@@ -30,6 +31,7 @@ export default function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitError('');
     setLoading(true);
     try {
       // Save to our database first
@@ -45,7 +47,7 @@ export default function Contact() {
           email: formData.email,
           subject: `Portfolio Contact: ${formData.subject}`,
           message: formData.message,
-          from_name: 'Muwafak Portfolio',
+          from_name: `${portfolioData.name} Portfolio`,
         }),
       });
 
@@ -53,14 +55,14 @@ export default function Contact() {
       setFormData({ name: '', email: '', subject: '', message: '' });
     } catch (error) {
       console.error('Contact form error:', error);
-      alert('Something went wrong. Please try again or contact me directly via email.');
+      setSubmitError('Something went wrong. Please try again or contact me directly by email.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <section id="contact" className="py-24 md:py-32 relative overflow-hidden">
+    <section id="contact" className="section-space relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-[#E8E6DE] to-[#DDDBD3]" />
       <div className="blob w-[500px] h-[500px] bg-[#185FA5] top-0 left-0 opacity-[0.05]" />
       <div className="blob w-[400px] h-[400px] bg-[#C2C0B8] bottom-0 right-0 opacity-[0.08]" />
@@ -81,7 +83,7 @@ export default function Contact() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-5 lg:gap-16">
           {/* Left - Contact Info */}
           <motion.div
             className="lg:col-span-2 space-y-6"
@@ -171,7 +173,7 @@ export default function Contact() {
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.4 }}
           >
-            <div className="glass-card rounded-[2rem] p-6 sm:p-10 relative overflow-hidden">
+            <div className="glass-card relative overflow-hidden rounded-2xl p-5 sm:rounded-[2rem] sm:p-10">
               <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-[#185FA5]/10 to-[#C2C0B8]/10 blur-3xl rounded-full" />
 
               {submitted ? (
@@ -193,6 +195,11 @@ export default function Contact() {
                 </motion.div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
+                  {submitError && (
+                    <div className="rounded-xl border border-red-300 bg-red-50 p-3 text-sm text-red-700" role="alert">
+                      {submitError}
+                    </div>
+                  )}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <label htmlFor="name" className="text-xs font-semibold text-[#626058] uppercase tracking-wider pl-1">Your Name</label>

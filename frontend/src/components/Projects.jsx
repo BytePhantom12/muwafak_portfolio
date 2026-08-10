@@ -36,9 +36,13 @@ function ProjectSlideshow({ images, title, hovered }) {
       <AnimatePresence mode="wait">
         <motion.img
           key={currentIndex}
-          src={currentImageUrl || 'https://via.placeholder.com/600x400?text=Project'}
+          src={currentImageUrl}
           alt={`${title} - slide ${currentIndex + 1}`}
           className="absolute inset-0 w-full h-full object-cover object-top"
+          loading="lazy"
+          decoding="async"
+          width={600}
+          height={400}
           initial={{ opacity: 0, scale: 1.1 }}
           animate={{
             opacity: 1,
@@ -136,7 +140,7 @@ function ProjectCard({ project, index }) {
     >
       {/* Project visual */}
       <div className="relative h-48 sm:h-52 overflow-hidden shrink-0 bg-[#DDDBD3]">
-        {project.images ? (
+        {Array.isArray(project.images) && project.images.length > 0 ? (
           <ProjectSlideshow images={project.images} title={project.title} hovered={hovered} />
         ) : imageSrc ? (
           <div className="relative w-full h-full overflow-hidden">
@@ -145,6 +149,10 @@ function ProjectCard({ project, index }) {
               src={imageSrc}
               alt={project.title}
               className="w-full h-full object-cover object-top"
+              loading="lazy"
+              decoding="async"
+              width={600}
+              height={400}
               animate={{
                 scale: hovered ? 1.05 : 1,
               }}
@@ -193,7 +201,7 @@ function ProjectCard({ project, index }) {
 
         {/* Hover overlay */}
         <motion.div
-          className="absolute inset-0 flex items-center justify-center gap-4 z-30"
+          className="absolute inset-0 z-30 hidden items-center justify-center gap-4 sm:flex"
           initial={{ opacity: 0 }}
           animate={{ opacity: hovered ? 1 : 0 }}
           transition={{ duration: 0.2 }}
@@ -244,7 +252,7 @@ function ProjectCard({ project, index }) {
       </div>
 
       {/* Content */}
-      <div className="p-6 flex flex-col flex-1">
+      <div className="flex flex-1 flex-col p-5 sm:p-6">
         <ProjectTitle title={project.title} accentColor={project.accentColor} />
         <p className="text-sm text-[#626058] leading-relaxed mb-6 flex-grow mt-1">
           {project.description}
@@ -255,6 +263,12 @@ function ProjectCard({ project, index }) {
             <ProjectTag key={tag} tag={tag} accentColor={project.accentColor} />
           ))}
         </div>
+        {(project.githubUrl || project.liveUrl) && (
+          <div className="mt-5 grid grid-cols-2 gap-3 sm:hidden">
+            {project.githubUrl && <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="btn-outline px-3">Code</a>}
+            {project.liveUrl && <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="btn-primary px-3">Live</a>}
+          </div>
+        )}
       </div>
     </motion.div>
   );
@@ -264,6 +278,7 @@ export default function Projects() {
   const ref = useRef(null);
   const _isInView = useInView(ref, { once: true, margin: '-100px' });
   const { portfolioData, loading } = usePortfolioData();
+  const githubUrl = portfolioData.socials.find((social) => social.icon === 'FaGithub')?.href;
 
   if (loading) {
     return (
@@ -279,7 +294,7 @@ export default function Projects() {
   }
 
   return (
-    <section id="projects" className="py-24 md:py-32 relative overflow-hidden">
+    <section id="projects" className="section-space relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-[#DDDBD3] to-[#E8E6DE]" />
       <div className="blob w-[500px] h-[500px] bg-[#185FA5] top-1/2 right-0 opacity-[0.05] -translate-y-1/2" />
       <div className="blob w-[400px] h-[400px] bg-[#C2C0B8] bottom-0 left-1/4 opacity-[0.08]" />
@@ -287,7 +302,7 @@ export default function Projects() {
       <div className="container-custom relative z-10" ref={ref}>
         {/* Header */}
         <motion.div
-          className="text-left mb-16"
+          className="mb-10 text-left sm:mb-14 lg:mb-16"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -296,20 +311,20 @@ export default function Projects() {
           <h2 className="section-title">
             My <span className="text-gradient">Projects</span>
           </h2>
-          <p className="text-[#626058] text-lg max-w-2xl">
+          <p className="section-subtitle mx-0">
             A selection of projects that showcase my skills and passion for building great products
           </p>
         </motion.div>
 
         {/* Projects Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-5 min-[700px]:grid-cols-2 lg:grid-cols-3 lg:gap-6">
           {portfolioData.projects.map((project, i) => (
             <ProjectCard key={project.id} project={project} index={i} />
           ))}
         </div>
 
         {/* View More CTA */}
-        <motion.div
+        {githubUrl && <motion.div
           className="flex justify-center mt-12"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -317,7 +332,7 @@ export default function Projects() {
           viewport={{ once: true }}
         >
           <a
-            href="https://github.com"
+            href={githubUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 text-[#626058] hover:text-[#1C1B19] transition-colors text-sm font-medium"
@@ -325,7 +340,7 @@ export default function Projects() {
             <FaGithub className="w-5 h-5" />
             View more on GitHub
           </a>
-        </motion.div>
+        </motion.div>}
       </div>
     </section>
   );

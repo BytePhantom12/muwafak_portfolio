@@ -1,7 +1,5 @@
 import { getIconComponent } from './iconMap';
 
-export const DEFAULT_SKILL_LEVEL = 85;
-
 export const SKILL_CATEGORY_CONFIG = {
   Frontend: { color: '#185FA5', emoji: '🎨' },
   Backend: { color: '#626058', emoji: '⚙️' },
@@ -126,7 +124,6 @@ export const normalizeSkillItem = (item, fallbackCategory = 'Frontend', fallback
 
   return {
     name: itemName,
-    level: item?.level ?? DEFAULT_SKILL_LEVEL,
     category,
     color: item?.color || fallbackColor || categoryConfig.color,
     iconType: normalizedIcon.iconType,
@@ -162,7 +159,6 @@ export const serializeSkillItem = (skill) => {
 
   return {
     name: normalizedSkill.name,
-    level: normalizedSkill.level,
     category: normalizedSkill.category,
     color: normalizedSkill.color,
     iconType: normalizedSkill.iconType,

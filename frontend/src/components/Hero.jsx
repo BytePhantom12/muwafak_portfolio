@@ -2,9 +2,9 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-scroll';
 import { TypeAnimation } from 'react-type-animation';
 import { useEffect, useState } from 'react';
-import { HiArrowDownTray, HiEnvelope } from 'react-icons/hi2';
+import { HiArrowDownTray, HiChartBar, HiEnvelope } from 'react-icons/hi2';
 import { FaGithub, FaLinkedinIn, FaFacebookF, FaInstagram, FaWhatsapp } from 'react-icons/fa';
-import { SiFastapi } from 'react-icons/si';
+import { SiFastapi, SiMysql, SiReact } from 'react-icons/si';
 import { usePortfolioData } from '../context/usePortfolioData';
 import { resolveBackendUrl } from '../services/api';
 
@@ -25,6 +25,13 @@ const iconMap = {
   FaInstagram,
   FaWhatsapp,
 };
+
+const orbitSkills = [
+  { name: 'React', Icon: SiReact, color: '#149ECA', position: 'top-0 left-1/2 -translate-x-1/2 -translate-y-1/2' },
+  { name: 'FastAPI', Icon: SiFastapi, color: '#009688', position: 'top-1/2 right-0 translate-x-1/2 -translate-y-1/2' },
+  { name: 'MySQL', Icon: SiMysql, color: '#4479A1', position: 'bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2' },
+  { name: 'Matplotlib', Icon: HiChartBar, color: '#11557C', position: 'top-1/2 left-0 -translate-x-1/2 -translate-y-1/2' },
+];
 
 // Counter namespace — unique to this portfolio
 const COUNTER_NS = 'muwafak-portfolio';
@@ -89,7 +96,7 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-screen flex flex-col justify-center overflow-hidden"
+      className="relative min-h-[100svh] flex flex-col justify-center overflow-hidden"
     >
       {/* Background layer */}
       <div className="absolute inset-0 bg-[#E8E6DE]">
@@ -99,11 +106,11 @@ export default function Hero() {
         <div className="blob w-[300px] h-[300px] bg-[#185FA5] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.05]" />
       </div>
 
-      <div className="container-custom relative z-10 pt-24 pb-16 md:pt-32">
-        <div className="flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-20">
+      <div className="container-custom relative z-10 pb-12 pt-24 sm:pb-16 md:pt-28">
+        <div className="flex flex-col-reverse items-center gap-10 lg:flex-row lg:gap-16 xl:gap-20">
           {/* Text Content */}
           <motion.div
-            className="flex-1 text-center lg:text-left"
+            className="w-full min-w-0 flex-1 overflow-hidden text-center lg:text-left"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
@@ -113,9 +120,13 @@ export default function Hero() {
             </motion.div> */}
 
 
+            <motion.h1 variants={itemVariants} className="mb-3 break-words font-display text-[clamp(2rem,10vw,4.5rem)] font-extrabold leading-[0.98] tracking-tight text-[#1C1B19]">
+              {portfolioData.name}
+            </motion.h1>
+
             <motion.div
               variants={itemVariants}
-              className="text-xl sm:text-2xl md:text-3xl font-display font-semibold text-[#1C1B19] mb-6 h-10"
+              className="mb-5 min-h-14 max-w-full break-words font-display text-lg font-semibold text-[#1C1B19] sm:text-2xl md:text-3xl [&_span]:whitespace-normal"
             >
               I'm a{' '}
               <TypeAnimation
@@ -162,29 +173,23 @@ export default function Hero() {
             {/* CTA Buttons */}
             <motion.div
               variants={itemVariants}
-              className="flex flex-wrap gap-4 justify-center lg:justify-start"
+              className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:gap-4 justify-center lg:justify-start [&>*]:w-full sm:[&>*]:w-auto"
             >
               <Link to="contact" smooth={true} duration={600} offset={-80}>
-                <button id="hero-hire-me" className="btn-primary">
+                <button id="hero-hire-me" className="btn-primary w-full sm:w-auto">
                   <HiEnvelope className="w-4 h-4" />
                   Hire Me
                 </button>
               </Link>
-              <a
+              {portfolioData.cvUrl && <a
                 href={resolveBackendUrl(portfolioData.cvUrl) || '#'}
                 download
                 id="hero-download-cv"
-                className="btn-outline"
-                onClick={(e) => {
-                  if (!portfolioData.cvUrl) {
-                    e.preventDefault();
-                    alert('CV not available');
-                  }
-                }}
+                className="btn-outline w-full sm:w-auto"
               >
                 <HiArrowDownTray className="w-4 h-4" />
                 Download CV
-              </a>
+              </a>}
             </motion.div>
           </motion.div>
 
@@ -197,16 +202,17 @@ export default function Hero() {
           >
             <div className="relative animate-float">
               <div className="absolute inset-[-16px] rounded-full bg-gradient-to-br from-[#185FA5]/20 to-[#C2C0B8]/20 blur-xl animate-pulse-slow" />
-              <div className="profile-ring" style={{ width: 280, height: 280 }}>
+              <div className="profile-ring h-52 w-52 sm:h-64 sm:w-64 lg:h-[280px] lg:w-[280px]">
                 <img
                   src={profileImage}
-                  alt="Muwafak – Full-Stack Developer & Data Analyst"
+                  alt={portfolioData.name ? `${portfolioData.name} profile` : 'Portfolio profile'}
                   className="w-full h-full rounded-full object-cover object-top"
-                  style={{ width: '100%', height: '100%' }}
+                  width={280}
+                  height={280}
+                  onError={(event) => { event.currentTarget.src = '/profile.png'; }}
                 />
               </div>
-              <div className="absolute inset-[-8px] rounded-full border border-[#185FA5]/20 animate-spin-slow" />
-              <motion.div
+              {portfolioData.profile?.availability && <motion.div
                 className="absolute -bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-2
                   bg-[#DDDBD3] border border-[#C2C0B8]/30 rounded-full px-4 py-2 shadow-card whitespace-nowrap"
                 initial={{ opacity: 0, y: 10 }}
@@ -214,58 +220,31 @@ export default function Hero() {
                 transition={{ delay: 0.8 }}
               >
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-xs text-[#626058] font-medium">Available for work</span>
+                <span className="text-xs text-[#626058] font-medium">{portfolioData.profile.availability}</span>
               </motion.div>
+              }
 
-              {/* Orbiting skill badges */}
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none hidden sm:flex">
+              <div className="pointer-events-none absolute inset-0 hidden items-center justify-center xl:flex" aria-hidden="true">
                 <motion.div
-                  className="relative w-[380px] h-[380px] rounded-full border border-[#C2C0B8]/20"
+                  className="relative h-[360px] w-[360px] rounded-full"
                   animate={{ rotate: 360 }}
                   transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
                 >
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                    <motion.div
-                      animate={{ rotate: -360 }}
-                      transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
-                      className="glass-card px-4 py-2 rounded-xl flex items-center gap-2 bg-[#DDDBD3]/80 backdrop-blur-md border-[#C2C0B8]/30"
-                    >
-                      <span className="text-base">⚛️</span>
-                      <span className="text-xs text-[#1C1B19] font-semibold tracking-wide">React</span>
-                    </motion.div>
-                  </div>
-                  <div className="absolute top-1/2 right-0 translate-x-1/2 -translate-y-1/2">
-                    <motion.div
-                      animate={{ rotate: -360 }}
-                      transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
-                      className="glass-card px-4 py-2 rounded-xl flex items-center gap-2 bg-[#DDDBD3]/80 backdrop-blur-md border-[#C2C0B8]/30"
-                    >
-                      <span className="text-base">🎨</span>
-                      <span className="text-xs text-[#1C1B19] font-semibold tracking-wide">Tailwind</span>
-                    </motion.div>
-                  </div>
-                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2">
-                    <motion.div
-                      animate={{ rotate: -360 }}
-                      transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
-                      className="glass-card px-4 py-2 rounded-xl flex items-center gap-2 bg-[#DDDBD3]/80 backdrop-blur-md border-[#C2C0B8]/30"
-                    >
-                      <span className="text-base">⚡</span>
-                      <span className="text-xs text-[#1C1B19] font-semibold tracking-wide">Next.js</span>
-                    </motion.div>
-                  </div>
-                  <div className="absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2">
-                    <motion.div
-                      animate={{ rotate: -360 }}
-                      transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
-                      className="glass-card px-4 py-2 rounded-xl flex items-center gap-2 bg-[#DDDBD3]/80 backdrop-blur-md border-[#C2C0B8]/30"
-                    >
-                      <SiFastapi className="text-base text-[#009688]" />
-                      <span className="text-xs text-[#1C1B19] font-semibold tracking-wide">FastAPI</span>
-                    </motion.div>
-                  </div>
+                  {orbitSkills.map(({ name, Icon, color, position }) => (
+                    <div key={name} className={`absolute ${position}`}>
+                      <motion.div
+                        animate={{ rotate: -360 }}
+                        transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
+                        className="glass-card flex items-center gap-2 whitespace-nowrap rounded-xl bg-[#DDDBD3]/90 px-3 py-2 shadow-card backdrop-blur-md"
+                      >
+                        <Icon className="h-4 w-4" style={{ color }} />
+                        <span className="text-xs font-semibold tracking-wide text-[#1C1B19]">{name}</span>
+                      </motion.div>
+                    </div>
+                  ))}
                 </motion.div>
               </div>
+
             </div>
           </motion.div>
         </div>

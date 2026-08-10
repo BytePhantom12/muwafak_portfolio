@@ -1,7 +1,22 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 import { portfolioAPI } from '../services/api';
 import { getSkillCategoryConfig, normalizeCategoryName, normalizeSkillItem } from '../utils/skillUtils';
-import rawSeedData from '@shared/seedData.json';
+
+const EMPTY_PORTFOLIO_DATA = {
+  name: '',
+  role: '',
+  typingPhrases: [],
+  heroDescription: '',
+  cvUrl: '',
+  profile: {},
+  about: { yearsOfExperience: 0, projectsDone: 0, highlights: [] },
+  socials: [],
+  contact: {},
+  skillCategories: [],
+  projects: [],
+  experience: [],
+  education: [],
+};
 
 const extractPublicId = (value) => {
   if (!value) return null;
@@ -17,7 +32,7 @@ const buildSocialLinks = (dbData) => {
 
   const social = dbData?.contact?.social;
   if (!social) {
-    return rawSeedData.socials || [];
+    return [];
   }
 
   return [
@@ -30,40 +45,40 @@ const buildSocialLinks = (dbData) => {
 
 // Transform database data to match frontend format
 const transformPortfolioData = (dbData) => {
-  const source = dbData || rawSeedData;
+  const source = dbData || {};
 
   return {
     // Hero
-    name: source.profile?.name || rawSeedData.profile.name,
-    role: source.profile?.title || rawSeedData.profile.title,
-    typingPhrases: source.typingPhrases || rawSeedData.typingPhrases,
-    heroDescription: source.profile?.bio || rawSeedData.profile.bio,
-    cvUrl: source.profile?.resume || rawSeedData.profile.resume,
+    name: source.profile?.name || '',
+    role: source.profile?.title || '',
+    typingPhrases: source.typingPhrases || [],
+    heroDescription: source.profile?.bio || '',
+    cvUrl: source.profile?.resume || '',
 
     // Profile
     profile: {
-      name: source.profile?.name || rawSeedData.profile.name,
-      title: source.profile?.title || rawSeedData.profile.title,
+      name: source.profile?.name || '',
+      title: source.profile?.title || '',
       profileImage: source.profile?.profileImage || null,
       profileImagePublicId: extractPublicId(source.profile?.profileImage),
-      email: source.profile?.email || rawSeedData.contact.email,
-      location: source.profile?.location || rawSeedData.profile.location || null,
-      languages: source.profile?.languages || rawSeedData.profile.languages || null,
-      availability: source.profile?.availability || rawSeedData.profile.availability || null,
+      email: source.profile?.email || source.contact?.email || '',
+      location: source.profile?.location || '',
+      languages: source.profile?.languages || '',
+      availability: source.profile?.availability || '',
     },
 
     // About
     about: {
-      introHeading: source.about?.introHeading || source.profile?.title || rawSeedData.about.introHeading,
-      introHeadingHighlight: source.about?.introHeadingHighlight || rawSeedData.about.introHeadingHighlight,
-      introDescription: source.about?.introDescription || source.about?.description || rawSeedData.about.introDescription,
-      yearsOfExperience: source.about?.yearsOfExperience ?? rawSeedData.about.yearsOfExperience,
-      projectsDone: source.about?.projectsDone ?? (source.projects?.length || rawSeedData.about.projectsDone),
-      location: source.about?.location || source.profile?.location || rawSeedData.about.location,
-      role: source.about?.role || source.profile?.title || rawSeedData.about.role,
-      education: source.about?.education || source.education?.[0]?.degree || rawSeedData.about.education,
-      languages: source.about?.languages || source.profile?.languages || rawSeedData.about.languages,
-      highlights: source.about?.highlights || rawSeedData.about.highlights,
+      introHeading: source.about?.introHeading || source.profile?.title || '',
+      introHeadingHighlight: source.about?.introHeadingHighlight || '',
+      introDescription: source.about?.introDescription || source.about?.description || '',
+      yearsOfExperience: source.about?.yearsOfExperience ?? 0,
+      projectsDone: source.about?.projectsDone ?? (source.projects?.length || 0),
+      location: source.about?.location || source.profile?.location || '',
+      role: source.about?.role || source.profile?.title || '',
+      education: source.about?.education || source.education?.[0]?.degree || '',
+      languages: source.about?.languages || source.profile?.languages || '',
+      highlights: source.about?.highlights || [],
     },
 
     // Social Links
@@ -71,13 +86,13 @@ const transformPortfolioData = (dbData) => {
 
     // Contact
     contact: {
-      email: source.contact?.email || rawSeedData.contact.email,
-      phone: source.contact?.phone || rawSeedData.contact.phone,
-      location: source.profile?.location || source.contact?.location || rawSeedData.contact.location || rawSeedData.profile.location,
+      email: source.contact?.email || '',
+      phone: source.contact?.phone || '',
+      location: source.profile?.location || source.contact?.location || '',
     },
 
     // Skills - Transform from database format
-    skillCategories: (source.skills?.length > 0 ? source.skills : rawSeedData.skills).map((skillCategory) => {
+    skillCategories: (source.skills || []).map((skillCategory) => {
       const categoryName = normalizeCategoryName(skillCategory.category || skillCategory.name || 'Frontend');
       const categoryConfig = getSkillCategoryConfig(categoryName);
       const rawItems = skillCategory.items || skillCategory.skills || [];
@@ -91,7 +106,7 @@ const transformPortfolioData = (dbData) => {
     }),
 
     // Projects - Transform from database format
-    projects: (source.projects?.length > 0 ? source.projects : rawSeedData.projects).map((project, index) => ({
+    projects: (source.projects || []).map((project, index) => ({
       _id: project._id || null,
       id: project._id || index + 1,
       title: project.title,
@@ -114,10 +129,11 @@ const transformPortfolioData = (dbData) => {
       emoji: '🚀',
       isFeatured: project.featured || false,
     })),
+
+    experience: Array.isArray(source.experience) ? source.experience : [],
+    education: Array.isArray(source.education) ? source.education : [],
   };
 };
-
-const FALLBACK_DATA = transformPortfolioData(rawSeedData);
 
 const deepMerge = (target, partial) => {
   if (typeof target !== 'object' || target === null) return partial;
@@ -149,11 +165,11 @@ const deepMerge = (target, partial) => {
 export const PortfolioContext = createContext(null);
 
 export const PortfolioProvider = ({ children }) => {
-  const [portfolioData, setPortfolioData] = useState(FALLBACK_DATA);
+  const [portfolioData, setPortfolioData] = useState(EMPTY_PORTFOLIO_DATA);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Broadcast updates across tabs/windows (and fallback to localStorage)
+  // Broadcast updates across tabs/windows.
   const broadcastUpdate = (data) => {
     try {
       if (typeof BroadcastChannel !== 'undefined') {
@@ -189,8 +205,7 @@ export const PortfolioProvider = ({ children }) => {
       } catch (err) {
         console.error('Error fetching portfolio data:', err);
         setError(err.message);
-        // Keep using fallback data on error
-        setPortfolioData(FALLBACK_DATA);
+        setPortfolioData(EMPTY_PORTFOLIO_DATA);
       } finally {
         setLoading(false);
       }
@@ -227,7 +242,7 @@ export const PortfolioProvider = ({ children }) => {
     };
   }, []);
 
-  const refreshPortfolio = async () => {
+  const refreshPortfolio = useCallback(async () => {
     try {
       const data = await portfolioAPI.getPortfolio();
       const transformedData = transformPortfolioData(data);
@@ -237,7 +252,7 @@ export const PortfolioProvider = ({ children }) => {
       console.error('Error refreshing portfolio:', err);
       throw err;
     }
-  };
+  }, []);
 
   return (
     <PortfolioContext.Provider value={{

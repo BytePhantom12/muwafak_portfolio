@@ -148,7 +148,7 @@ export default function TechStackManager() {
 
   return (
     <div className="max-w-7xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col gap-3 min-[430px]:flex-row min-[430px]:items-center min-[430px]:justify-between mb-6">
         <h2 className="text-2xl font-bold font-display text-gradient">Tech Stack Management</h2>
         <button onClick={openAddModal} className="btn-primary text-sm" disabled={saving}>
           <HiPlus className="w-4 h-4" />
@@ -257,7 +257,7 @@ export default function TechStackManager() {
           if (categoryTech.length === 0) return <div key={category} style={{ display: 'none' }} />;
 
           return (
-            <div key={category} className="glass-card p-6 rounded-2xl">
+            <div key={category} className="glass-card p-4 sm:p-6 rounded-2xl">
               <h3 className="text-xl font-semibold text-text-primary mb-4">{category}</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

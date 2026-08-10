@@ -11,11 +11,16 @@ export default function FileUpload({
 }) {
   const [dragActive, setDragActive] = useState(false);
   const [preview, setPreview] = useState(value || null);
+  const [selectedFile, setSelectedFile] = useState(null);
   const fileInputRef = useRef(null);
 
   useEffect(() => {
     setPreview(value || null);
   }, [value]);
+
+  useEffect(() => () => {
+    if (preview?.startsWith?.('blob:')) URL.revokeObjectURL(preview);
+  }, [preview]);
 
   const handleDrag = (e) => {
     e.preventDefault();
@@ -71,6 +76,7 @@ export default function FileUpload({
     // Create preview URL
     const url = URL.createObjectURL(file);
     setPreview(url);
+    setSelectedFile(file);
     
     // Convert to base64 for storage
     const reader = new FileReader();
@@ -90,6 +96,7 @@ export default function FileUpload({
 
   const handleRemove = () => {
     setPreview(null);
+    setSelectedFile(null);
     onChange(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
@@ -109,15 +116,15 @@ export default function FileUpload({
   return (
     <div className="space-y-3">
       {label && (
-        <label className="block text-sm font-medium text-slate-300">{label}</label>
+        <label className="block text-sm font-medium text-[#1C1B19]">{label}</label>
       )}
       
       {/* Upload Area */}
       <div
-        className={`relative border-2 border-dashed rounded-xl p-6 transition-all duration-200 ${
+        className={`relative min-h-36 border-2 border-dashed rounded-xl p-4 sm:p-6 transition-all duration-200 ${
           dragActive 
-            ? 'border-[#00d4ff] bg-[#00d4ff]/5' 
-            : 'border-white/20 hover:border-white/30'
+            ? 'border-[#185FA5] bg-[#185FA5]/5'
+            : 'border-[#C2C0B8] bg-[#E8E6DE]/40 hover:border-[#185FA5]/50'
         }`}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
@@ -130,12 +137,13 @@ export default function FileUpload({
           accept={accept}
           onChange={handleChange}
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+          aria-label={label || placeholder}
         />
         
         {preview ? (
           <div className="space-y-3">
             {type === 'image' ? (
-              <div className="relative">
+              <div className="relative z-20 pointer-events-none">
                 <img 
                   src={preview} 
                   alt="Preview" 
@@ -143,25 +151,29 @@ export default function FileUpload({
                 />
                 <button
                   onClick={handleRemove}
-                  className="absolute top-2 right-2 p-1 rounded-full bg-red-500 text-white hover:bg-red-600 transition-colors"
+                  type="button"
+                  className="touch-target pointer-events-auto absolute top-2 right-2 flex items-center justify-center rounded-full bg-red-600 text-white hover:bg-red-700 transition-colors"
+                  aria-label="Remove selected image"
                 >
                   <HiTrash className="w-3 h-3" />
                 </button>
               </div>
             ) : (
-              <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg">
-                <Icon className="w-8 h-8 text-[#00d4ff]" />
+              <div className="relative z-20 flex items-center gap-3 rounded-lg bg-[#E8E6DE] p-3 pointer-events-none">
+                <Icon className="w-8 h-8 text-[#185FA5]" />
                 <div className="flex-1">
                   <p className="text-sm font-medium text-slate-200">
-                    {onChange.name || 'File selected'}
+                    {selectedFile?.name || 'File selected'}
                   </p>
                   <p className="text-xs text-slate-500">
-                    {onChange.size ? `${(onChange.size / 1024).toFixed(1)} KB` : ''}
+                    {selectedFile?.size ? `${(selectedFile.size / 1024).toFixed(1)} KB` : ''}
                   </p>
                 </div>
                 <button
                   onClick={handleRemove}
-                  className="p-1 rounded-full hover:bg-white/10 text-slate-400 hover:text-red-400 transition-colors"
+                  type="button"
+                  className="touch-target pointer-events-auto flex items-center justify-center rounded-full text-[#626058] hover:bg-red-50 hover:text-red-600 transition-colors"
+                  aria-label="Remove selected document"
                 >
                   <HiTrash className="w-4 h-4" />
                 </button>
@@ -170,9 +182,9 @@ export default function FileUpload({
           </div>
         ) : (
           <div className="text-center">
-            <Icon className="w-12 h-12 text-slate-500 mx-auto mb-3" />
-            <p className="text-sm text-slate-400 mb-1">{placeholder}</p>
-            <p className="text-xs text-slate-500">
+            <Icon className="w-10 h-10 sm:w-12 sm:h-12 text-[#626058] mx-auto mb-3" />
+            <p className="text-sm text-[#1C1B19] mb-1">{placeholder}</p>
+            <p className="text-xs text-[#626058]">
               {type === 'image' ? 'PNG, JPG, GIF, SVG up to 10MB' : 'PDF, Word, ODT, RTF, TXT up to 10MB'}
             </p>
           </div>

@@ -139,7 +139,7 @@ export default function EducationManager() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col gap-3 min-[430px]:flex-row min-[430px]:items-center min-[430px]:justify-between mb-6">
         <h2 className="text-2xl font-bold font-display text-gradient">Education</h2>
         <button onClick={openAddModal} className="btn-primary text-sm" disabled={saving}>
           <HiPlus className="w-4 h-4" />
@@ -228,7 +228,7 @@ export default function EducationManager() {
       {/* Education List */}
       <div className="space-y-4">
         {education.map((item) => (
-          <div key={item._id} className="glass-card p-6 rounded-2xl">
+          <div key={item._id} className="glass-card p-4 sm:p-6 rounded-2xl">
             <div className="flex items-start justify-between mb-3">
               <div>
                 <h3 className="text-lg font-semibold text-text-primary">{item.degree}</h3>

@@ -5,6 +5,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { HiMenuAlt3, HiX } from 'react-icons/hi';
 import { HiArrowDownTray, HiCog6Tooth } from 'react-icons/hi2';
 import { usePortfolioData } from '../context/usePortfolioData';
+import { resolveBackendUrl } from '../services/api';
 
 const navLinks = [
   { label: 'Home', to: 'home' },
@@ -19,12 +20,23 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const { portfolioData } = usePortfolioData();
+  const [firstName = '', ...remainingNames] = portfolioData.name.trim().split(/\s+/);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    const closeOnEscape = (event) => event.key === 'Escape' && setMenuOpen(false);
+    window.addEventListener('keydown', closeOnEscape);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [menuOpen]);
 
   return (
     <>
@@ -44,13 +56,14 @@ export default function Navbar() {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
-              className="flex items-center gap-2"
+              className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden md:flex-none"
             >
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#185FA5] to-[#C2C0B8] flex items-center justify-center shadow-[0_0_15px_rgba(24,95,165,0.25)]">
-                <span className="text-white font-bold text-sm font-display">M</span>
+              <div className="w-8 h-8 shrink-0 rounded-lg bg-gradient-to-br from-[#185FA5] to-[#C2C0B8] flex items-center justify-center shadow-[0_0_15px_rgba(24,95,165,0.25)]">
+                <span className="text-white font-bold text-sm font-display">{firstName.charAt(0)}</span>
               </div>
-              <span className="text-[#1C1B19] font-display font-extrabold text-3xl">
-               Muwafak <span className="text-gradient font-extrabold text-3xl">Abubakar</span>
+              <span className="truncate text-[#1C1B19] font-display font-extrabold text-lg sm:text-xl lg:text-2xl">
+                {firstName}{remainingNames.length > 0 && ' '}
+                <span className="text-gradient font-extrabold">{remainingNames.join(' ')}</span>
               </span>
             </motion.div>
 
@@ -93,23 +106,25 @@ export default function Navbar() {
               >
                 <HiCog6Tooth className="w-4 h-4" />
               </RouterLink>
-              <a
-                href={portfolioData.cvUrl}
+              {portfolioData.cvUrl && <a
+                href={resolveBackendUrl(portfolioData.cvUrl) || '#'}
                 download
                 id="nav-download-cv"
                 className="btn-primary text-sm py-2.5 px-5"
               >
                 <HiArrowDownTray className="w-4 h-4" />
                 Download CV
-              </a>
+              </a>}
             </motion.div>
 
             {/* Hamburger */}
             <button
               id="mobile-menu-toggle"
-              className="md:hidden w-10 h-10 flex items-center justify-center rounded-xl glass-card text-[#626058] hover:text-[#1C1B19] transition-colors"
+              className="touch-target md:hidden flex shrink-0 items-center justify-center rounded-xl glass-card text-[#626058] hover:text-[#1C1B19] transition-colors"
               onClick={() => setMenuOpen(!menuOpen)}
-              aria-label="Toggle menu"
+              aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              aria-expanded={menuOpen}
+              aria-controls="mobile-navigation"
             >
               {menuOpen ? <HiX className="w-5 h-5" /> : <HiMenuAlt3 className="w-5 h-5" />}
             </button>
@@ -125,7 +140,8 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0, height: 'auto' }}
             exit={{ opacity: 0, y: -20, height: 0 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="fixed top-16 left-0 right-0 z-40 md:hidden bg-[#E8E6DE]/95 backdrop-blur-xl border-b border-[#C2C0B8]/20 overflow-hidden"
+            id="mobile-navigation"
+            className="fixed inset-x-0 top-16 z-40 max-h-[calc(100dvh-4rem)] overflow-y-auto border-b border-[#C2C0B8]/20 bg-[#E8E6DE]/98 shadow-xl backdrop-blur-xl md:hidden"
           >
             <div className="container-custom py-6 flex flex-col gap-4">
               {navLinks.map((link, i) => (
@@ -163,7 +179,7 @@ export default function Navbar() {
                   <HiCog6Tooth className="w-4 h-4" />
                   Admin Panel
                 </RouterLink>
-                <a href={portfolioData.cvUrl} download id="mobile-download-cv" className="btn-primary w-full justify-center">
+                <a href={resolveBackendUrl(portfolioData.cvUrl) || '#'} download id="mobile-download-cv" className="btn-primary w-full justify-center">
                   <HiArrowDownTray className="w-4 h-4" />
                   Download CV
                 </a>

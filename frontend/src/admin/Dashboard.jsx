@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   HiUser, HiAcademicCap, HiCodeBracket, HiBriefcase,
@@ -14,6 +14,8 @@ import ExperienceManager from './sections/ExperienceManager';
 import ProjectsManager from './sections/ProjectsManager';
 import ContactManager from './sections/ContactManager';
 import ProfileManager from './sections/ProfileManager';
+import { usePortfolioData } from '../context/usePortfolioData';
+import { contactAPI } from '../services/api';
 
 const menuItems = [
   { id: 'overview', label: 'Overview', icon: HiChartBar },
@@ -49,17 +51,30 @@ export default function Dashboard({ onLogout }) {
     setSidebarOpen(false); // Close mobile sidebar after selection
   };
 
+  useEffect(() => {
+    if (!sidebarOpen) return undefined;
+    const close = (event) => event.key === 'Escape' && setSidebarOpen(false);
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', close);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', close);
+    };
+  }, [sidebarOpen]);
+
   return (
     <div className="min-h-screen bg-[#E8E6DE] text-[#1C1B19]">
       {/* Header */}
       <header className="sticky top-0 z-50 glass-card border-b border-[#C2C0B8]/30">
-        <div className="px-4 lg:px-8 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        <div className="flex min-h-[68px] items-center justify-between gap-2 px-3 py-3 sm:px-4 lg:px-8">
+          <div className="flex min-w-0 items-center gap-2 sm:gap-4">
             {/* Mobile Menu Button */}
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="lg:hidden p-2 rounded-xl glass-card text-[#626058] hover:text-[#185FA5] transition-colors"
+              className="touch-target lg:hidden flex items-center justify-center rounded-xl glass-card text-[#626058] hover:text-[#185FA5] transition-colors"
               aria-label="Toggle mobile menu"
+              aria-expanded={sidebarOpen}
+              aria-controls="admin-sidebar"
             >
               {sidebarOpen ? <HiXMark className="w-5 h-5" /> : <HiBars3 className="w-5 h-5" />}
             </button>
@@ -73,7 +88,7 @@ export default function Dashboard({ onLogout }) {
               {sidebarCollapsed ? <HiChevronRight className="w-5 h-5" /> : <HiChevronLeft className="w-5 h-5" />}
             </button>
 
-            <h1 className="text-lg lg:text-xl font-bold font-display text-gradient">
+            <h1 className="truncate text-base font-bold font-display text-gradient sm:text-lg lg:text-xl">
               {sidebarCollapsed ? 'Admin' : 'Admin Dashboard'}
             </h1>
           </div>
@@ -114,12 +129,12 @@ export default function Dashboard({ onLogout }) {
 
         {/* Sidebar */}
         <aside className={`
-          fixed lg:static top-[73px] left-0 z-50 lg:z-auto
-          ${sidebarCollapsed ? 'w-16' : 'w-64'} h-[calc(100vh-73px)] lg:min-h-[calc(100vh-73px)]
-          glass-card border-r border-[#C2C0B8]/30 p-4
+          fixed lg:sticky top-[68px] left-0 z-50 lg:z-auto
+          ${sidebarCollapsed ? 'w-16' : 'w-[min(18rem,86vw)] lg:w-64'} h-[calc(100dvh-68px)]
+          glass-card overflow-y-auto border-r border-[#C2C0B8]/30 p-4
           transform transition-all duration-300 ease-in-out lg:transform-none
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-        `}>
+        `} id="admin-sidebar" aria-label="Admin sections">
           <nav className="space-y-2">
             {menuItems.map(({ id, label, icon: Icon }) => (
               <button
@@ -168,7 +183,7 @@ export default function Dashboard({ onLogout }) {
         </aside>
 
         {/* Main Content */}
-        <main className={`flex-1 p-4 lg:p-8 transition-all duration-300 ${sidebarCollapsed ? 'lg:ml-0' : 'lg:ml-0'
+        <main className={`min-w-0 flex-1 overflow-x-hidden p-3 sm:p-5 lg:p-8 transition-all duration-300 ${sidebarCollapsed ? 'lg:ml-0' : 'lg:ml-0'
           }`}>
           <motion.div
             key={activeSection}
@@ -185,28 +200,84 @@ export default function Dashboard({ onLogout }) {
 }
 
 function Overview({ setActiveSection }) {
+  const { portfolioData, loading, error, refreshPortfolio } = usePortfolioData();
+  const [messageStats, setMessageStats] = useState({ total: 0, unread: 0 });
+  const [refreshing, setRefreshing] = useState(false);
+  const [overviewError, setOverviewError] = useState('');
+
+  const refreshOverview = useCallback(async ({ showProgress = true } = {}) => {
+    if (showProgress) setRefreshing(true);
+    try {
+      const [, messageResponse] = await Promise.all([
+        refreshPortfolio(),
+        contactAPI.getMessages({ limit: 1 }),
+      ]);
+      setMessageStats({
+        total: messageResponse.pagination?.total || 0,
+        unread: messageResponse.unreadCount || 0,
+      });
+      setOverviewError('');
+    } catch (refreshError) {
+      console.error('Error refreshing dashboard overview:', refreshError);
+      setOverviewError(refreshError.message);
+    } finally {
+      if (showProgress) setRefreshing(false);
+    }
+  }, [refreshPortfolio]);
+
+  useEffect(() => {
+    refreshOverview();
+    const intervalId = window.setInterval(() => {
+      if (document.visibilityState === 'visible') refreshOverview({ showProgress: false });
+    }, 15000);
+    const refreshOnFocus = () => refreshOverview({ showProgress: false });
+    window.addEventListener('focus', refreshOnFocus);
+    return () => {
+      window.clearInterval(intervalId);
+      window.removeEventListener('focus', refreshOnFocus);
+    };
+  }, [refreshOverview]);
+
+  const skillCount = portfolioData.skillCategories.reduce(
+    (total, category) => total + (category.skills?.length || 0),
+    0
+  );
+
   const stats = [
-    { label: 'Total Projects', value: '10+', icon: HiRectangleStack, color: 'from-[#185FA5] to-[#0C447C]' },
-    { label: 'Skills', value: '15+', icon: HiCodeBracket, color: 'from-[#378ADD] to-[#185FA5]' },
-    { label: 'Experience', value: '2+ Years', icon: HiBriefcase, color: 'from-[#85B7EB] to-[#378ADD]' },
-    { label: 'Education', value: 'BSc CS', icon: HiAcademicCap, color: 'from-[#B5D4F4] to-[#85B7EB]' },
+    { label: 'Projects', value: portfolioData.projects.length, icon: HiRectangleStack, color: 'from-[#185FA5] to-[#0C447C]' },
+    { label: 'Skills', value: skillCount, icon: HiCodeBracket, color: 'from-[#378ADD] to-[#185FA5]' },
+    { label: 'Experience Entries', value: portfolioData.experience.length, icon: HiBriefcase, color: 'from-[#85B7EB] to-[#378ADD]' },
+    { label: 'Education Entries', value: portfolioData.education.length, icon: HiAcademicCap, color: 'from-[#B5D4F4] to-[#85B7EB]' },
+    { label: 'Messages', value: messageStats.total, detail: `${messageStats.unread} unread`, icon: HiEnvelope, color: 'from-[#0C447C] to-[#378ADD]' },
   ];
 
   return (
     <div className="max-w-7xl mx-auto">
-      <div className="mb-6 lg:mb-8">
-        <h2 className="text-2xl lg:text-3xl font-bold font-display mb-2">Welcome Back!</h2>
-        <p className="text-[#626058] text-sm lg:text-base">Manage your portfolio content from here</p>
+      <div className="mb-6 flex flex-col gap-4 min-[430px]:flex-row min-[430px]:items-center min-[430px]:justify-between lg:mb-8">
+        <div>
+          <h2 className="text-2xl lg:text-3xl font-bold font-display mb-2">Portfolio Overview</h2>
+          <p className="text-[#626058] text-sm lg:text-base">Live totals from your portfolio and inbox</p>
+        </div>
+        <button type="button" onClick={() => refreshOverview()} disabled={refreshing} className="btn-outline text-sm">
+          {refreshing ? 'Refreshing…' : 'Refresh'}
+        </button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-8">
-        {stats.map(({ label, value, icon: Icon, color }) => (
+      {(error || overviewError) && (
+        <div className="mb-5 rounded-xl border border-red-300 bg-red-50 p-3 text-sm text-red-700" role="alert">
+          Dashboard data could not be refreshed. {overviewError || error}
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4 lg:gap-6 mb-6 lg:mb-8" aria-busy={loading || refreshing}>
+        {stats.map(({ label, value, detail, icon: Icon, color }) => (
           <div key={label} className="glass-card p-4 lg:p-6 rounded-2xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
             <div className={`w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center mb-3 lg:mb-4`}>
               <Icon className="w-5 h-5 lg:w-6 lg:h-6 text-white" />
             </div>
             <h3 className="text-xl lg:text-2xl font-bold font-display text-gradient mb-1">{value}</h3>
             <p className="text-xs lg:text-sm text-[#626058]">{label}</p>
+            {detail && <p className="mt-1 text-xs font-medium text-[#185FA5]">{detail}</p>}
           </div>
         ))}
       </div>

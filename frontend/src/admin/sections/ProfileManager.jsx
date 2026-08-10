@@ -6,7 +6,7 @@ import Modal from '../../components/Modal';
 import FileUpload from '../../components/FileUpload';
 
 export default function ProfileManager() {
-  const { portfolioData, updateLocalPortfolio } = usePortfolioData();
+  const { portfolioData, refreshPortfolio, updateLocalPortfolio } = usePortfolioData();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   
@@ -18,14 +18,15 @@ export default function ProfileManager() {
     name: '',
     role: '',
     heroDescription: '',
+    typingPhrases: [],
     cvUrl: '',
     profileImage: '',
     title: '',
     shortDescription: '',
     location: '',
-    roleDetail: '',
     education: '',
     languages: '',
+    availability: '',
     email: '',
     socials: [],
   });
@@ -42,15 +43,16 @@ export default function ProfileManager() {
       name: portfolioData.name || portfolioData.profile?.name || '',
       role: portfolioData.role || portfolioData.profile?.title || '',
       heroDescription: portfolioData.heroDescription || portfolioData.profile?.bio || '',
+      typingPhrases: portfolioData.typingPhrases || [],
       cvUrl: portfolioData.cvUrl || portfolioData.profile?.resume || '',
       profileImage: portfolioData.profile?.profileImage || '',
-      title: portfolioData.about?.introDescription || portfolioData.about?.description || '',
-      shortDescription: portfolioData.about?.highlights?.[0] || '',
+      title: portfolioData.about?.introHeading || '',
+      shortDescription: portfolioData.about?.introDescription || '',
       email: portfolioData.contact?.email || portfolioData.profile?.email || '',
       location: portfolioData.about?.location || portfolioData.profile?.location || '',
-      roleDetail: portfolioData.about?.role || portfolioData.profile?.title || '',
-      education: portfolioData.education?.[0]?.degree || '',
+      education: portfolioData.about?.education || portfolioData.education?.[0]?.degree || '',
       languages: portfolioData.about?.languages || portfolioData.profile?.languages || '',
+      availability: portfolioData.profile?.availability || '',
       socials: portfolioData.socials || (portfolioData.contact?.social ? Object.entries(portfolioData.contact.social).map(([key, value]) => ({
         id: key,
         label: key.charAt(0).toUpperCase() + key.slice(1),
@@ -119,38 +121,31 @@ export default function ProfileManager() {
           profileImage: formData.profileImage,
           location: formData.location,
           languages: formData.languages,
-          email: formData.email || 'contact@example.com',
+          availability: formData.availability,
+          email: formData.email,
         },
         about: {
-          description: formData.title,
-          highlights: [formData.shortDescription],
+          introHeading: formData.title,
+          introDescription: formData.shortDescription,
+          location: formData.location,
+          role: formData.role,
+          education: formData.education,
+          languages: formData.languages,
         },
         contact: {
-          email: formData.email || 'contact@example.com',
+          email: formData.email,
           social: formData.socials.reduce((acc, social) => {
             acc[social.id] = social.href;
             return acc;
           }, {}),
         },
         socials: formData.socials,
+        typingPhrases: formData.typingPhrases,
       };
 
       await portfolioAPI.updatePortfolio(updateData);
-      updateLocalPortfolio({
-        name: formData.name,
-        role: formData.role,
-        heroDescription: formData.heroDescription,
-        cvUrl: formData.cvUrl,
-        profile: {
-          ...updateData.profile,
-        },
-        about: {
-          introDescription: formData.title,
-          highlights: [formData.shortDescription],
-        },
-        contact: updateData.contact,
-        socials: formData.socials,
-      });
+      const refreshedPortfolio = await refreshPortfolio();
+      updateLocalPortfolio(refreshedPortfolio);
       alert('Profile updated successfully!');
       closeModal();
     } catch (error) {
@@ -209,7 +204,7 @@ export default function ProfileManager() {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col gap-3 min-[430px]:flex-row min-[430px]:items-center min-[430px]:justify-between mb-6">
         <h2 className="text-2xl font-bold font-display text-gradient">Profile Management</h2>
         <div className="flex gap-2">
           <button 
@@ -230,29 +225,26 @@ export default function ProfileManager() {
       </div>
 
       {/* Profile Summary Card */}
-      <div className="glass-card p-6 rounded-2xl">
+      <div className="glass-card p-4 sm:p-6 rounded-2xl">
         <div className="flex items-start gap-6">
           <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-accent/20 to-accent-dark/20 flex items-center justify-center overflow-hidden">
-            {formData.profileImage ? (
-              <img 
-                src={getFileUrl(formData.profileImage)} 
-                alt="Profile" 
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <span className="text-2xl font-bold text-text-muted">
-                {formData.name.split(' ').map(n => n[0]).join('').toUpperCase()}
-              </span>
-            )}
+            <img
+              src={getFileUrl(formData.profileImage) || '/profile.png'}
+              alt={formData.name ? `${formData.name} profile` : 'Portfolio profile'}
+              className="w-full h-full object-cover"
+              width={96}
+              height={96}
+              onError={(event) => { event.currentTarget.src = '/profile.png'; }}
+            />
           </div>
           <div className="flex-1">
-            <h3 className="text-xl font-bold text-text-primary mb-1">{formData.name || 'Your Name'}</h3>
-            <p className="text-accent mb-2">{formData.role || 'Your Role'}</p>
-            <p className="text-sm text-text-muted mb-3">{formData.heroDescription || 'Your bio description'}</p>
+            <h3 className="text-xl font-bold text-text-primary mb-1">{formData.name}</h3>
+            <p className="text-accent mb-2">{formData.role}</p>
+            <p className="text-sm text-text-muted mb-3">{formData.heroDescription}</p>
             <div className="flex flex-wrap gap-4 text-xs text-text-muted">
-              <span>📍 {formData.location || 'Location'}</span>
-              <span>🎓 {formData.education || 'Education'}</span>
-              <span>🌍 {formData.languages || 'Languages'}</span>
+              {formData.location && <span>📍 {formData.location}</span>}
+              {formData.education && <span>🎓 {formData.education}</span>}
+              {formData.languages && <span>🌍 {formData.languages}</span>}
             </div>
           </div>
         </div>
@@ -285,7 +277,7 @@ export default function ProfileManager() {
             <FileUpload
               label="Profile Image"
               accept="image/*"
-              value={getFileUrl(formData.profileImage)}
+              value={getFileUrl(formData.profileImage) || '/profile.png'}
               onChange={(fileData) => handleFileUpload(fileData, 'profileImage')}
               type="image"
               placeholder="Upload your profile photo"
@@ -362,6 +354,31 @@ export default function ProfileManager() {
                 disabled={modalMode === 'view'}
                 className="form-input disabled:opacity-60 disabled:cursor-not-allowed"
                 placeholder="English, Arabic"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-text-primary mb-2">Availability</label>
+              <input
+                type="text"
+                value={formData.availability}
+                onChange={(e) => setFormData({ ...formData, availability: e.target.value })}
+                disabled={modalMode === 'view'}
+                className="form-input disabled:opacity-60 disabled:cursor-not-allowed"
+                placeholder="Available for work"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-text-primary mb-2">Hero Roles</label>
+              <textarea
+                value={formData.typingPhrases.join('\n')}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  typingPhrases: e.target.value.split('\n').map((item) => item.trim()).filter(Boolean),
+                })}
+                disabled={modalMode === 'view'}
+                rows={3}
+                className="form-input resize-none disabled:opacity-60 disabled:cursor-not-allowed"
+                placeholder="One role per line"
               />
             </div>
           </div>
