@@ -355,7 +355,7 @@ export default function ProjectsManager() {
               {modalMode !== 'view' && (
                 <button
                   onClick={addTag}
-                  className="text-sm text-accent hover:text-[#0C447C] transition-colors"
+                  className="text-sm text-accent hover:text-[#1D4ED8] transition-colors"
                 >
                   + Add Technology
                 </button>

@@ -55,7 +55,7 @@ function ProjectSlideshow({ images, title, hovered }) {
 
       {/* Tech Scanning Overlay */}
       <motion.div
-        className="absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#185FA5] to-transparent opacity-50 z-10"
+        className="absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#2563EB] to-transparent opacity-50 z-10"
         animate={{
           top: ["-10%", "110%"],
         }}
@@ -71,17 +71,17 @@ function ProjectSlideshow({ images, title, hovered }) {
         {images.map((_, i) => (
           <div
             key={i}
-            className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === currentIndex ? 'bg-[#185FA5] w-4' : 'bg-[#C2C0B8]/60'
+            className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === currentIndex ? 'bg-[#2563EB] w-4' : 'bg-[#E2E8F0]/60'
               }`}
           />
         ))}
       </div>
 
       {/* Corner Markers */}
-      <div className="absolute top-2 left-2 w-2 h-2 border-l border-t border-[#185FA5]/50 z-20" />
-      <div className="absolute top-2 right-2 w-2 h-2 border-r border-t border-[#185FA5]/50 z-20" />
-      <div className="absolute bottom-2 left-2 w-2 h-2 border-l border-b border-[#185FA5]/50 z-20" />
-      <div className="absolute bottom-2 right-2 w-2 h-2 border-r border-b border-[#185FA5]/50 z-20" />
+      <div className="absolute top-2 left-2 w-2 h-2 border-l border-t border-[#2563EB]/50 z-20" />
+      <div className="absolute top-2 right-2 w-2 h-2 border-r border-t border-[#2563EB]/50 z-20" />
+      <div className="absolute bottom-2 left-2 w-2 h-2 border-l border-b border-[#2563EB]/50 z-20" />
+      <div className="absolute bottom-2 right-2 w-2 h-2 border-r border-b border-[#2563EB]/50 z-20" />
 
       {/* Digital Grid Overlay */}
       <div className="absolute inset-0 bg-grid-black/[0.03] pointer-events-none" />
@@ -95,7 +95,7 @@ function ProjectTag({ tag, accentColor }) {
     <span
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-[#C2C0B8]/30 bg-[#DDDBD3] text-[#626058]
+      className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-[#E2E8F0]/30 bg-[#F8FAFC] text-[#64748B]
         hover:-translate-y-0.5 transition-all duration-300 cursor-default"
       style={{
         borderColor: isHovered ? `${accentColor}40` : '',
@@ -115,8 +115,8 @@ function ProjectTitle({ title, accentColor }) {
     <h3
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="text-lg font-bold font-display text-[#1C1B19] mb-2 transition-colors duration-300 line-clamp-1 w-fit cursor-default"
-      style={{ color: isHovered ? accentColor : '#1C1B19' }}
+      className="text-lg font-bold font-display text-[#0F172A] mb-2 transition-colors duration-300 line-clamp-1 w-fit cursor-default"
+      style={{ color: isHovered ? accentColor : '#0F172A' }}
     >
       {title}
     </h3>
@@ -139,7 +139,7 @@ function ProjectCard({ project, index }) {
       id={`project-card-${project.id}`}
     >
       {/* Project visual */}
-      <div className="relative h-48 sm:h-52 overflow-hidden shrink-0 bg-[#DDDBD3]">
+      <div className="relative h-48 sm:h-52 overflow-hidden shrink-0 bg-[#F8FAFC]">
         {Array.isArray(project.images) && project.images.length > 0 ? (
           <ProjectSlideshow images={project.images} title={project.title} hovered={hovered} />
         ) : imageSrc ? (
@@ -161,7 +161,7 @@ function ProjectCard({ project, index }) {
 
             {/* Tech Scanning Overlay */}
             <motion.div
-              className="absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#185FA5] to-transparent opacity-50 z-10"
+              className="absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#2563EB] to-transparent opacity-50 z-10"
               animate={{
                 top: ["-10%", "110%"],
               }}
@@ -173,10 +173,10 @@ function ProjectCard({ project, index }) {
             />
 
             {/* Corner Markers */}
-            <div className="absolute top-2 left-2 w-2 h-2 border-l border-t border-[#185FA5]/50 z-20" />
-            <div className="absolute top-2 right-2 w-2 h-2 border-r border-t border-[#185FA5]/50 z-20" />
-            <div className="absolute bottom-2 left-2 w-2 h-2 border-l border-b border-[#185FA5]/50 z-20" />
-            <div className="absolute bottom-2 right-2 w-2 h-2 border-r border-b border-[#185FA5]/50 z-20" />
+            <div className="absolute top-2 left-2 w-2 h-2 border-l border-t border-[#2563EB]/50 z-20" />
+            <div className="absolute top-2 right-2 w-2 h-2 border-r border-t border-[#2563EB]/50 z-20" />
+            <div className="absolute bottom-2 left-2 w-2 h-2 border-l border-b border-[#2563EB]/50 z-20" />
+            <div className="absolute bottom-2 right-2 w-2 h-2 border-r border-b border-[#2563EB]/50 z-20" />
 
             {/* Digital Grid Overlay */}
             <div className="absolute inset-0 bg-grid-black/[0.03] pointer-events-none" />
@@ -192,7 +192,7 @@ function ProjectCard({ project, index }) {
               <span className="text-[10px] mb-4 opacity-30 group-hover:scale-110 transition-transform duration-500">
                 {project.emoji || '🚀'}
               </span>
-              <span className="text-xl font-bold font-display text-[#1C1B19]/40 tracking-wider uppercase group-hover:text-[#1C1B19]/60 transition-colors duration-500">
+              <span className="text-xl font-bold font-display text-[#0F172A]/40 tracking-wider uppercase group-hover:text-[#0F172A]/60 transition-colors duration-500">
                 {project.title}
               </span>
             </div>
@@ -205,15 +205,18 @@ function ProjectCard({ project, index }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: hovered ? 1 : 0 }}
           transition={{ duration: 0.2 }}
-          style={{ background: 'rgba(232,230,222,0.92)', backdropFilter: 'blur(4px)' }}
+          style={{
+            background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.12), rgba(15, 23, 42, 0.32))',
+            backdropFilter: 'blur(1px)',
+          }}
         >
           {project.githubUrl && (
             <a
               href={project.githubUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl glass-card text-[#626058]
-                hover:text-[#185FA5] hover:border-[#185FA5]/30 transition-all duration-200 text-sm font-medium"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl glass-card text-[#64748B]
+                hover:text-[#2563EB] hover:border-[#2563EB]/30 transition-all duration-200 text-sm font-medium"
               onClick={(e) => e.stopPropagation()}
             >
               <FaGithub className="w-4 h-4" />
@@ -254,7 +257,7 @@ function ProjectCard({ project, index }) {
       {/* Content */}
       <div className="flex flex-1 flex-col p-5 sm:p-6">
         <ProjectTitle title={project.title} accentColor={project.accentColor} />
-        <p className="text-sm text-[#626058] leading-relaxed mb-6 flex-grow mt-1">
+        <p className="text-sm text-[#64748B] leading-relaxed mb-6 flex-grow mt-1">
           {project.description}
         </p>
 
@@ -285,8 +288,8 @@ export default function Projects() {
       <section id="projects" className="py-24 md:py-32 relative overflow-hidden">
         <div className="container-custom flex items-center justify-center">
           <div className="text-center">
-            <div className="w-16 h-16 border-4 border-[#185FA5] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-[#626058]">Loading projects...</p>
+            <div className="w-16 h-16 border-4 border-[#2563EB] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-[#64748B]">Loading projects...</p>
           </div>
         </div>
       </section>
@@ -295,9 +298,9 @@ export default function Projects() {
 
   return (
     <section id="projects" className="section-space relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-[#DDDBD3] to-[#E8E6DE]" />
-      <div className="blob w-[500px] h-[500px] bg-[#185FA5] top-1/2 right-0 opacity-[0.05] -translate-y-1/2" />
-      <div className="blob w-[400px] h-[400px] bg-[#C2C0B8] bottom-0 left-1/4 opacity-[0.08]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#F8FAFC] to-[#F1F5F9]" />
+      <div className="blob w-[500px] h-[500px] bg-[#2563EB] top-1/2 right-0 opacity-[0.05] -translate-y-1/2" />
+      <div className="blob w-[400px] h-[400px] bg-[#E2E8F0] bottom-0 left-1/4 opacity-[0.08]" />
 
       <div className="container-custom relative z-10" ref={ref}>
         {/* Header */}
@@ -335,7 +338,7 @@ export default function Projects() {
             href={githubUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 text-[#626058] hover:text-[#1C1B19] transition-colors text-sm font-medium"
+            className="flex items-center gap-2 text-[#64748B] hover:text-[#0F172A] transition-colors text-sm font-medium"
           >
             <FaGithub className="w-5 h-5" />
             View more on GitHub

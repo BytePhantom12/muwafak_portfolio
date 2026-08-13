@@ -25,7 +25,7 @@ function SkillCard({ skill, index }) {
       viewport={{ once: true, margin: '-20px' }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       whileHover={{ y: -8, scale: 1.02 }}
-      className="bg-[#DDDBD3] border border-[#C2C0B8]/30 hover:border-[#C2C0B8]/60 transition-colors rounded-[1.25rem] p-6 flex flex-col items-center gap-4 relative overflow-hidden group w-full"
+      className="bg-[#FFFFFF] border border-[#E2E8F0] hover:border-[#BFDBFE] hover:shadow-card transition-all rounded-[1.25rem] p-6 flex flex-col items-center gap-4 relative overflow-hidden group w-full"
       style={{ '--skill-color': skill.color }}
     >
       <div
@@ -48,7 +48,7 @@ function SkillCard({ skill, index }) {
       </div>
 
       {/* Skill Name */}
-      <span className="text-base font-bold text-[#1C1B19] tracking-wide mt-2">
+      <span className="text-base font-bold text-[#0F172A] tracking-wide mt-2">
         {skill.name}
       </span>
 
@@ -62,11 +62,11 @@ export default function Skills() {
 
   if (loading) {
     return (
-      <section id="skills" className="py-24 md:py-32 relative overflow-hidden bg-[#E8E6DE]">
+      <section id="skills" className="py-24 md:py-32 relative overflow-hidden bg-[#F1F5F9]">
         <div className="container-custom flex items-center justify-center">
           <div className="text-center">
-            <div className="w-16 h-16 border-4 border-[#185FA5] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-[#626058]">Loading skills...</p>
+            <div className="w-16 h-16 border-4 border-[#2563EB] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-[#64748B]">Loading skills...</p>
           </div>
         </div>
       </section>
@@ -74,10 +74,10 @@ export default function Skills() {
   }
 
   return (
-    <section id="skills" className="section-space relative overflow-hidden bg-[#E8E6DE]">
+    <section id="skills" className="section-space relative overflow-hidden bg-[#F1F5F9]">
       {/* Subtle Background Elements */}
-      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#C2C0B8]/20 to-transparent" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#DDDBD3]/40 via-[#E8E6DE] to-[#E8E6DE] pointer-events-none" />
+      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#E2E8F0]/20 to-transparent" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#BFDBFE]/20 via-[#F1F5F9] to-[#F1F5F9] pointer-events-none" />
 
       <div className="container-custom relative z-10">
 
@@ -85,7 +85,7 @@ export default function Skills() {
         <div className="mb-12 flex flex-col justify-between gap-6 sm:mb-16 lg:mb-20 lg:flex-row lg:items-end lg:gap-8">
           <div className="max-w-2xl">
             <h2 className="section-title mb-5">
-              Skills & <span className="text-[#185FA5]">Technologies</span>
+              Skills & <span className="text-[#2563EB]">Technologies</span>
             </h2>
             <p className="section-subtitle mx-0">
               Tools and technologies I work with to bring ideas to life.
@@ -94,17 +94,17 @@ export default function Skills() {
 
           {/* Top Right Stats */}
           <div className="grid w-full grid-cols-3 gap-2 select-none sm:flex sm:w-auto sm:gap-4">
-            <div className="bg-[#DDDBD3] border border-[#C2C0B8]/30 rounded-xl px-2 py-3 sm:rounded-2xl sm:px-6 sm:py-4 flex flex-col items-center hover:border-[#C2C0B8]/60 transition-colors">
-              <span className="text-2xl font-bold text-[#1C1B19] mb-1"><Counter value={portfolioData.about.yearsOfExperience} />+</span>
-              <span className="text-[10px] text-[#626058] uppercase tracking-widest font-semibold">Years Exp</span>
+            <div className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-xl px-2 py-3 sm:rounded-2xl sm:px-6 sm:py-4 flex flex-col items-center hover:border-[#BFDBFE] transition-colors">
+              <span className="text-2xl font-bold text-[#0F172A] mb-1"><Counter value={portfolioData.about.yearsOfExperience} />+</span>
+              <span className="text-[10px] text-[#64748B] uppercase tracking-widest font-semibold">Years Exp</span>
             </div>
-            <div className="bg-[#DDDBD3] border border-[#C2C0B8]/30 rounded-xl px-2 py-3 sm:rounded-2xl sm:px-6 sm:py-4 flex flex-col items-center hover:border-[#C2C0B8]/60 transition-colors">
-              <span className="text-2xl font-bold text-[#1C1B19] mb-1"><Counter value={portfolioData.projects.length} /></span>
-              <span className="text-[10px] text-[#626058] uppercase tracking-widest font-semibold">Projects</span>
+            <div className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-xl px-2 py-3 sm:rounded-2xl sm:px-6 sm:py-4 flex flex-col items-center hover:border-[#BFDBFE] transition-colors">
+              <span className="text-2xl font-bold text-[#0F172A] mb-1"><Counter value={portfolioData.projects.length} /></span>
+              <span className="text-[10px] text-[#64748B] uppercase tracking-widest font-semibold">Projects</span>
             </div>
-            <div className="bg-[#DDDBD3] border border-[#C2C0B8]/30 rounded-xl px-2 py-3 sm:rounded-2xl sm:px-6 sm:py-4 flex flex-col items-center hover:border-[#C2C0B8]/60 transition-colors">
-              <span className="text-2xl font-bold text-[#1C1B19] mb-1"><Counter value={portfolioData.skillCategories.reduce((acc, cat) => acc + cat.skills.length, 0)} />+</span>
-              <span className="text-[10px] text-[#626058] uppercase tracking-widest font-semibold">Tech Stack</span>
+            <div className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-xl px-2 py-3 sm:rounded-2xl sm:px-6 sm:py-4 flex flex-col items-center hover:border-[#BFDBFE] transition-colors">
+              <span className="text-2xl font-bold text-[#0F172A] mb-1"><Counter value={portfolioData.skillCategories.reduce((acc, cat) => acc + cat.skills.length, 0)} />+</span>
+              <span className="text-[10px] text-[#64748B] uppercase tracking-widest font-semibold">Tech Stack</span>
             </div>
           </div>
         </div>
@@ -123,20 +123,20 @@ export default function Skills() {
                 className="flex items-center gap-4 w-full"
               >
                 <div
-                  className="w-10 h-10 shrink-0 rounded-full flex items-center justify-center bg-[#DDDBD3] border border-[#C2C0B8]/30"
+                  className="w-10 h-10 shrink-0 rounded-full flex items-center justify-center bg-[#F8FAFC] border border-[#E2E8F0]/30"
                 >
                   <div
                     className="w-3 h-3 rounded-full animate-pulse"
                     style={{ backgroundColor: cat.color, boxShadow: `0 0 12px ${cat.color}` }}
                   />
                 </div>
-                <h3 className="min-w-0 break-words text-xl sm:text-2xl md:text-3xl font-bold text-[#1C1B19] tracking-wide">
+                <h3 className="min-w-0 break-words text-xl sm:text-2xl md:text-3xl font-bold text-[#0F172A] tracking-wide">
                   {cat.name}
                 </h3>
 
                 {/* Modern Tech Animated Line */}
                 <div className="flex-1 flex items-center gap-2 ml-2 md:ml-4 overflow-hidden opacity-80">
-                  <div className="h-px w-full bg-[#C2C0B8]/40 relative overflow-hidden rounded-full">
+                  <div className="h-px w-full bg-[#E2E8F0]/40 relative overflow-hidden rounded-full">
                     {/* Fast moving data packet */}
                     <motion.div
                       className="absolute top-0 bottom-0 w-32"

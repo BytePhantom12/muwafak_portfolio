@@ -1,8 +1,8 @@
 import { getIconComponent } from './iconMap';
 
 export const SKILL_CATEGORY_CONFIG = {
-  Frontend: { color: '#185FA5', emoji: '🎨' },
-  Backend: { color: '#626058', emoji: '⚙️' },
+  Frontend: { color: '#2563EB', emoji: '🎨' },
+  Backend: { color: '#64748B', emoji: '⚙️' },
   Database: { color: '#10b981', emoji: '🗄️' },
   Databases: { color: '#10b981', emoji: '🗄️' },
   'Data Analysis': { color: '#f59e0b', emoji: '📊' },

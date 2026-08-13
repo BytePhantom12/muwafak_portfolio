@@ -25,20 +25,20 @@ function JourneyCard({ item, type, index }) {
       className="glass-card relative min-w-0 p-5 sm:p-6"
     >
       <div className="mb-4 flex items-start gap-3">
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#185FA5]/10 text-[#185FA5]">
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#2563EB]/10 text-[#2563EB]">
           <Icon className="h-5 w-5" aria-hidden="true" />
         </span>
         <div className="min-w-0">
-          <h3 className="break-words font-display text-lg font-bold text-[#1C1B19]">{title || organization}</h3>
-          {title && organization && <p className="text-sm font-medium text-[#185FA5]">{organization}</p>}
-          {(start || end) && <p className="mt-1 text-xs text-[#626058]">{[start, end].filter(Boolean).join(' – ')}</p>}
+          <h3 className="break-words font-display text-lg font-bold text-[#0F172A]">{title || organization}</h3>
+          {title && organization && <p className="text-sm font-medium text-[#2563EB]">{organization}</p>}
+          {(start || end) && <p className="mt-1 text-xs text-[#64748B]">{[start, end].filter(Boolean).join(' – ')}</p>}
         </div>
       </div>
-      {item.field && <p className="mb-2 text-sm font-medium text-[#1C1B19]">{item.field}</p>}
-      {item.description && <p className="text-sm leading-6 text-[#626058]">{item.description}</p>}
+      {item.field && <p className="mb-2 text-sm font-medium text-[#0F172A]">{item.field}</p>}
+      {item.description && <p className="text-sm leading-6 text-[#64748B]">{item.description}</p>}
       {Array.isArray(item.technologies) && item.technologies.length > 0 && (
         <ul className="mt-4 flex flex-wrap gap-2" aria-label="Technologies">
-          {item.technologies.map((technology) => <li key={technology} className="rounded-full bg-[#185FA5]/8 px-3 py-1 text-xs text-[#0C447C]">{technology}</li>)}
+          {item.technologies.map((technology) => <li key={technology} className="rounded-full bg-[#2563EB]/8 px-3 py-1 text-xs text-[#1D4ED8]">{technology}</li>)}
         </ul>
       )}
     </motion.article>
@@ -53,7 +53,7 @@ export default function Journey() {
   if (loading || (experience.length === 0 && education.length === 0)) return null;
 
   return (
-    <section id="journey" className="section-space bg-[#DDDBD3]">
+    <section id="journey" className="section-space bg-[#F8FAFC]">
       <div className="container-custom">
         <header className="mb-10 sm:mb-14">
           <h2 className="section-title">Experience &amp; <span className="text-gradient">Education</span></h2>

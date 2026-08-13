@@ -63,15 +63,15 @@ export default function Dashboard({ onLogout }) {
   }, [sidebarOpen]);
 
   return (
-    <div className="min-h-screen bg-[#E8E6DE] text-[#1C1B19]">
+    <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A]">
       {/* Header */}
-      <header className="sticky top-0 z-50 glass-card border-b border-[#C2C0B8]/30">
+      <header className="sticky top-0 z-50 glass-card border-b border-[#E2E8F0]/30">
         <div className="flex min-h-[68px] items-center justify-between gap-2 px-3 py-3 sm:px-4 lg:px-8">
           <div className="flex min-w-0 items-center gap-2 sm:gap-4">
             {/* Mobile Menu Button */}
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="touch-target lg:hidden flex items-center justify-center rounded-xl glass-card text-[#626058] hover:text-[#185FA5] transition-colors"
+              className="touch-target lg:hidden flex items-center justify-center rounded-xl glass-card text-[#64748B] hover:text-[#2563EB] transition-colors"
               aria-label="Toggle mobile menu"
               aria-expanded={sidebarOpen}
               aria-controls="admin-sidebar"
@@ -82,7 +82,7 @@ export default function Dashboard({ onLogout }) {
             {/* Desktop Sidebar Toggle */}
             <button
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="hidden lg:flex p-2 rounded-xl glass-card text-[#626058] hover:text-[#185FA5] transition-colors"
+              className="hidden lg:flex p-2 rounded-xl glass-card text-[#64748B] hover:text-[#2563EB] transition-colors"
               aria-label="Toggle sidebar"
             >
               {sidebarCollapsed ? <HiChevronRight className="w-5 h-5" /> : <HiChevronLeft className="w-5 h-5" />}
@@ -98,7 +98,7 @@ export default function Dashboard({ onLogout }) {
             {/* Go Home Button */}
             <Link
               to="/"
-              className="p-2 sm:px-4 sm:py-2 rounded-xl glass-card text-[#626058] hover:text-[#185FA5] hover:border-[#185FA5]/30 hover:shadow-[0_0_15px_rgba(24,95,165,0.15)] transition-all duration-300 flex items-center gap-2"
+              className="p-2 sm:px-4 sm:py-2 rounded-xl glass-card text-[#64748B] hover:text-[#2563EB] hover:border-[#2563EB]/30 hover:shadow-[0_0_15px_rgba(37, 99, 235,0.15)] transition-all duration-300 flex items-center gap-2"
               title="Go to Homepage"
             >
               <HiHome className="w-4 h-4" />
@@ -131,7 +131,7 @@ export default function Dashboard({ onLogout }) {
         <aside className={`
           fixed lg:sticky top-[68px] left-0 z-50 lg:z-auto
           ${sidebarCollapsed ? 'w-16' : 'w-[min(18rem,86vw)] lg:w-64'} h-[calc(100dvh-68px)]
-          glass-card overflow-y-auto border-r border-[#C2C0B8]/30 p-4
+          glass-card overflow-y-auto border-r border-[#E2E8F0]/30 p-4
           transform transition-all duration-300 ease-in-out lg:transform-none
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `} id="admin-sidebar" aria-label="Admin sections">
@@ -141,8 +141,8 @@ export default function Dashboard({ onLogout }) {
                 key={id}
                 onClick={() => handleSectionChange(id)}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 group relative ${activeSection === id
-                    ? 'bg-[#185FA5]/10 text-[#185FA5] border border-[#185FA5]/25'
-                    : 'text-[#626058] hover:text-[#1C1B19] hover:bg-[#C2C0B8]/20'
+                    ? 'bg-[#EFF6FF] text-[#2563EB] border border-[#BFDBFE]'
+                    : 'text-[#64748B] hover:text-[#0F172A] hover:bg-[#E2E8F0]/20'
                   }`}
                 title={sidebarCollapsed ? label : ''}
               >
@@ -154,7 +154,7 @@ export default function Dashboard({ onLogout }) {
 
                 {/* Tooltip for collapsed state */}
                 {sidebarCollapsed && (
-                  <div className="absolute left-full ml-2 px-2 py-1 bg-[#DDDBD3] text-xs text-[#1C1B19] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50 border border-[#C2C0B8]">
+                  <div className="absolute left-full ml-2 px-2 py-1 bg-[#F8FAFC] text-xs text-[#0F172A] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50 border border-[#E2E8F0]">
                     {label}
                   </div>
                 )}
@@ -163,10 +163,10 @@ export default function Dashboard({ onLogout }) {
           </nav>
 
           {/* Mobile Footer Actions */}
-          <div className="lg:hidden absolute bottom-4 left-4 right-4 space-y-2 border-t border-[#C2C0B8]/30 pt-4">
+          <div className="lg:hidden absolute bottom-4 left-4 right-4 space-y-2 border-t border-[#E2E8F0]/30 pt-4">
             <Link
               to="/"
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-[#626058] hover:text-[#1C1B19] hover:bg-[#C2C0B8]/20 transition-all duration-300"
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-[#64748B] hover:text-[#0F172A] hover:bg-[#E2E8F0]/20 transition-all duration-300"
               onClick={() => setSidebarOpen(false)}
             >
               <HiHome className="w-5 h-5 flex-shrink-0" />
@@ -244,11 +244,11 @@ function Overview({ setActiveSection }) {
   );
 
   const stats = [
-    { label: 'Projects', value: portfolioData.projects.length, icon: HiRectangleStack, color: 'from-[#185FA5] to-[#0C447C]' },
-    { label: 'Skills', value: skillCount, icon: HiCodeBracket, color: 'from-[#378ADD] to-[#185FA5]' },
-    { label: 'Experience Entries', value: portfolioData.experience.length, icon: HiBriefcase, color: 'from-[#85B7EB] to-[#378ADD]' },
-    { label: 'Education Entries', value: portfolioData.education.length, icon: HiAcademicCap, color: 'from-[#B5D4F4] to-[#85B7EB]' },
-    { label: 'Messages', value: messageStats.total, detail: `${messageStats.unread} unread`, icon: HiEnvelope, color: 'from-[#0C447C] to-[#378ADD]' },
+    { label: 'Projects', value: portfolioData.projects.length, icon: HiRectangleStack, color: 'from-[#2563EB] to-[#1D4ED8]' },
+    { label: 'Skills', value: skillCount, icon: HiCodeBracket, color: 'from-[#06B6D4] to-[#2563EB]' },
+    { label: 'Experience Entries', value: portfolioData.experience.length, icon: HiBriefcase, color: 'from-[#2563EB] to-[#06B6D4]' },
+    { label: 'Education Entries', value: portfolioData.education.length, icon: HiAcademicCap, color: 'from-[#BFDBFE] to-[#2563EB]' },
+    { label: 'Messages', value: messageStats.total, detail: `${messageStats.unread} unread`, icon: HiEnvelope, color: 'from-[#1D4ED8] to-[#06B6D4]' },
   ];
 
   return (
@@ -256,7 +256,7 @@ function Overview({ setActiveSection }) {
       <div className="mb-6 flex flex-col gap-4 min-[430px]:flex-row min-[430px]:items-center min-[430px]:justify-between lg:mb-8">
         <div>
           <h2 className="text-2xl lg:text-3xl font-bold font-display mb-2">Portfolio Overview</h2>
-          <p className="text-[#626058] text-sm lg:text-base">Live totals from your portfolio and inbox</p>
+          <p className="text-[#64748B] text-sm lg:text-base">Live totals from your portfolio and inbox</p>
         </div>
         <button type="button" onClick={() => refreshOverview()} disabled={refreshing} className="btn-outline text-sm">
           {refreshing ? 'Refreshing…' : 'Refresh'}
@@ -276,8 +276,8 @@ function Overview({ setActiveSection }) {
               <Icon className="w-5 h-5 lg:w-6 lg:h-6 text-white" />
             </div>
             <h3 className="text-xl lg:text-2xl font-bold font-display text-gradient mb-1">{value}</h3>
-            <p className="text-xs lg:text-sm text-[#626058]">{label}</p>
-            {detail && <p className="mt-1 text-xs font-medium text-[#185FA5]">{detail}</p>}
+            <p className="text-xs lg:text-sm text-[#64748B]">{label}</p>
+            {detail && <p className="mt-1 text-xs font-medium text-[#2563EB]">{detail}</p>}
           </div>
         ))}
       </div>

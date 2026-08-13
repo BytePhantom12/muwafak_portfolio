@@ -22,8 +22,8 @@ export default function Contact() {
   const { contact, socials } = portfolioData;
 
   const contactInfo = [
-    { icon: HiEnvelope, label: 'Email', value: contact.email, href: `mailto:${contact.email}`, color: '#185FA5' },
-    { icon: HiPhone, label: 'Phone', value: contact.phone, href: `tel:${contact.phone}`, color: '#C2C0B8' },
+    { icon: HiEnvelope, label: 'Email', value: contact.email, href: `mailto:${contact.email}`, color: '#2563EB' },
+    { icon: HiPhone, label: 'Phone', value: contact.phone, href: `tel:${contact.phone}`, color: '#E2E8F0' },
     { icon: HiMapPin, label: 'Location', value: contact.location, href: null, color: '#10b981' },
   ];
 
@@ -63,9 +63,9 @@ export default function Contact() {
 
   return (
     <section id="contact" className="section-space relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-[#E8E6DE] to-[#DDDBD3]" />
-      <div className="blob w-[500px] h-[500px] bg-[#185FA5] top-0 left-0 opacity-[0.05]" />
-      <div className="blob w-[400px] h-[400px] bg-[#C2C0B8] bottom-0 right-0 opacity-[0.08]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#F1F5F9] to-[#F8FAFC]" />
+      <div className="blob w-[500px] h-[500px] bg-[#2563EB] top-0 left-0 opacity-[0.05]" />
+      <div className="blob w-[400px] h-[400px] bg-[#E2E8F0] bottom-0 right-0 opacity-[0.08]" />
 
       <div className="container-custom relative z-10" ref={ref}>
         {/* Header */}
@@ -92,10 +92,10 @@ export default function Contact() {
             transition={{ duration: 0.7, delay: 0.2 }}
           >
             <div>
-              <h3 className="text-2xl font-bold font-display text-[#1C1B19] mb-3">
+              <h3 className="text-2xl font-bold font-display text-[#0F172A] mb-3">
                 Ready to Start a <span className="text-gradient">Project?</span>
               </h3>
-              <p className="text-[#626058] text-sm leading-relaxed">
+              <p className="text-[#64748B] text-sm leading-relaxed">
                 I'm always open to discussing new opportunities, creative projects, or just
                 having a chat about tech. Let's build something awesome together!
               </p>
@@ -106,7 +106,7 @@ export default function Contact() {
               {contactInfo.map(({ icon: Icon, label, value, href, color }) => (
                 <motion.div
                   key={label}
-                  className="glass-card group flex min-w-0 items-center gap-3 rounded-2xl p-4 transition-all duration-300 hover:border-[#C2C0B8]/60 sm:gap-4"
+                  className="glass-card group flex min-w-0 items-center gap-3 rounded-2xl p-4 transition-all duration-300 hover:border-[#E2E8F0]/60 sm:gap-4"
                   whileHover={{ x: 4 }}
                 >
                   <div
@@ -116,13 +116,13 @@ export default function Contact() {
                     <Icon className="w-5 h-5" style={{ color }} />
                   </div>
                   <div className="min-w-0">
-                    <span className="text-xs text-[#626058] uppercase tracking-wider block mb-0.5">{label}</span>
+                    <span className="text-xs text-[#64748B] uppercase tracking-wider block mb-0.5">{label}</span>
                     {href ? (
-                      <a href={href} className="break-all text-sm font-medium text-[#1C1B19] transition-colors hover:text-[#185FA5]">
+                      <a href={href} className="break-all text-sm font-medium text-[#0F172A] transition-colors hover:text-[#2563EB]">
                         {value}
                       </a>
                     ) : (
-                      <span className="break-words text-sm font-medium text-[#1C1B19]">{value}</span>
+                      <span className="break-words text-sm font-medium text-[#0F172A]">{value}</span>
                     )}
                   </div>
                 </motion.div>
@@ -131,7 +131,7 @@ export default function Contact() {
 
             {/* Social Links */}
             <div>
-              <p className="text-sm text-[#626058] mb-4">Follow me on social media</p>
+              <p className="text-sm text-[#64748B] mb-4">Follow me on social media</p>
               <div className="flex flex-wrap gap-3">
                 {socials.map(({ id, label, href, icon }) => {
                   const Icon = iconMap[icon];
@@ -144,8 +144,8 @@ export default function Contact() {
                       rel="noopener noreferrer"
                       aria-label={label}
                       className="w-11 h-11 flex items-center justify-center rounded-xl glass-card
-                        text-[#626058] hover:text-[#185FA5] hover:border-[#185FA5]/30
-                        hover:shadow-[0_0_15px_rgba(24,95,165,0.1)] transition-all duration-300"
+                        text-[#64748B] hover:text-[#2563EB] hover:border-[#2563EB]/30
+                        hover:shadow-[0_0_15px_rgba(37, 99, 235,0.1)] transition-all duration-300"
                     >
                       {Icon && <Icon className="w-4 h-4" />}
                     </a>
@@ -158,9 +158,9 @@ export default function Contact() {
             <div className="glass-card rounded-2xl p-5 neon-border">
               <div className="flex items-center gap-3 mb-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-sm font-semibold text-[#1C1B19]">Currently Available</span>
+                <span className="text-sm font-semibold text-[#0F172A]">Currently Available</span>
               </div>
-              <p className="text-xs text-[#626058] leading-relaxed">
+              <p className="text-xs text-[#64748B] leading-relaxed">
                 Open to freelance projects, full-time roles, and exciting collaborations.
               </p>
             </div>
@@ -174,7 +174,7 @@ export default function Contact() {
             transition={{ duration: 0.7, delay: 0.4 }}
           >
             <div className="glass-card relative overflow-hidden rounded-2xl p-5 sm:rounded-[2rem] sm:p-10">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-[#185FA5]/10 to-[#C2C0B8]/10 blur-3xl rounded-full" />
+              <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-[#2563EB]/10 to-[#E2E8F0]/10 blur-3xl rounded-full" />
 
               {submitted ? (
                 <motion.div
@@ -185,8 +185,8 @@ export default function Contact() {
                   <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mb-6">
                     <HiCheckCircle className="w-12 h-12 text-emerald-400" />
                   </div>
-                  <h3 className="text-2xl font-bold font-display text-[#1C1B19] mb-3">Message Sent!</h3>
-                  <p className="text-[#626058] max-w-sm mb-8">
+                  <h3 className="text-2xl font-bold font-display text-[#0F172A] mb-3">Message Sent!</h3>
+                  <p className="text-[#64748B] max-w-sm mb-8">
                     Thank you for reaching out. I'll get back to you as soon as possible.
                   </p>
                   <button onClick={() => setSubmitted(false)} className="btn-outline py-2.5 px-6 text-sm">
@@ -202,28 +202,28 @@ export default function Contact() {
                   )}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <label htmlFor="name" className="text-xs font-semibold text-[#626058] uppercase tracking-wider pl-1">Your Name</label>
+                      <label htmlFor="name" className="text-xs font-semibold text-[#64748B] uppercase tracking-wider pl-1">Your Name</label>
                       <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required placeholder="John Doe"
                         className="form-input" />
                     </div>
                     <div className="space-y-2">
-                      <label htmlFor="email" className="text-xs font-semibold text-[#626058] uppercase tracking-wider pl-1">Email Address</label>
+                      <label htmlFor="email" className="text-xs font-semibold text-[#64748B] uppercase tracking-wider pl-1">Email Address</label>
                       <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required placeholder="john@example.com"
                         className="form-input" />
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <label htmlFor="subject" className="text-xs font-semibold text-[#626058] uppercase tracking-wider pl-1">Subject</label>
+                    <label htmlFor="subject" className="text-xs font-semibold text-[#64748B] uppercase tracking-wider pl-1">Subject</label>
                     <input type="text" id="subject" name="subject" value={formData.subject} onChange={handleChange} required placeholder="Project Inquiry"
                       className="form-input" />
                   </div>
                   <div className="space-y-2">
-                    <label htmlFor="message" className="text-xs font-semibold text-[#626058] uppercase tracking-wider pl-1">Message</label>
+                    <label htmlFor="message" className="text-xs font-semibold text-[#64748B] uppercase tracking-wider pl-1">Message</label>
                     <textarea id="message" name="message" value={formData.message} onChange={handleChange} required rows={5} placeholder="Tell me about your project..."
                       className="form-input resize-none" />
                   </div>
                   <button type="submit" disabled={loading}
-                    className="w-full h-14 bg-gradient-to-r from-[#185FA5] to-[#0C447C] rounded-xl text-white font-semibold flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(24,95,165,0.2)] disabled:opacity-70 disabled:cursor-not-allowed transition-all">
+                    className="w-full h-14 bg-gradient-to-r from-[#2563EB] to-[#1D4ED8] rounded-xl text-white font-semibold flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(37, 99, 235,0.2)] disabled:opacity-70 disabled:cursor-not-allowed transition-all">
                     {loading ? (
                       <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                     ) : (

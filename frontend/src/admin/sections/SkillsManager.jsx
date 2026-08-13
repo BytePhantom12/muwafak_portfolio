@@ -206,14 +206,14 @@ export default function SkillsManager() {
                 <div className="flex items-center gap-3">
                   <div
                     className="w-10 h-10 rounded-xl flex items-center justify-center text-white text-sm font-bold"
-                    style={{ backgroundColor: categories.find(c => c.name === formData.category)?.color || '#185FA5' }}
+                    style={{ backgroundColor: categories.find(c => c.name === formData.category)?.color || '#2563EB' }}
                   >
                     <SkillIcon
                       skill={{
                         name: formData.name,
                         iconType: formData.iconType,
                         icon: formData.icon,
-                        color: categories.find((c) => c.name === formData.category)?.color || '#185FA5',
+                        color: categories.find((c) => c.name === formData.category)?.color || '#2563EB',
                       }}
                       className="w-6 h-6"
                       imageClassName="w-6 h-6"

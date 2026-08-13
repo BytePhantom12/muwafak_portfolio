@@ -109,15 +109,15 @@ export default function FileUpload({
   return (
     <div className="space-y-3">
       {label && (
-        <label className="block text-sm font-medium text-[#1C1B19]">{label}</label>
+        <label className="block text-sm font-medium text-[#0F172A]">{label}</label>
       )}
       
       {/* Upload Area */}
       <div
         className={`relative min-h-36 border-2 border-dashed rounded-xl p-4 sm:p-6 transition-all duration-200 ${
           dragActive 
-            ? 'border-[#185FA5] bg-[#185FA5]/5'
-            : 'border-[#C2C0B8] bg-[#E8E6DE]/40 hover:border-[#185FA5]/50'
+            ? 'border-[#2563EB] bg-[#2563EB]/5'
+            : 'border-[#E2E8F0] bg-[#FFFFFF]/40 hover:border-[#2563EB]/50'
         }`}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
@@ -152,10 +152,10 @@ export default function FileUpload({
                 </button>
               </div>
             ) : (
-              <div className="relative z-20 flex items-center gap-3 rounded-lg bg-[#E8E6DE] p-3 pointer-events-none">
-                <Icon className="w-8 h-8 text-[#185FA5]" />
+              <div className="relative z-20 flex items-center gap-3 rounded-lg bg-[#FFFFFF] p-3 pointer-events-none">
+                <Icon className="w-8 h-8 text-[#2563EB]" />
                 <div className="flex-1">
-                  <p className="break-all text-sm font-medium text-[#1C1B19]">
+                  <p className="break-all text-sm font-medium text-[#0F172A]">
                     {selectedFile?.name || 'File selected'}
                   </p>
                   <p className="text-xs text-slate-500">
@@ -165,7 +165,7 @@ export default function FileUpload({
                 <button
                   onClick={handleRemove}
                   type="button"
-                  className="touch-target pointer-events-auto flex items-center justify-center rounded-full text-[#626058] hover:bg-red-50 hover:text-red-600 transition-colors"
+                  className="touch-target pointer-events-auto flex items-center justify-center rounded-full text-[#64748B] hover:bg-red-50 hover:text-red-600 transition-colors"
                   aria-label="Remove selected document"
                 >
                   <HiTrash className="w-4 h-4" />
@@ -175,9 +175,9 @@ export default function FileUpload({
           </div>
         ) : (
           <div className="text-center">
-            <Icon className="w-10 h-10 sm:w-12 sm:h-12 text-[#626058] mx-auto mb-3" />
-            <p className="text-sm text-[#1C1B19] mb-1">{placeholder}</p>
-            <p className="text-xs text-[#626058]">
+            <Icon className="w-10 h-10 sm:w-12 sm:h-12 text-[#64748B] mx-auto mb-3" />
+            <p className="text-sm text-[#0F172A] mb-1">{placeholder}</p>
+            <p className="text-xs text-[#64748B]">
               {type === 'image' ? 'PNG, JPG, GIF, SVG up to 10MB' : 'PDF, Word, ODT, RTF, TXT up to 10MB'}
             </p>
           </div>

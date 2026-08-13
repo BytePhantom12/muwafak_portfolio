@@ -45,7 +45,7 @@ export default function Navbar() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled
-            ? 'bg-[#E8E6DE]/90 backdrop-blur-xl border-b border-[#C2C0B8]/20 shadow-[0_4px_30px_rgba(0,0,0,0.08)]'
+            ? 'bg-[#F8FAFC]/95 backdrop-blur-xl border-b border-[#E2E8F0] shadow-[0_4px_20px_rgba(15,23,42,0.05)]'
             : 'bg-transparent'
           }`}
       >
@@ -58,11 +58,11 @@ export default function Navbar() {
               transition={{ delay: 0.2 }}
               className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden md:flex-none"
             >
-              <div className="w-8 h-8 shrink-0 rounded-lg bg-gradient-to-br from-[#185FA5] to-[#C2C0B8] flex items-center justify-center shadow-[0_0_15px_rgba(24,95,165,0.25)]">
+              <div className="w-8 h-8 shrink-0 rounded-lg bg-gradient-to-br from-[#2563EB] to-[#E2E8F0] flex items-center justify-center shadow-[0_0_15px_rgba(37, 99, 235,0.25)]">
                 <span className="text-white font-bold text-sm font-display">{firstName.charAt(0)}</span>
               </div>
-              <span className="truncate text-[#1C1B19] font-display font-extrabold text-lg sm:text-xl lg:text-2xl">
-                <span className="font-extrabold text-[#1C1B19]">{firstName}</span>
+              <span className="truncate text-[#0F172A] font-display font-extrabold text-lg sm:text-xl lg:text-2xl">
+                <span className="font-extrabold text-[#0F172A]">{firstName}</span>
               </span>
             </motion.div>
 
@@ -100,7 +100,7 @@ export default function Navbar() {
             >
               <RouterLink
                 to="/admin"
-                className="p-2.5 rounded-xl glass-card text-[#626058] hover:text-[#185FA5] hover:border-[#185FA5]/30 hover:shadow-[0_0_15px_rgba(24,95,165,0.1)] transition-all duration-300"
+                className="p-2.5 rounded-xl glass-card text-[#64748B] hover:text-[#2563EB] hover:border-[#2563EB]/30 hover:shadow-[0_0_15px_rgba(37, 99, 235,0.1)] transition-all duration-300"
                 title="Admin Panel"
               >
                 <HiCog6Tooth className="w-4 h-4" />
@@ -119,7 +119,7 @@ export default function Navbar() {
             {/* Hamburger */}
             <button
               id="mobile-menu-toggle"
-              className="touch-target md:hidden flex shrink-0 items-center justify-center rounded-xl glass-card text-[#626058] hover:text-[#1C1B19] transition-colors"
+              className="touch-target md:hidden flex shrink-0 items-center justify-center rounded-xl glass-card text-[#64748B] hover:text-[#0F172A] transition-colors"
               onClick={() => setMenuOpen(!menuOpen)}
               aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
               aria-expanded={menuOpen}
@@ -149,7 +149,7 @@ export default function Navbar() {
             exit={{ opacity: 0, y: -20, height: 0 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
             id="mobile-navigation"
-            className="fixed inset-x-0 top-16 z-40 max-h-[calc(100dvh-4rem)] overflow-y-auto border-b border-[#C2C0B8]/20 bg-[#E8E6DE]/98 shadow-xl backdrop-blur-xl md:hidden"
+            className="fixed inset-x-0 top-16 z-40 max-h-[calc(100dvh-4rem)] overflow-y-auto border-b border-[#E2E8F0] bg-[#F8FAFC]/98 shadow-lg backdrop-blur-xl md:hidden"
           >
             <div className="container-custom py-6 flex flex-col gap-4">
               {navLinks.map((link, i) => (
@@ -165,7 +165,7 @@ export default function Navbar() {
                     smooth={true}
                     duration={600}
                     offset={-80}
-                    className="block py-3 px-4 rounded-xl nav-link text-base hover:bg-[#DDDBD3] cursor-pointer"
+                    className="block py-3 px-4 rounded-xl nav-link text-base hover:bg-[#F8FAFC] cursor-pointer"
                     onClick={() => setMenuOpen(false)}
                     id={`mobile-nav-${link.to}`}
                   >
@@ -177,7 +177,7 @@ export default function Navbar() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
-                className="pt-2 border-t border-[#C2C0B8]/20 space-y-3"
+                className="pt-2 border-t border-[#E2E8F0]/20 space-y-3"
               >
                 <RouterLink
                   to="/admin"

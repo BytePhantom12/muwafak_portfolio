@@ -55,10 +55,10 @@ export default function AdminApp() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#E8E6DE] flex items-center justify-center">
+      <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-[#185FA5] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-[#626058]">Loading...</p>
+          <div className="w-16 h-16 border-4 border-[#2563EB] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-[#64748B]">Loading...</p>
         </div>
       </div>
     );

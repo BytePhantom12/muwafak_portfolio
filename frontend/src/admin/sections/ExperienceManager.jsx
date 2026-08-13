@@ -243,7 +243,7 @@ export default function ExperienceManager() {
               ))}
               <button
                 onClick={addAchievement}
-                className="text-sm text-accent hover:text-[#0C447C] transition-colors"
+                className="text-sm text-accent hover:text-[#1D4ED8] transition-colors"
               >
                 + Add Item
               </button>

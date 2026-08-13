@@ -108,8 +108,8 @@ export default function Hero() {
     return (
       <section id="home" className="relative min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-[#185FA5] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-[#626058]">Loading portfolio...</p>
+          <div className="w-16 h-16 border-4 border-[#2563EB] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-[#64748B]">Loading portfolio...</p>
         </div>
       </section>
     );
@@ -121,11 +121,11 @@ export default function Hero() {
       className="relative min-h-[100svh] flex flex-col justify-center overflow-hidden"
     >
       {/* Background layer */}
-      <div className="absolute inset-0 bg-[#E8E6DE]">
+      <div className="absolute inset-0 bg-gradient-to-b from-[#F8FAFC] via-[#F8FAFC] to-[#F1F5F9]">
         <div className="absolute inset-0 dot-grid opacity-40" />
-        <div className="blob w-[500px] h-[500px] bg-[#185FA5] top-[-100px] right-[-100px] opacity-[0.07]" />
-        <div className="blob w-[600px] h-[600px] bg-[#C2C0B8] bottom-[-150px] left-[-150px] opacity-[0.15]" />
-        <div className="blob w-[300px] h-[300px] bg-[#185FA5] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.05]" />
+        <div className="blob w-[500px] h-[500px] bg-[#2563EB] top-[-100px] right-[-100px] opacity-[0.07]" />
+        <div className="blob w-[600px] h-[600px] bg-[#E2E8F0] bottom-[-150px] left-[-150px] opacity-[0.15]" />
+        <div className="blob w-[300px] h-[300px] bg-[#2563EB] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.05]" />
       </div>
 
       <div className="container-custom relative z-10 pb-12 pt-24 sm:pb-16 md:pt-28">
@@ -142,13 +142,13 @@ export default function Hero() {
             </motion.div> */}
 
 
-            <motion.h1 variants={itemVariants} className="mb-3 break-words font-display text-[clamp(2rem,10vw,4.5rem)] font-extrabold leading-[0.98] tracking-tight text-[#1C1B19]">
+            <motion.h1 variants={itemVariants} className="mb-3 break-words font-display text-[clamp(2rem,10vw,4.5rem)] font-extrabold leading-[0.98] tracking-tight text-[#0F172A]">
               {portfolioData.name}
             </motion.h1>
 
             <motion.div
               variants={itemVariants}
-              className="mb-5 min-h-14 max-w-full break-words font-display text-lg font-semibold text-[#1C1B19] sm:text-2xl md:text-3xl [&_span]:whitespace-normal"
+              className="mb-5 min-h-14 max-w-full break-words font-display text-lg font-semibold text-[#0F172A] sm:text-2xl md:text-3xl [&_span]:whitespace-normal"
             >
               I'm a{' '}
               <RotatingRole phrases={portfolioData.typingPhrases} role={portfolioData.role} />
@@ -156,7 +156,7 @@ export default function Hero() {
 
             <motion.p
               variants={itemVariants}
-              className="text-[#626058] text-base md:text-lg leading-relaxed max-w-lg mx-auto lg:mx-0 mb-8"
+              className="text-[#64748B] text-base md:text-lg leading-relaxed max-w-lg mx-auto lg:mx-0 mb-8"
             >
               {portfolioData.heroDescription}
             </motion.p>
@@ -176,8 +176,8 @@ export default function Hero() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={label}
-                    className="w-10 h-10 flex items-center justify-center rounded-xl glass-card text-[#626058]
-                      hover:text-[#185FA5] hover:border-[#185FA5]/30 hover:shadow-[0_0_15px_rgba(24,95,165,0.2)]
+                    className="w-10 h-10 flex items-center justify-center rounded-xl glass-card text-[#64748B]
+                      hover:text-[#2563EB] hover:border-[#2563EB]/30 hover:shadow-[0_0_15px_rgba(37, 99, 235,0.2)]
                       transition-all duration-300 group"
                   >
                     {Icon && <Icon className="w-4 h-4 group-hover:scale-110 transition-transform duration-200" />}
@@ -217,7 +217,7 @@ export default function Hero() {
             transition={{ duration: 0.8, ease: 'easeOut', delay: 0.2 }}
           >
             <div className="relative animate-float">
-              <div className="absolute inset-[-16px] rounded-full bg-gradient-to-br from-[#185FA5]/20 to-[#C2C0B8]/20 blur-xl animate-pulse-slow" />
+              <div className="absolute inset-[-16px] rounded-full bg-gradient-to-br from-[#2563EB]/20 to-[#E2E8F0]/20 blur-xl animate-pulse-slow" />
               <div className="profile-ring h-52 w-52 sm:h-64 sm:w-64 lg:h-[280px] lg:w-[280px]">
                 <img
                   src={profileImage}
@@ -230,13 +230,13 @@ export default function Hero() {
               </div>
               {portfolioData.profile?.availability && <motion.div
                 className="absolute -bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-2
-                  bg-[#DDDBD3] border border-[#C2C0B8]/30 rounded-full px-4 py-2 shadow-card whitespace-nowrap"
+                  bg-[#F8FAFC] border border-[#E2E8F0]/30 rounded-full px-4 py-2 shadow-card whitespace-nowrap"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 }}
               >
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-xs text-[#626058] font-medium">{portfolioData.profile.availability}</span>
+                <span className="text-xs text-[#64748B] font-medium">{portfolioData.profile.availability}</span>
               </motion.div>
               }
 
@@ -251,10 +251,10 @@ export default function Hero() {
                       <motion.div
                         animate={{ rotate: -360 }}
                         transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
-                        className="glass-card flex items-center gap-2 whitespace-nowrap rounded-xl bg-[#DDDBD3]/90 px-3 py-2 shadow-card backdrop-blur-md"
+                        className="glass-card flex items-center gap-2 whitespace-nowrap rounded-xl bg-[#F8FAFC]/90 px-3 py-2 shadow-card backdrop-blur-md"
                       >
                         <Icon className="h-4 w-4" style={{ color }} />
-                        <span className="text-xs font-semibold tracking-wide text-[#1C1B19]">{name}</span>
+                        <span className="text-xs font-semibold tracking-wide text-[#0F172A]">{name}</span>
                       </motion.div>
                     </div>
                   ))}
@@ -273,46 +273,46 @@ export default function Hero() {
           transition={{ delay: 0.8, duration: 0.6 }}
         >
           {/* Cyberpunk / High-Tech HUD Container */}
-          <div className="relative rounded-2xl bg-[#DDDBD3] border border-[#C2C0B8]/30 overflow-hidden group shadow-[0_0_30px_rgba(0,0,0,0.08)]">
+          <div className="relative rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0]/30 overflow-hidden group shadow-[0_0_30px_rgba(0,0,0,0.08)]">
 
             {/* Tech Grid Background Animation */}
             <div
               className="absolute inset-0 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity duration-700"
               style={{
-                backgroundImage: 'linear-gradient(#185FA5 1px, transparent 1px), linear-gradient(90deg, #185FA5 1px, transparent 1px)',
+                backgroundImage: 'linear-gradient(#2563EB 1px, transparent 1px), linear-gradient(90deg, #2563EB 1px, transparent 1px)',
                 backgroundSize: '32px 32px',
                 backgroundPosition: 'center center'
               }}
             />
 
             {/* Corner HUD Markers */}
-            <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-[#185FA5] rounded-tl-xl opacity-70" />
-            <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-[#C2C0B8] rounded-tr-xl opacity-70" />
-            <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-[#C2C0B8] rounded-bl-xl opacity-70" />
-            <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-[#185FA5] rounded-br-xl opacity-70" />
+            <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-[#2563EB] rounded-tl-xl opacity-70" />
+            <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-[#E2E8F0] rounded-tr-xl opacity-70" />
+            <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-[#E2E8F0] rounded-bl-xl opacity-70" />
+            <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-[#2563EB] rounded-br-xl opacity-70" />
 
             {/* Content Container */}
             <div className="relative z-10 w-full backdrop-blur-sm">
-              <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-[#185FA5]/10">
+              <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-[#2563EB]/10">
                 {stats.map(({ value, label }, i) => (
                   <motion.div
                     key={label}
                     className="flex flex-col items-center justify-center py-6 px-4 gap-1.5
-                      hover:bg-[#185FA5]/[0.03] transition-colors duration-300 relative group/stat"
+                      hover:bg-[#2563EB]/[0.03] transition-colors duration-300 relative group/stat"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 1 + i * 0.1 }}
                   >
                     {/* Hover tech overlay on individual stat */}
                     <div className="absolute inset-0 opacity-0 group-hover/stat:opacity-100 transition-opacity duration-300 pointer-events-none flex items-center justify-between p-2">
-                      <div className="w-1.5 h-1.5 bg-[#185FA5]/40 rounded-sm" />
-                      <div className="w-1.5 h-1.5 bg-[#C2C0B8]/40 rounded-sm" />
+                      <div className="w-1.5 h-1.5 bg-[#2563EB]/40 rounded-sm" />
+                      <div className="w-1.5 h-1.5 bg-[#E2E8F0]/40 rounded-sm" />
                     </div>
 
-                    <span className="text-3xl md:text-4xl font-bold font-display text-gradient drop-shadow-[0_0_12px_rgba(24,95,165,0.2)]">
+                    <span className="text-3xl md:text-4xl font-bold font-display text-gradient drop-shadow-[0_0_12px_rgba(37, 99, 235,0.2)]">
                       {value}
                     </span>
-                    <span className="text-[11px] md:text-xs text-[#626058] text-center font-semibold tracking-wider uppercase">
+                    <span className="text-[11px] md:text-xs text-[#64748B] text-center font-semibold tracking-wider uppercase">
                       {label}
                     </span>
                   </motion.div>
@@ -330,10 +330,10 @@ export default function Hero() {
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5 }}
       >
-        <span className="text-xs text-[#626058]">Scroll down</span>
-        <div className="w-5 h-9 border border-[#C2C0B8]/40 rounded-full flex items-start justify-center p-1">
+        <span className="text-xs text-[#64748B]">Scroll down</span>
+        <div className="w-5 h-9 border border-[#E2E8F0]/40 rounded-full flex items-start justify-center p-1">
           <motion.div
-            className="w-1 h-2 bg-[#185FA5] rounded-full"
+            className="w-1 h-2 bg-[#2563EB] rounded-full"
             animate={{ y: [0, 16, 0] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
           />

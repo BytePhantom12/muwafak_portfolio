@@ -28,11 +28,11 @@ export default function Login({ onLogin }) {
   };
 
   return (
-    <div className="min-h-[100svh] bg-[#E8E6DE] flex items-center justify-center px-4 py-20 sm:p-6 relative overflow-hidden">
+    <div className="min-h-[100svh] bg-[#F8FAFC] flex items-center justify-center px-4 py-20 sm:p-6 relative overflow-hidden">
       {/* Home Button */}
       <a
         href="/"
-        className="touch-target absolute top-4 right-4 px-3 sm:px-4 rounded-xl glass-card text-[#626058] hover:text-[#185FA5] hover:border-[#185FA5]/30 hover:shadow-[0_0_15px_rgba(24,95,165,0.15)] transition-all duration-300 flex items-center justify-center gap-2 z-20"
+        className="touch-target absolute top-4 right-4 px-3 sm:px-4 rounded-xl glass-card text-[#64748B] hover:text-[#2563EB] hover:border-[#2563EB]/30 hover:shadow-[0_0_15px_rgba(37, 99, 235,0.15)] transition-all duration-300 flex items-center justify-center gap-2 z-20"
         title="Go to Homepage"
       >
         <HiHome className="w-4 h-4" />
@@ -42,8 +42,8 @@ export default function Login({ onLogin }) {
       {/* Background effects */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 dot-grid opacity-40" />
-        <div className="blob w-[500px] h-[500px] bg-[#185FA5] top-[-100px] right-[-100px] opacity-10" />
-        <div className="blob w-[600px] h-[600px] bg-[#C2C0B8] bottom-[-150px] left-[-150px] opacity-10" />
+        <div className="blob w-[500px] h-[500px] bg-[#2563EB] top-[-100px] right-[-100px] opacity-10" />
+        <div className="blob w-[600px] h-[600px] bg-[#E2E8F0] bottom-[-150px] left-[-150px] opacity-10" />
       </div>
 
       <motion.div
@@ -59,19 +59,19 @@ export default function Login({ onLogin }) {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, type: 'spring' }}
-              className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-[#185FA5] to-[#C2C0B8] flex items-center justify-center shadow-neon-both"
+              className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-[#2563EB] to-[#E2E8F0] flex items-center justify-center shadow-neon-both"
             >
               <HiLockClosed className="w-8 h-8 text-white" />
             </motion.div>
             <h1 className="text-3xl font-bold font-display text-gradient mb-2">Admin Panel</h1>
-            <p className="text-[#626058] text-sm">Sign in to manage your portfolio</p>
+            <p className="text-[#64748B] text-sm">Sign in to manage your portfolio</p>
           </div>
 
           {/* Login Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Username */}
             <div>
-              <label htmlFor="admin-username" className="block text-sm font-medium text-[#1C1B19] mb-2">Username</label>
+              <label htmlFor="admin-username" className="block text-sm font-medium text-[#0F172A] mb-2">Username</label>
               <input
                 id="admin-username"
                 autoComplete="username"
@@ -86,7 +86,7 @@ export default function Login({ onLogin }) {
 
             {/* Password */}
             <div>
-              <label htmlFor="admin-password" className="block text-sm font-medium text-[#1C1B19] mb-2">Password</label>
+              <label htmlFor="admin-password" className="block text-sm font-medium text-[#0F172A] mb-2">Password</label>
               <div className="relative">
                 <input
                   id="admin-password"
@@ -101,7 +101,7 @@ export default function Login({ onLogin }) {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="touch-target absolute right-1 top-1/2 -translate-y-1/2 text-slate-500 hover:text-[#185FA5] transition-colors flex items-center justify-center"
+                  className="touch-target absolute right-1 top-1/2 -translate-y-1/2 text-slate-500 hover:text-[#2563EB] transition-colors flex items-center justify-center"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <HiEyeSlash className="w-5 h-5" /> : <HiEye className="w-5 h-5" />}
