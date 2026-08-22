@@ -18,10 +18,6 @@ export default function ExperienceManager() {
     achievements: [''],
   });
 
-  useEffect(() => {
-    fetchExperience();
-  }, []);
-
   const { portfolioData, updateLocalPortfolio } = usePortfolioData();
 
   useEffect(() => {
@@ -30,19 +26,6 @@ export default function ExperienceManager() {
       setLoading(false);
     }
   }, [portfolioData]);
-
-  const fetchExperience = async () => {
-    try {
-      setLoading(true);
-      const data = await portfolioAPI.getPortfolio();
-      setExperience(data.experience || []);
-    } catch (error) {
-      console.error('Error fetching experience:', error);
-      alert('Failed to load experience data');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const saveExperience = async (updatedExperience) => {
     try {

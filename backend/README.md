@@ -61,7 +61,7 @@ npm start
 
 ### Upload Routes (Cloudinary)
 - `POST /api/upload` - Upload file to Cloudinary (requires auth)
-- `DELETE /api/upload/:type/:filename` - Delete file from Cloudinary (requires auth)
+- `DELETE /api/upload` - Delete a Cloudinary file by `public_id` (requires auth)
 
 #### Upload Example
 ```javascript
@@ -103,7 +103,7 @@ All file uploads are stored on Cloudinary with automatic optimization:
 - ✅ Max size: 2000x2000px (maintains aspect ratio)
 
 ### Supported Files
-- **Images:** JPG, JPEG, PNG, GIF, WebP, SVG (max 10MB)
+- **Images:** JPG, JPEG, PNG, GIF, WebP (max 10MB)
 - **Documents:** PDF, DOC, DOCX, ODT, RTF, TXT (max 10MB)
 
 ### File Organization

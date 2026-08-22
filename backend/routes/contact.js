@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
 const ContactMessage = require('../models/ContactMessage');
 const auth = require('../middleware/auth');
@@ -10,6 +11,13 @@ const contactRateLimit = createRateLimit({
   message: 'Too many messages submitted. Please try again later.'
 });
 const cleanText = (value) => typeof value === 'string' ? value.trim() : '';
+
+router.param('id', (req, res, next, id) => {
+  if (!mongoose.isValidObjectId(id)) {
+    return res.status(400).json({ success: false, message: 'Invalid message ID' });
+  }
+  return next();
+});
 
 /**
  * @openapi
@@ -478,6 +486,9 @@ router.delete('/', auth, async (req, res) => {
         success: false,
         message: 'Between 1 and 100 message IDs are required'
       });
+    }
+    if (!ids.every((id) => mongoose.isValidObjectId(id))) {
+      return res.status(400).json({ success: false, message: 'Every message ID must be valid' });
     }
     
     const result = await ContactMessage.deleteMany({

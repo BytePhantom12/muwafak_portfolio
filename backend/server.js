@@ -6,6 +6,7 @@ require('dotenv').config();
 const { connectDB, requireDatabase } = require('./config/database');
 
 const app = express();
+app.set('trust proxy', 1);
 
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsdoc = require("swagger-jsdoc");
@@ -84,6 +85,12 @@ app.use('/api/upload', require('./routes/upload'));
 // Basic route
 app.get('/', (req, res) => {
   res.json({ message: 'Portfolio Backend API is running!' });
+});
+
+app.use((error, req, res, next) => {
+  console.error('Unhandled request error:', error.message);
+  if (res.headersSent) return next(error);
+  return res.status(500).json({ message: 'Server error' });
 });
 
 const PORT = process.env.PORT || 5000;

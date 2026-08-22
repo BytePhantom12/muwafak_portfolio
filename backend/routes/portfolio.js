@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
 const Portfolio = require('../models/Portfolio');
 const auth = require('../middleware/auth');
@@ -9,6 +10,13 @@ const EDITABLE_SECTIONS = new Set([
   'profile', 'about', 'skills', 'education', 'experience', 'projects',
   'contact', 'socials', 'typingPhrases', 'statistics'
 ]);
+
+router.param('id', (req, res, next, id) => {
+  if (!mongoose.isValidObjectId(id)) {
+    return res.status(400).json({ message: 'Invalid project ID' });
+  }
+  return next();
+});
 
 /**
  * @openapi
@@ -318,7 +326,9 @@ router.post('/projects', auth, async (req, res) => {
     res.status(201).json({ message: 'Project created successfully', project: newProject, projects: portfolio.projects });
   } catch (error) {
     console.error('Error creating project:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(error.name === 'ValidationError' ? 400 : 500).json({
+      message: error.name === 'ValidationError' ? 'Invalid project data' : 'Server error'
+    });
   }
 });
 
@@ -387,7 +397,9 @@ router.put('/projects/:id', auth, async (req, res) => {
     res.json({ message: 'Project updated successfully', project, projects: portfolio.projects });
   } catch (error) {
     console.error('Error updating project:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(error.name === 'ValidationError' ? 400 : 500).json({
+      message: error.name === 'ValidationError' ? 'Invalid project data' : 'Server error'
+    });
   }
 });
 
@@ -445,7 +457,7 @@ router.delete('/projects/:id', auth, async (req, res) => {
     res.json({ message: 'Project deleted successfully', projects: portfolio.projects });
   } catch (error) {
     console.error('Error deleting project:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ message: 'Server error' });
   }
 });
 

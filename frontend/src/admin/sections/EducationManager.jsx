@@ -17,10 +17,6 @@ export default function EducationManager() {
     description: '',
   });
 
-  useEffect(() => {
-    fetchEducation();
-  }, []);
-
   const { portfolioData, updateLocalPortfolio } = usePortfolioData();
 
   useEffect(() => {
@@ -29,19 +25,6 @@ export default function EducationManager() {
       setLoading(false);
     }
   }, [portfolioData]);
-
-  const fetchEducation = async () => {
-    try {
-      setLoading(true);
-      const data = await portfolioAPI.getPortfolio();
-      setEducation(data.education || []);
-    } catch (error) {
-      console.error('Error fetching education:', error);
-      alert('Failed to load education data');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const saveEducation = async (updatedEducation) => {
     try {
