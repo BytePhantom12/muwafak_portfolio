@@ -178,7 +178,7 @@ export default function FileUpload({
             <Icon className="w-10 h-10 sm:w-12 sm:h-12 text-[#64748B] mx-auto mb-3" />
             <p className="text-sm text-[#0F172A] mb-1">{placeholder}</p>
             <p className="text-xs text-[#64748B]">
-              {type === 'image' ? 'PNG, JPG, GIF, SVG up to 10MB' : 'PDF, Word, ODT, RTF, TXT up to 10MB'}
+              {type === 'image' ? 'PNG, JPG, GIF, WebP up to 10MB' : 'PDF, Word, ODT, RTF, TXT up to 10MB'}
             </p>
           </div>
         )}

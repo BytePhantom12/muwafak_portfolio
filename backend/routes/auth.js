@@ -4,11 +4,18 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const auth = require('../middleware/auth');
+const { createRateLimit } = require('../middleware/rateLimit');
 
 // Session duration: configurable via env, default 24 hours
 const ADMIN_SESSION_DURATION = parseInt(process.env.ADMIN_SESSION_DURATION, 10) || 86400000;
 const JWT_EXPIRES_IN_SECONDS = Math.max(60, Math.floor(ADMIN_SESSION_DURATION / 1000));
 const getJwtSecret = () => process.env.JWT_SECRET;
+const authRateLimit = createRateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: 'Too many authentication attempts. Please try again later.'
+});
+const normalizeIdentity = (value) => typeof value === 'string' ? value.trim() : '';
 /**
  * @openapi
  * /api/auth/register:
@@ -74,12 +81,17 @@ const getJwtSecret = () => process.env.JWT_SECRET;
  *         description: Server error
  */
 // POST /api/auth/register - Register new user
-router.post('/register', async (req, res) => {
+router.post('/register', authRateLimit, async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const username = normalizeIdentity(req.body?.username);
+    const email = normalizeIdentity(req.body?.email).toLowerCase();
+    const password = typeof req.body?.password === 'string' ? req.body.password : '';
 
-    if (!username || !email || !password || password.length < 8) {
+    if (!username || !email || password.length < 8 || username.length > 50 || email.length > 254) {
       return res.status(400).json({ message: 'Username, email, and a password of at least 8 characters are required' });
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({ message: 'A valid email address is required' });
     }
 
     // Bootstrap the first account only. Further registration requires an
@@ -195,9 +207,10 @@ router.post('/register', async (req, res) => {
  *         description: Server error
  */
 // POST /api/auth/login - Login user
-router.post('/login', async (req, res) => {
+router.post('/login', authRateLimit, async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const username = normalizeIdentity(req.body?.username);
+    const password = typeof req.body?.password === 'string' ? req.body.password : '';
     
     if (!username || !password) {
       return res.status(400).json({ message: 'Please provide both username/email and password' });

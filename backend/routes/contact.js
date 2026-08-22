@@ -2,6 +2,14 @@ const express = require('express');
 const router = express.Router();
 const ContactMessage = require('../models/ContactMessage');
 const auth = require('../middleware/auth');
+const { createRateLimit } = require('../middleware/rateLimit');
+
+const contactRateLimit = createRateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 5,
+  message: 'Too many messages submitted. Please try again later.'
+});
+const cleanText = (value) => typeof value === 'string' ? value.trim() : '';
 
 /**
  * @openapi
@@ -45,9 +53,12 @@ const auth = require('../middleware/auth');
  *         description: Failed to send message
  */
 // POST /api/contact - Submit contact form (public)
-router.post('/', async (req, res) => {
+router.post('/', contactRateLimit, async (req, res) => {
   try {
-    const { name, email, subject, message } = req.body;
+    const name = cleanText(req.body?.name);
+    const email = cleanText(req.body?.email).toLowerCase();
+    const subject = cleanText(req.body?.subject);
+    const message = cleanText(req.body?.message);
     
     // Validate required fields
     if (!name || !email || !subject || !message) {
@@ -87,9 +98,10 @@ router.post('/', async (req, res) => {
     });
   } catch (error) {
     console.error('Error saving contact message:', error);
-    res.status(500).json({ 
+    const isValidationError = error.name === 'ValidationError';
+    res.status(isValidationError ? 400 : 500).json({ 
       success: false,
-      message: 'Failed to send message. Please try again.' 
+      message: isValidationError ? 'Please check the submitted fields' : 'Failed to send message. Please try again.'
     });
   }
 });
@@ -258,6 +270,9 @@ router.get('/:id', auth, async (req, res) => {
 router.patch('/:id/read', auth, async (req, res) => {
   try {
     const { read } = req.body;
+    if (read !== undefined && typeof read !== 'boolean') {
+      return res.status(400).json({ success: false, message: 'read must be a boolean' });
+    }
     
     const message = await ContactMessage.findByIdAndUpdate(
       req.params.id,
@@ -328,12 +343,12 @@ router.patch('/:id/read', auth, async (req, res) => {
 // PATCH /api/contact/:id/reply - Add reply to message (protected)
 router.patch('/:id/reply', auth, async (req, res) => {
   try {
-    const { replyMessage } = req.body;
+    const replyMessage = cleanText(req.body?.replyMessage);
     
-    if (!replyMessage) {
+    if (!replyMessage || replyMessage.length > 5000) {
       return res.status(400).json({ 
         success: false,
-        message: 'Reply message is required' 
+        message: 'Reply message is required and must be 5000 characters or fewer'
       });
     }
     
@@ -458,10 +473,10 @@ router.delete('/', auth, async (req, res) => {
   try {
     const { ids } = req.body;
     
-    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+    if (!ids || !Array.isArray(ids) || ids.length === 0 || ids.length > 100) {
       return res.status(400).json({ 
         success: false,
-        message: 'Message IDs array is required' 
+        message: 'Between 1 and 100 message IDs are required'
       });
     }
     
