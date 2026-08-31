@@ -86,7 +86,7 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-[100svh] flex flex-col justify-center overflow-hidden"
+      className="relative min-h-[100svh] flex flex-col justify-start overflow-hidden lg:justify-center"
     >
       {/* Background layer */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#F8FAFC] via-[#F8FAFC] to-[#F1F5F9]">
@@ -96,7 +96,7 @@ export default function Hero() {
         <div className="blob w-[300px] h-[300px] bg-[#2563EB] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.05]" />
       </div>
 
-      <div className="container-custom relative z-10 pb-16 pt-24 sm:pb-20 md:pt-28">
+      <div className="hero-content container-custom relative z-10 pb-16 sm:pb-20">
         <div className="flex flex-col items-center gap-12 lg:flex-row lg:items-center lg:gap-16 xl:gap-20">
           {/* Text Content */}
           <motion.div

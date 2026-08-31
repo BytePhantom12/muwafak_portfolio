@@ -355,6 +355,26 @@
   min-height: 44px;
 }
 
+/* Keep fixed navigation and first-page content aligned, including iOS safe areas. */
+.site-navbar {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+.hero-content {
+  padding-top: calc(4rem + env(safe-area-inset-top, 0px) + 2rem);
+}
+
+.mobile-navigation-panel {
+  top: calc(4rem + env(safe-area-inset-top, 0px));
+  max-height: calc(100dvh - 4rem - env(safe-area-inset-top, 0px));
+}
+
+@media (min-width: 768px) {
+  .hero-content {
+    padding-top: calc(5rem + env(safe-area-inset-top, 0px) + 2rem);
+  }
+}
+
 @media (hover: none) {
   .project-card:hover,
   .btn-primary:hover,

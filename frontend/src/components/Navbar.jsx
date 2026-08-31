@@ -53,7 +53,7 @@ export default function Navbar() {
         initial={{ y: -80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled
+        className={`site-navbar fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled
             ? 'bg-[#F8FAFC]/95 backdrop-blur-xl border-b border-[#E2E8F0] shadow-[0_4px_20px_rgba(15,23,42,0.05)]'
             : 'bg-transparent'
           }`}
@@ -158,7 +158,7 @@ export default function Navbar() {
             exit={{ opacity: 0, y: -20, height: 0 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
             id="mobile-navigation"
-            className="fixed inset-x-0 top-16 z-40 max-h-[calc(100dvh-4rem)] overflow-y-auto border-b border-[#E2E8F0] bg-[#F8FAFC]/98 shadow-lg backdrop-blur-xl lg:hidden"
+            className="mobile-navigation-panel fixed inset-x-0 z-40 overflow-y-auto border-b border-[#E2E8F0] bg-[#F8FAFC]/98 shadow-lg backdrop-blur-xl lg:hidden"
           >
             <div className="container-custom py-6 flex flex-col gap-4">
               {navLinks.map((link, i) => (
