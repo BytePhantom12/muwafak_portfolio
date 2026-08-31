@@ -6,6 +6,7 @@ import About from './components/About';
 import Skills from './components/Skills';
 import Journey from './components/Journey';
 import Projects from './components/Projects';
+import Certifications from './components/Certifications';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import NotFound from './components/NotFound';
@@ -39,6 +40,8 @@ function Portfolio() {
         <Skills />
         <SectionDivider />
         <Projects />
+        <SectionDivider />
+        <Certifications />
         <SectionDivider />
         <Contact />
       </main>

@@ -24,7 +24,7 @@ export default function SkillsManager() {
     name: '',
     iconType: 'react',
     icon: 'FaCode',
-    category: 'Frontend',
+    category: 'Web Development',
     color: '#00d4ff',
   });
 
@@ -69,7 +69,7 @@ export default function SkillsManager() {
 
   const openAddModal = () => {
     setEditingId(null);
-    setFormData({ name: '', iconType: 'react', icon: 'FaCode', category: 'Frontend', color: '#00d4ff' });
+    setFormData({ name: '', iconType: 'react', icon: 'FaCode', category: 'Web Development', color: '#00d4ff' });
     setShowModal(true);
   };
 
@@ -132,7 +132,7 @@ export default function SkillsManager() {
   const closeModal = () => {
     setShowModal(false);
     setEditingId(null);
-    setFormData({ name: '', iconType: 'react', icon: 'FaCode', category: 'Frontend', color: '#00d4ff' });
+    setFormData({ name: '', iconType: 'react', icon: 'FaCode', category: 'Web Development', color: '#00d4ff' });
   };
 
   if (loading) {

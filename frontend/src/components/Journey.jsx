@@ -29,16 +29,21 @@ function JourneyCard({ item, type, index }) {
           <Icon className="h-5 w-5" aria-hidden="true" />
         </span>
         <div className="min-w-0">
-          <h3 className="break-words font-display text-lg font-bold text-[#0F172A]">{title || organization}</h3>
+          <h4 className="break-words font-display text-lg font-bold text-[#0F172A]">{title || organization}</h4>
           {title && organization && <p className="text-sm font-medium text-[#2563EB]">{organization}</p>}
-          {(start || end) && <p className="mt-1 text-xs text-[#64748B]">{[start, end].filter(Boolean).join(' – ')}</p>}
+          {(start || end) && <p className="mt-1 text-xs font-medium uppercase tracking-wide text-[#64748B]">{[start, end].filter(Boolean).join(' – ')}</p>}
         </div>
       </div>
       {item.field && <p className="mb-2 text-sm font-medium text-[#0F172A]">{item.field}</p>}
       {item.description && <p className="text-sm leading-6 text-[#64748B]">{item.description}</p>}
-      {Array.isArray(item.technologies) && item.technologies.length > 0 && (
-        <ul className="mt-4 flex flex-wrap gap-2" aria-label="Technologies">
-          {item.technologies.map((technology) => <li key={technology} className="rounded-full bg-[#2563EB]/8 px-3 py-1 text-xs text-[#1D4ED8]">{technology}</li>)}
+      {isExperience && Array.isArray(item.technologies) && item.technologies.length > 0 && (
+        <ul className="mt-4 space-y-2" aria-label="Key responsibilities">
+          {item.technologies.map((responsibility) => (
+            <li key={responsibility} className="flex items-start gap-2 text-sm leading-relaxed text-[#334155]">
+              <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#2563EB]" aria-hidden="true" />
+              <span className="break-words">{responsibility}</span>
+            </li>
+          ))}
         </ul>
       )}
     </motion.article>
@@ -57,11 +62,31 @@ export default function Journey() {
       <div className="container-custom">
         <header className="mb-10 sm:mb-14">
           <h2 className="section-title">Experience &amp; <span className="text-gradient">Education</span></h2>
-          <p className="section-subtitle mx-0">My professional and academic journey.</p>
+          <p className="section-subtitle mx-0">Professional experience and academic background.</p>
         </header>
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-10">
-          {experience.length > 0 && <div><h3 className="mb-4 font-display text-xl font-bold">Experience</h3><div className="space-y-4">{experience.map((item, index) => <JourneyCard key={item._id || `${item.company}-${index}`} item={item} type="experience" index={index} />)}</div></div>}
-          {education.length > 0 && <div><h3 className="mb-4 font-display text-xl font-bold">Education</h3><div className="space-y-4">{education.map((item, index) => <JourneyCard key={item._id || `${item.institution}-${index}`} item={item} type="education" index={index} />)}</div></div>}
+          {experience.length > 0 && (
+            <div>
+              <h3 className="mb-4 flex items-center gap-2 font-display text-xl font-bold text-[#0F172A]">
+                <HiBriefcase className="h-5 w-5 text-[#2563EB]" aria-hidden="true" />
+                Experience
+              </h3>
+              <div className="space-y-4">
+                {experience.map((item, index) => <JourneyCard key={item._id || `${item.company}-${index}`} item={item} type="experience" index={index} />)}
+              </div>
+            </div>
+          )}
+          {education.length > 0 && (
+            <div>
+              <h3 className="mb-4 flex items-center gap-2 font-display text-xl font-bold text-[#0F172A]">
+                <HiAcademicCap className="h-5 w-5 text-[#2563EB]" aria-hidden="true" />
+                Education
+              </h3>
+              <div className="space-y-4">
+                {education.map((item, index) => <JourneyCard key={item._id || `${item.institution}-${index}`} item={item} type="education" index={index} />)}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </section>

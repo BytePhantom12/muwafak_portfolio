@@ -13,12 +13,28 @@ export default function ExperienceManager() {
   const [formData, setFormData] = useState({
     title: '',
     company: '',
-    period: '',
+    startDate: '',
+    endDate: '',
+    current: false,
     description: '',
     achievements: [''],
   });
 
   const { portfolioData, updateLocalPortfolio } = usePortfolioData();
+
+  // Convert a stored Date to a <input type="month"> value (YYYY-MM)
+  const toMonthInputValue = (value) => {
+    if (!value) return '';
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return '';
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+  };
+
+  const formatPeriod = (item) => {
+    const start = toMonthInputValue(item.startDate);
+    const end = item.current ? 'Present' : toMonthInputValue(item.endDate);
+    return [start, end].filter(Boolean).join(' – ') || 'Dates not set';
+  };
 
   useEffect(() => {
     if (portfolioData?.experience) {
@@ -44,7 +60,7 @@ export default function ExperienceManager() {
 
   const openAddModal = () => {
     setEditingId(null);
-    setFormData({ title: '', company: '', period: '', description: '', achievements: [''] });
+    setFormData({ title: '', company: '', startDate: '', endDate: '', current: false, description: '', achievements: [''] });
     setShowModal(true);
   };
 
@@ -53,7 +69,9 @@ export default function ExperienceManager() {
     setFormData({
       title: item.position,
       company: item.company,
-      period: item.current ? 'Present' : '',
+      startDate: toMonthInputValue(item.startDate),
+      endDate: toMonthInputValue(item.endDate),
+      current: item.current || false,
       description: item.description,
       achievements: item.technologies || [''],
     });
@@ -62,14 +80,15 @@ export default function ExperienceManager() {
 
   const handleAdd = async () => {
     if (saving) return; // Prevent duplicate submissions
-    
+
     try {
       setSaving(true);
       const newExperience = {
         company: formData.company,
         position: formData.title,
-        startDate: new Date(),
-        current: false,
+        startDate: formData.startDate ? new Date(`${formData.startDate}-01`) : null,
+        endDate: formData.current || !formData.endDate ? null : new Date(`${formData.endDate}-01`),
+        current: formData.current,
         description: formData.description,
         technologies: formData.achievements.filter(a => a.trim() !== ''),
       };
@@ -83,14 +102,17 @@ export default function ExperienceManager() {
 
   const handleUpdate = async () => {
     if (saving) return; // Prevent duplicate submissions
-    
+
     try {
       setSaving(true);
-      const updatedExperience = experience.map(item => 
-        item._id === editingId ? { 
-          ...item, 
+      const updatedExperience = experience.map(item =>
+        item._id === editingId ? {
+          ...item,
           company: formData.company,
           position: formData.title,
+          startDate: formData.startDate ? new Date(`${formData.startDate}-01`) : null,
+          endDate: formData.current || !formData.endDate ? null : new Date(`${formData.endDate}-01`),
+          current: formData.current,
           description: formData.description,
           technologies: formData.achievements.filter(a => a.trim() !== ''),
         } : item
@@ -113,7 +135,7 @@ export default function ExperienceManager() {
   const closeModal = () => {
     setShowModal(false);
     setEditingId(null);
-    setFormData({ title: '', company: '', period: '', description: '', achievements: [''] });
+    setFormData({ title: '', company: '', startDate: '', endDate: '', current: false, description: '', achievements: [''] });
   };
 
   const addAchievement = () => {
@@ -169,27 +191,50 @@ export default function ExperienceManager() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-text-primary mb-2">Company</label>
+              <label className="block text-sm font-medium text-text-primary mb-2">Company / Workplace</label>
               <input
                 type="text"
                 value={formData.company}
                 onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                 className="form-input"
-                placeholder="e.g., Tech Company"
+                placeholder="e.g., Internet Café"
               />
             </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-text-primary mb-2">Period</label>
-            <input
-              type="text"
-              value={formData.period}
-              onChange={(e) => setFormData({ ...formData, period: e.target.value })}
-              className="form-input"
-              placeholder="e.g., 2022 - Present"
-            />
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div>
+              <label className="block text-sm font-medium text-text-primary mb-2">Start Date</label>
+              <input
+                type="month"
+                value={formData.startDate}
+                onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                className="form-input"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-text-primary mb-2">End Date</label>
+              <input
+                type="month"
+                value={formData.endDate}
+                onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                className="form-input"
+                disabled={formData.current}
+                placeholder="Leave blank if current"
+              />
+            </div>
           </div>
+
+          <label className="flex items-center gap-2 text-sm text-text-primary">
+            <input
+              type="checkbox"
+              checked={formData.current}
+              onChange={(e) => setFormData({ ...formData, current: e.target.checked, endDate: e.target.checked ? '' : formData.endDate })}
+              className="h-4 w-4 rounded border-border-base"
+            />
+            This is my current role
+          </label>
 
           <div>
             <label className="block text-sm font-medium text-text-primary mb-2">Description</label>
@@ -203,7 +248,7 @@ export default function ExperienceManager() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-2">Key Technologies/Achievements</label>
+            <label className="block text-sm font-medium text-text-primary mb-2">Key Responsibilities</label>
             <div className="space-y-2">
               {formData.achievements.map((achievement, index) => (
                 <div key={index} className="flex gap-2">
@@ -285,7 +330,7 @@ export default function ExperienceManager() {
                 </button>
               </div>
             </div>
-            <p className="text-sm text-text-muted mb-3">{item.current ? 'Present' : 'Past'}</p>
+            <p className="text-sm text-text-muted mb-3">{formatPeriod(item)}</p>
             <p className="text-sm text-text-muted/90 mb-3">{item.description}</p>
             {item.technologies && item.technologies.length > 0 && (
               <ul className="space-y-1">

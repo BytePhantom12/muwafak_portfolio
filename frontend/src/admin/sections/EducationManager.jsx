@@ -13,11 +13,27 @@ export default function EducationManager() {
   const [formData, setFormData] = useState({
     degree: '',
     institution: '',
-    period: '',
+    fieldOfStudy: '',
+    startDate: '',
+    endDate: '',
     description: '',
   });
 
   const { portfolioData, updateLocalPortfolio } = usePortfolioData();
+
+  // Convert a stored Date to a <input type="month"> value (YYYY-MM)
+  const toMonthInputValue = (value) => {
+    if (!value) return '';
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return '';
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+  };
+
+  const formatPeriod = (item) => {
+    const start = toMonthInputValue(item.startDate);
+    const end = toMonthInputValue(item.endDate);
+    return [start, end].filter(Boolean).join(' – ');
+  };
 
   useEffect(() => {
     if (portfolioData?.education) {
@@ -43,7 +59,7 @@ export default function EducationManager() {
 
   const openAddModal = () => {
     setEditingId(null);
-    setFormData({ degree: '', institution: '', period: '', description: '' });
+    setFormData({ degree: '', institution: '', fieldOfStudy: '', startDate: '', endDate: '', description: '' });
     setShowModal(true);
   };
 
@@ -52,7 +68,9 @@ export default function EducationManager() {
     setFormData({
       degree: item.degree,
       institution: item.institution,
-      period: item.field || '',
+      fieldOfStudy: item.field || '',
+      startDate: toMonthInputValue(item.startDate),
+      endDate: toMonthInputValue(item.endDate),
       description: item.description,
     });
     setShowModal(true);
@@ -60,13 +78,15 @@ export default function EducationManager() {
 
   const handleAdd = async () => {
     if (saving) return; // Prevent duplicate submissions
-    
+
     try {
       setSaving(true);
       const newEducation = {
         institution: formData.institution,
         degree: formData.degree,
-        field: formData.period,
+        field: formData.fieldOfStudy,
+        startDate: formData.startDate ? new Date(`${formData.startDate}-01`) : null,
+        endDate: formData.endDate ? new Date(`${formData.endDate}-01`) : null,
         description: formData.description,
       };
       const updatedEducation = [...education, newEducation];
@@ -79,15 +99,17 @@ export default function EducationManager() {
 
   const handleUpdate = async () => {
     if (saving) return; // Prevent duplicate submissions
-    
+
     try {
       setSaving(true);
-      const updatedEducation = education.map(item => 
-        item._id === editingId ? { 
-          ...item, 
+      const updatedEducation = education.map(item =>
+        item._id === editingId ? {
+          ...item,
           institution: formData.institution,
           degree: formData.degree,
-          field: formData.period,
+          field: formData.fieldOfStudy,
+          startDate: formData.startDate ? new Date(`${formData.startDate}-01`) : null,
+          endDate: formData.endDate ? new Date(`${formData.endDate}-01`) : null,
           description: formData.description,
         } : item
       );
@@ -109,7 +131,7 @@ export default function EducationManager() {
   const closeModal = () => {
     setShowModal(false);
     setEditingId(null);
-    setFormData({ degree: '', institution: '', period: '', description: '' });
+    setFormData({ degree: '', institution: '', fieldOfStudy: '', startDate: '', endDate: '', description: '' });
   };
 
   if (loading) {
@@ -161,14 +183,36 @@ export default function EducationManager() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-2">Period</label>
+            <label className="block text-sm font-medium text-text-primary mb-2">Field of Study</label>
             <input
               type="text"
-              value={formData.period}
-              onChange={(e) => setFormData({ ...formData, period: e.target.value })}
+              value={formData.fieldOfStudy}
+              onChange={(e) => setFormData({ ...formData, fieldOfStudy: e.target.value })}
               className="form-input"
-              placeholder="e.g., 2019 - 2023"
+              placeholder="e.g., Computer Science"
             />
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div>
+              <label className="block text-sm font-medium text-text-primary mb-2">Start Date</label>
+              <input
+                type="month"
+                value={formData.startDate}
+                onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                className="form-input"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-text-primary mb-2">End Date</label>
+              <input
+                type="month"
+                value={formData.endDate}
+                onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                className="form-input"
+              />
+            </div>
           </div>
 
           <div>
@@ -234,7 +278,8 @@ export default function EducationManager() {
                 </button>
               </div>
             </div>
-            <p className="text-sm text-text-muted mb-2">{item.field}</p>
+            <p className="text-sm text-text-muted mb-1">{item.field}</p>
+            {formatPeriod(item) && <p className="text-xs text-text-muted mb-2">{formatPeriod(item)}</p>}
             <p className="text-sm text-text-muted/80">{item.description}</p>
           </div>
         ))}

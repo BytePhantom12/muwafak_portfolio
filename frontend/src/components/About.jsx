@@ -2,8 +2,17 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { HiCheckBadge } from 'react-icons/hi2';
+import { Target, GraduationCap, MapPin, CircleCheck, Languages } from 'lucide-react';
 import { Link } from 'react-scroll';
 import { usePortfolioData } from '../context/usePortfolioData';
+
+const FACT_ICONS = {
+  Focus: Target,
+  Education: GraduationCap,
+  Location: MapPin,
+  Availability: CircleCheck,
+  Languages: Languages,
+};
 
 export default function About() {
   const ref = useRef(null);
@@ -14,11 +23,17 @@ export default function About() {
   const profileImage = (typeof profileImgRaw === 'object' ? profileImgRaw?.secure_url || profileImgRaw?.url : profileImgRaw) || '/profile.png';
 
   const facts = [
-    { emoji: '📍', label: 'Location', value: about.location },
-    { emoji: '💼', label: 'Role', value: about.role },
-    { emoji: '🎓', label: 'Education', value: about.education },
-    { emoji: '🌍', label: 'Languages', value: about.languages },
-  ];
+    { label: 'Focus', value: about.role },
+    { label: 'Education', value: about.education },
+    { label: 'Location', value: about.location },
+    { label: 'Availability', value: portfolioData.profile?.availability },
+    { label: 'Languages', value: about.languages },
+  ].filter((fact) => fact.value);
+
+  const introParagraphs = (about.introDescription || '')
+    .split(/\n{2,}/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean);
 
   return (
     <section id="about" className="section-space relative overflow-hidden">
@@ -37,7 +52,7 @@ export default function About() {
             About <span className="text-gradient">Me</span>
           </h2>
           <p className="section-subtitle">
-            A passionate developer who transforms ideas into exceptional digital experiences
+            The path from hands-on IT support to data-driven software.
           </p>
         </motion.div>
 
@@ -51,14 +66,17 @@ export default function About() {
             className="flex flex-col items-start text-left"
           >
             <h3 className="text-[clamp(1.5rem,5vw,2rem)] font-bold font-display text-[#0F172A] mb-4 leading-tight">
-              {about.introHeading}{' '}
-              &amp;{' '}
-              <span className="text-gradient">{about.introHeadingHighlight}</span>
+              {about.introHeading}
+              {about.introHeadingHighlight && <> <span className="text-gradient">{about.introHeadingHighlight}</span></>}
             </h3>
 
-            <p className="text-[#64748B] leading-relaxed mb-6">
-              {about.introDescription}
-            </p>
+            <div className="max-w-xl mb-6">
+              {introParagraphs.map((paragraph, i) => (
+                <p key={i} className="text-[#64748B] leading-relaxed mb-3 last:mb-0">
+                  {paragraph}
+                </p>
+              ))}
+            </div>
 
             {/* Highlights */}
             <div className="space-y-3 mb-8">
@@ -78,15 +96,20 @@ export default function About() {
 
             {/* Quick Facts Grid */}
             <div className="grid w-full grid-cols-1 gap-3 min-[430px]:grid-cols-2 sm:gap-4 mb-8">
-              {facts.map(({ emoji, label, value }) => (
-                <div key={label} className="glass-card min-w-0 p-4 rounded-xl flex items-center gap-3">
-                  <span className="text-2xl">{emoji}</span>
-                  <div>
-                    <span className="text-[10px] text-[#64748B] uppercase tracking-wider block">{label}</span>
-                    <span className="block break-words text-sm text-[#0F172A] font-medium">{value}</span>
+              {facts.map(({ label, value }) => {
+                const Icon = FACT_ICONS[label];
+                return (
+                  <div key={label} className="glass-card min-w-0 p-4 rounded-xl flex items-center gap-3">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#2563EB]/10 text-[#2563EB]">
+                      <Icon className="h-5 w-5" aria-hidden="true" />
+                    </span>
+                    <div className="min-w-0">
+                      <span className="text-[10px] text-[#64748B] uppercase tracking-wider block">{label}</span>
+                      <span className="block break-words text-sm text-[#0F172A] font-medium">{value}</span>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:gap-4 [&>*]:w-full sm:[&>*]:w-auto [&_button]:w-full sm:[&_button]:w-auto">
@@ -108,21 +131,12 @@ export default function About() {
           >
             <div className="relative w-full max-w-[360px] px-3 sm:px-0">
 
-              {/* Main Image Container with Spinning Tech Border */}
-              <div className="relative w-full rounded-3xl p-[2px] overflow-hidden group shadow-[0_8px_30px_rgba(15,23,42,0.08)] bg-[#FFFFFF]">
-
-                {/* Techno Spinning Laser Background */}
-                <motion.div
-                  className="absolute left-[-50%] top-[-50%] w-[200%] h-[200%]"
-                  style={{
-                    background: 'conic-gradient(from 0deg, transparent 60%, rgba(37, 99, 235, 0.8) 80%, rgba(6, 182, 212, 1) 100%)',
-                  }}
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 3.5, repeat: Infinity, ease: "linear" }}
-                />
-
-                {/* Inner Image Mask */}
-                <div className="relative rounded-[calc(1.5rem-2px)] overflow-hidden bg-[#F8FAFC] h-full w-full z-10">
+              {/* Main Image Container */}
+              <div
+                className="relative w-full rounded-3xl p-[2px] overflow-hidden group shadow-[0_8px_30px_rgba(15,23,42,0.08)]"
+                style={{ background: 'linear-gradient(135deg, #2563EB, #06B6D4)' }}
+              >
+                <div className="relative rounded-[calc(1.5rem-2px)] overflow-hidden bg-[#F8FAFC] h-full w-full">
                   <img
                     src={profileImage}
                     alt={portfolioData.name ? `${portfolioData.name} about profile` : 'Portfolio profile'}
@@ -133,13 +147,6 @@ export default function About() {
                     onError={(event) => { event.currentTarget.src = '/profile.png'; }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#FFFFFF]/80 via-[#FFFFFF]/20 to-transparent pointer-events-none" />
-
-                  {/* Digital Scanline Overlay */}
-                  <motion.div
-                    className="absolute inset-x-0 h-[3px] bg-gradient-to-r from-transparent via-[#2563EB]/40 to-transparent blur-[1px] pointer-events-none"
-                    animate={{ top: ['0%', '100%'] }}
-                    transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
-                  />
                 </div>
               </div>
 
@@ -165,40 +172,6 @@ export default function About() {
                 <span className="text-xs text-[#64748B]">Projects Done</span>
               </motion.div>
 
-              {/* Outer Techno Pulsing Frames (Softened and Elegant) */}
-
-              {/* Inner frame - Glowing Pulse */}
-              <div className="absolute inset-[-20px] pointer-events-none -z-10">
-                <svg className="w-full h-full overflow-visible">
-                  <motion.rect
-                    x="0" y="0" width="100%" height="100%" rx="36"
-                    fill="none"
-                    stroke="#2563EB"
-                    strokeWidth="1"
-                    animate={{ opacity: [0.1, 0.3, 0.1] }}
-                    transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                    style={{ filter: 'drop-shadow(0 0 8px rgba(37, 99, 235,0.3))' }}
-                  />
-                </svg>
-              </div>
-
-              {/* Outer frame - Cyber Flowing Data Track */}
-              <div className="absolute inset-[-40px] pointer-events-none -z-10">
-                <svg className="w-full h-full overflow-visible">
-                  <motion.rect
-                    x="0" y="0" width="100%" height="100%" rx="48"
-                    fill="none"
-                    stroke="#E2E8F0"
-                    strokeWidth="1.5"
-                    strokeDasharray="20 40"
-                    strokeLinecap="round"
-                    animate={{ strokeDashoffset: [0, -360] }}
-                    transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
-                    className="opacity-30"
-                    style={{ filter: 'drop-shadow(0 0 4px rgba(37, 99, 235,0.15))' }}
-                  />
-                </svg>
-              </div>
             </div>
           </motion.div>
 

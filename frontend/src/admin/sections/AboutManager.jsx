@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { HiPencil, HiCheck, HiXMark } from 'react-icons/hi2';
+import { HiPencil, HiCheck, HiXMark, HiTrash } from 'react-icons/hi2';
 import { portfolioAPI } from '../../services/api';
 import { usePortfolioData } from '../../context/usePortfolioData';
 import Modal from '../../components/Modal';
@@ -19,6 +19,7 @@ export default function AboutManager() {
     languages: '',
     yearsOfExperience: '',
     projectsDone: '',
+    highlights: [''],
   });
 
   useEffect(() => {
@@ -26,17 +27,32 @@ export default function AboutManager() {
 
     setFormData({
       introHeading: portfolioData.about?.introHeading || portfolioData.about?.description || '',
-      introHeadingHighlight: portfolioData.about?.introHeadingHighlight || portfolioData.about?.highlights?.[0] || '',
-      introDescription: portfolioData.about?.introDescription || portfolioData.about?.highlights?.[1] || '',
+      introHeadingHighlight: portfolioData.about?.introHeadingHighlight || '',
+      introDescription: portfolioData.about?.introDescription || '',
       location: portfolioData.about?.location || portfolioData.profile?.location || '',
-      role: portfolioData.role || portfolioData.profile?.title || '',
-      education: portfolioData.education?.[0]?.degree || '',
+      role: portfolioData.about?.role || '',
+      education: portfolioData.about?.education || portfolioData.education?.[0]?.degree || '',
       languages: portfolioData.about?.languages || portfolioData.profile?.languages || '',
-      yearsOfExperience: portfolioData.about?.yearsOfExperience || portfolioData.profile?.yearsOfExperience || '',
-      projectsDone: portfolioData.about?.projectsDone || portfolioData.profile?.projectsDone || '',
+      yearsOfExperience: portfolioData.about?.yearsOfExperience || '',
+      projectsDone: portfolioData.about?.projectsDone || '',
+      highlights: portfolioData.about?.highlights?.length ? portfolioData.about.highlights : [''],
     });
     setLoading(false);
   }, [portfolioData]);
+
+  const addHighlight = () => {
+    setFormData({ ...formData, highlights: [...formData.highlights, ''] });
+  };
+
+  const updateHighlight = (index, value) => {
+    const newHighlights = [...formData.highlights];
+    newHighlights[index] = value;
+    setFormData({ ...formData, highlights: newHighlights });
+  };
+
+  const removeHighlight = (index) => {
+    setFormData({ ...formData, highlights: formData.highlights.filter((_, i) => i !== index) });
+  };
 
   const openModal = () => {
     setShowModal(true);
@@ -56,17 +72,10 @@ export default function AboutManager() {
           introHeading: formData.introHeading,
           introHeadingHighlight: formData.introHeadingHighlight,
           introDescription: formData.introDescription,
-          highlights: [formData.introHeadingHighlight, formData.introDescription],
+          highlights: formData.highlights.filter((h) => h.trim() !== ''),
           location: formData.location,
           role: formData.role,
           education: formData.education,
-          languages: formData.languages,
-          yearsOfExperience: formData.yearsOfExperience,
-          projectsDone: formData.projectsDone,
-        },
-        profile: {
-          location: formData.location,
-          title: formData.role,
           languages: formData.languages,
           yearsOfExperience: formData.yearsOfExperience,
           projectsDone: formData.projectsDone,
@@ -119,22 +128,36 @@ export default function AboutManager() {
         {/* Description */}
         <div>
           <label className="block text-sm font-medium text-text-muted mb-2">Description</label>
-          <p className="text-text-primary">{formData.introDescription || 'Not set'}</p>
+          <p className="text-text-primary whitespace-pre-line">{formData.introDescription || 'Not set'}</p>
+        </div>
+
+        {/* Highlights */}
+        <div>
+          <label className="block text-sm font-medium text-text-muted mb-2">Highlights</label>
+          {formData.highlights.filter((h) => h.trim() !== '').length > 0 ? (
+            <ul className="list-disc space-y-1 pl-5">
+              {formData.highlights.filter((h) => h.trim() !== '').map((item) => (
+                <li key={item} className="text-text-primary text-sm">{item}</li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-text-primary">Not set</p>
+          )}
         </div>
 
         {/* Quick Facts */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-text-muted mb-2">Location</label>
-            <p className="text-text-primary">{formData.location || 'Not set'}</p>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-text-muted mb-2">Role</label>
+            <label className="block text-sm font-medium text-text-muted mb-2">Focus</label>
             <p className="text-text-primary">{formData.role || 'Not set'}</p>
           </div>
           <div>
             <label className="block text-sm font-medium text-text-muted mb-2">Education</label>
             <p className="text-text-primary">{formData.education || 'Not set'}</p>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-text-muted mb-2">Location</label>
+            <p className="text-text-primary">{formData.location || 'Not set'}</p>
           </div>
           <div>
             <label className="block text-sm font-medium text-text-muted mb-2">Languages</label>
@@ -172,7 +195,7 @@ export default function AboutManager() {
                 value={formData.introHeading}
                 onChange={(e) => setFormData({ ...formData, introHeading: e.target.value })}
                 className="form-input"
-                placeholder="e.g., I am a dedicated full-stack developer"
+                placeholder="e.g., From IT Support to"
               />
             </div>
             <div>
@@ -182,7 +205,7 @@ export default function AboutManager() {
                 value={formData.introHeadingHighlight}
                 onChange={(e) => setFormData({ ...formData, introHeadingHighlight: e.target.value })}
                 className="form-input"
-                placeholder="e.g., 3+ years of professional experience"
+                placeholder="e.g., Data & Backend Development"
               />
             </div>
           </div>
@@ -193,10 +216,42 @@ export default function AboutManager() {
             <textarea
               value={formData.introDescription}
               onChange={(e) => setFormData({ ...formData, introDescription: e.target.value })}
-              rows={4}
+              rows={6}
               className="form-input resize-none"
-              placeholder="Brief description about yourself..."
+              placeholder="Two short paragraphs about your background and focus. Leave a blank line between paragraphs."
             />
+          </div>
+
+          {/* Highlights */}
+          <div>
+            <label className="block text-sm font-medium text-text-primary mb-2">Highlights</label>
+            <div className="space-y-2">
+              {formData.highlights.map((highlight, index) => (
+                <div key={index} className="flex gap-2">
+                  <input
+                    type="text"
+                    value={highlight}
+                    onChange={(e) => updateHighlight(index, e.target.value)}
+                    className="form-input flex-1"
+                    placeholder="e.g., Designing reliable backend systems and REST APIs"
+                  />
+                  {formData.highlights.length > 1 && (
+                    <button
+                      onClick={() => removeHighlight(index)}
+                      className="p-3 rounded-xl hover:bg-border-base/30 text-text-muted hover:text-red-500 transition-colors"
+                    >
+                      <HiTrash className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+              ))}
+              <button
+                onClick={addHighlight}
+                className="text-sm text-accent hover:text-[#1D4ED8] transition-colors"
+              >
+                + Add Highlight
+              </button>
+            </div>
           </div>
 
           {/* Quick Facts */}
@@ -212,13 +267,13 @@ export default function AboutManager() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-text-primary mb-2">Role</label>
+              <label className="block text-sm font-medium text-text-primary mb-2">Focus</label>
               <input
                 type="text"
                 value={formData.role}
                 onChange={(e) => setFormData({ ...formData, role: e.target.value })}
                 className="form-input"
-                placeholder="e.g., Full Stack Developer"
+                placeholder="e.g., Data Analytics & Backend Development"
               />
             </div>
             <div>

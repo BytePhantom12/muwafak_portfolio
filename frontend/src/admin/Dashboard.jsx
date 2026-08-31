@@ -4,7 +4,7 @@ import {
   HiUser, HiAcademicCap, HiCodeBracket, HiBriefcase,
   HiRectangleStack, HiEnvelope, HiArrowRightOnRectangle,
   HiChartBar, HiBars3, HiXMark, HiChevronLeft, HiChevronRight,
-  HiHome, HiUserCircle
+  HiHome, HiUserCircle, HiCheckBadge
 } from 'react-icons/hi2';
 import { Link } from 'react-router-dom';
 import AboutManager from './sections/AboutManager';
@@ -12,6 +12,7 @@ import EducationManager from './sections/EducationManager';
 import SkillsManager from './sections/SkillsManager';
 import ExperienceManager from './sections/ExperienceManager';
 import ProjectsManager from './sections/ProjectsManager';
+import CertificationsManager from './sections/CertificationsManager';
 import ContactManager from './sections/ContactManager';
 import ProfileManager from './sections/ProfileManager';
 import { usePortfolioData } from '../context/usePortfolioData';
@@ -25,6 +26,7 @@ const menuItems = [
   { id: 'education', label: 'Education', icon: HiAcademicCap },
   { id: 'experience', label: 'Experience', icon: HiBriefcase },
   { id: 'projects', label: 'Projects', icon: HiRectangleStack },
+  { id: 'certifications', label: 'Certifications', icon: HiCheckBadge },
   { id: 'contact', label: 'Contact', icon: HiEnvelope },
 ];
 
@@ -41,6 +43,7 @@ export default function Dashboard({ onLogout }) {
       case 'education': return <EducationManager />;
       case 'experience': return <ExperienceManager />;
       case 'projects': return <ProjectsManager />;
+      case 'certifications': return <CertificationsManager />;
       case 'contact': return <ContactManager />;
       default: return <Overview setActiveSection={setActiveSection} />;
     }

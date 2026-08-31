@@ -7,7 +7,6 @@ const mongoose = require('mongoose');
 const app = require('../server');
 const Portfolio = require('../models/Portfolio');
 const User = require('../models/User');
-const seedData = require('../../shared/seedData.json');
 const { connectDB } = require('../config/database');
 const { deleteFromCloudinary } = require('../config/cloudinary');
 
@@ -42,9 +41,9 @@ const request = async (baseUrl, path, options = {}) => {
   try {
     const portfolioResult = await request(baseUrl, '/api/portfolio');
     assert.equal(portfolioResult.response.status, 200);
-    const expected = new Portfolio(seedData).toObject();
+    const expected = new Portfolio({}).toObject();
     assert.deepStrictEqual(stripGeneratedFields(portfolioResult.body), stripGeneratedFields(JSON.parse(JSON.stringify(expected))));
-    console.log('GET /api/portfolio matches canonical seed data.');
+    console.log('GET /api/portfolio bootstraps an empty portfolio document.');
 
     const docsResult = await request(baseUrl, '/docs/');
     assert.equal(docsResult.response.status, 200);
@@ -73,7 +72,7 @@ const request = async (baseUrl, path, options = {}) => {
     const update = await request(baseUrl, '/api/portfolio/section/statistics', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-      body: JSON.stringify(seedData.statistics),
+      body: JSON.stringify({ yearsOfExperience: 2, projectsDone: 1, technologies: '5+', dedication: '100%' }),
     });
     assert.equal(update.response.status, 200);
     console.log('Registration, login, protected update, current-user, and invalid-token checks passed.');

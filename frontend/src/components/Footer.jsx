@@ -9,13 +9,18 @@ const navLinks = [
   { label: 'About', to: 'about' },
   { label: 'Skills', to: 'skills' },
   { label: 'Projects', to: 'projects' },
+  { label: 'Experience', to: 'journey' },
+  { label: 'Certifications', to: 'certifications' },
   { label: 'Contact', to: 'contact' },
 ];
+
+const FALLBACK_IDENTITY = 'Data Analyst & Backend Developer';
 
 export default function Footer() {
   const year = new Date().getFullYear();
   const { portfolioData } = usePortfolioData();
   const { contact, socials } = portfolioData;
+  const socialLinks = socials.filter((social) => social.href);
   const [firstName = '', ...remainingNames] = portfolioData.name.trim().split(/\s+/);
 
   return (
@@ -36,11 +41,11 @@ export default function Footer() {
                 <span className="text-gradient font-extrabold text-xl">{remainingNames.join(' ')}</span>
               </span>
             </div>
-            <p className="text-[#64748B] text-sm leading-relaxed max-w-xs">
-              {portfolioData.heroDescription}
+            <p className="text-[#64748B] text-sm font-medium">
+              {portfolioData.role || FALLBACK_IDENTITY}
             </p>
             <div className="flex gap-3">
-              {socials.map(({ id, label, href, icon }) => {
+              {socialLinks.map(({ id, label, href, icon }) => {
                 const Icon = iconMap[icon];
                 return (
                   <a
@@ -85,21 +90,20 @@ export default function Footer() {
 
           {/* Contact Snippet */}
           <div>
-            <h4 className="text-[#0F172A] font-semibold font-display mb-5 text-sm tracking-wide">Let's Work Together</h4>
-            <p className="text-[#64748B] text-sm mb-4 leading-relaxed">
-              Have a project in mind? I'm always open to new opportunities.
-            </p>
-            <a
-              href={`mailto:${contact.email}`}
-              id="footer-email"
-              className="break-all text-sm font-medium text-[#2563EB] transition-all hover:underline"
-            >
-              {contact.email}
-            </a>
+            <h4 className="text-[#0F172A] font-semibold font-display mb-5 text-sm tracking-wide">Contact</h4>
+            {contact.email && (
+              <a
+                href={`mailto:${contact.email}`}
+                id="footer-email"
+                className="break-all text-sm font-medium text-[#2563EB] transition-all hover:underline"
+              >
+                {contact.email}
+              </a>
+            )}
             {portfolioData.profile?.availability && <div className="mt-4">
               <div className="inline-flex items-center gap-2 text-xs text-[#64748B]">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                {portfolioData.profile?.availability}
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" aria-hidden="true" />
+                {portfolioData.profile.availability}
               </div>
             </div>}
           </div>

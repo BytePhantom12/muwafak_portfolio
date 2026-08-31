@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
 import {
-  HiEnvelope, HiPhone, HiMapPin, HiPaperAirplane, HiCheckCircle,
+  HiEnvelope, HiMapPin, HiPaperAirplane, HiCheckCircle,
 } from 'react-icons/hi2';
 import { FaGithub, FaLinkedinIn, FaFacebookF, FaInstagram, FaWhatsapp } from 'react-icons/fa';
 import { usePortfolioData } from '../context/usePortfolioData';
@@ -22,10 +22,11 @@ export default function Contact() {
   const { contact, socials } = portfolioData;
 
   const contactInfo = [
-    { icon: HiEnvelope, label: 'Email', value: contact.email, href: `mailto:${contact.email}`, color: '#2563EB' },
-    { icon: HiPhone, label: 'Phone', value: contact.phone, href: `tel:${contact.phone}`, color: '#E2E8F0' },
+    { icon: HiEnvelope, label: 'Email', value: contact.email, href: contact.email ? `mailto:${contact.email}` : null, color: '#2563EB' },
     { icon: HiMapPin, label: 'Location', value: contact.location, href: null, color: '#10b981' },
-  ];
+  ].filter((item) => item.value);
+
+  const socialLinks = socials.filter((social) => social.href);
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -79,7 +80,7 @@ export default function Contact() {
             Let's <span className="text-gradient">Connect</span>
           </h2>
           <p className="section-subtitle">
-            Have a project in mind? Let's discuss how we can work together to bring your ideas to life
+            Have an opportunity, project, or collaboration in mind? Feel free to get in touch.
           </p>
         </motion.div>
 
@@ -91,16 +92,6 @@ export default function Contact() {
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.2 }}
           >
-            <div>
-              <h3 className="text-2xl font-bold font-display text-[#0F172A] mb-3">
-                Ready to Start a <span className="text-gradient">Project?</span>
-              </h3>
-              <p className="text-[#64748B] text-sm leading-relaxed">
-                I'm always open to discussing new opportunities, creative projects, or just
-                having a chat about tech. Let's build something awesome together!
-              </p>
-            </div>
-
             {/* Contact Cards */}
             <div className="space-y-4">
               {contactInfo.map(({ icon: Icon, label, value, href, color }) => (
@@ -130,10 +121,11 @@ export default function Contact() {
             </div>
 
             {/* Social Links */}
+            {socialLinks.length > 0 && (
             <div>
-              <p className="text-sm text-[#64748B] mb-4">Follow me on social media</p>
+              <p className="text-sm text-[#64748B] mb-4">Connect with me</p>
               <div className="flex flex-wrap gap-3">
-                {socials.map(({ id, label, href, icon }) => {
+                {socialLinks.map(({ id, label, href, icon }) => {
                   const Icon = iconMap[icon];
                   return (
                     <a
@@ -153,17 +145,15 @@ export default function Contact() {
                 })}
               </div>
             </div>
+            )}
 
-            {/* Availability Card */}
-            <div className="glass-card rounded-2xl p-5 neon-border">
-              <div className="flex items-center gap-3 mb-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-sm font-semibold text-[#0F172A]">Currently Available</span>
+            {/* Availability */}
+            {portfolioData.profile?.availability && (
+              <div className="glass-card flex items-center gap-2.5 rounded-2xl p-4">
+                <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" aria-hidden="true" />
+                <span className="text-sm font-medium text-[#0F172A]">{portfolioData.profile.availability}</span>
               </div>
-              <p className="text-xs text-[#64748B] leading-relaxed">
-                Open to freelance projects, full-time roles, and exciting collaborations.
-              </p>
-            </div>
+            )}
           </motion.div>
 
           {/* Right - Contact Form */}

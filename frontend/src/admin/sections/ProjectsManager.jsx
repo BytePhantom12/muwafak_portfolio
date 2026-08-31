@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { HiPlus, HiPencil, HiTrash, HiCheck, HiXMark, HiEye } from 'react-icons/hi2';
 import { portfolioAPI, uploadAPI, resolveBackendUrl } from '../../services/api';
 import { usePortfolioData } from '../../context/usePortfolioData';
+import { PROJECT_CATEGORIES } from '../../utils/projectCategory';
 import Modal from '../../components/Modal';
 import FileUpload from '../../components/FileUpload';
 
@@ -32,6 +33,7 @@ export default function ProjectsManager() {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
+    category: '',
     image: null,
     tags: [''],
     liveUrl: '',
@@ -52,12 +54,13 @@ export default function ProjectsManager() {
     setEditingProject(project);
 
     if (mode === 'add') {
-      setFormData({ title: '', description: '', image: null, tags: [''], liveUrl: '', githubUrl: '' });
+      setFormData({ title: '', description: '', category: '', image: null, tags: [''], liveUrl: '', githubUrl: '' });
       setUploadedImage(null);
     } else if (mode === 'edit' && project) {
       setFormData({
         title: project.title,
         description: project.description,
+        category: PROJECT_CATEGORIES.includes(project.category) ? project.category : '',
         image: project.image,
         tags: Array.isArray(project.technologies)
           ? project.technologies
@@ -70,6 +73,7 @@ export default function ProjectsManager() {
       setFormData({
         title: project.title,
         description: project.description,
+        category: PROJECT_CATEGORIES.includes(project.category) ? project.category : '',
         image: project.image,
         tags: Array.isArray(project.technologies)
           ? project.technologies
@@ -86,7 +90,7 @@ export default function ProjectsManager() {
     setShowModal(false);
     setModalMode('add');
     setEditingProject(null);
-    setFormData({ title: '', description: '', image: null, tags: [''], liveUrl: '', githubUrl: '' });
+    setFormData({ title: '', description: '', category: '', image: null, tags: [''], liveUrl: '', githubUrl: '' });
     setUploadedImage(null);
   };
 
@@ -122,6 +126,7 @@ export default function ProjectsManager() {
       const newProject = {
         title: formData.title,
         description: formData.description,
+        ...(formData.category ? { category: formData.category } : {}),
         image: formData.image,
         technologies: formData.tags.filter(t => t.trim() !== ''),
         liveUrl: formData.liveUrl,
@@ -149,6 +154,7 @@ export default function ProjectsManager() {
       const projectData = {
         title: formData.title,
         description: formData.description,
+        ...(formData.category ? { category: formData.category } : {}),
         image: formData.image,
         technologies: formData.tags.filter(t => t.trim() !== ''),
         liveUrl: formData.liveUrl,
@@ -265,6 +271,9 @@ export default function ProjectsManager() {
                   </button>
                 </div>
               </div>
+              <span className="mb-2 inline-block text-xs font-semibold px-2 py-1 rounded-lg bg-border-base/40 text-text-secondary">
+                {project.category}
+              </span>
               <p className="text-sm text-text-muted mb-3 line-clamp-2">{project.description}</p>
               <div className="flex flex-wrap gap-2">
                 {(project.technologies || []).map((tag, idx) => (
@@ -326,6 +335,22 @@ export default function ProjectsManager() {
               placeholder="Brief description of the project..."
               disabled={modalMode === 'view'}
             />
+          </div>
+
+          {/* Category */}
+          <div>
+            <label className="block text-sm font-medium text-text-primary mb-2">Category</label>
+            <select
+              value={formData.category}
+              onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+              className="form-input"
+              disabled={modalMode === 'view'}
+            >
+              <option value="">{modalMode === 'view' ? 'Not set' : 'Select category'}</option>
+              {PROJECT_CATEGORIES.map((category) => (
+                <option key={category} value={category}>{category}</option>
+              ))}
+            </select>
           </div>
 
           {/* Technologies */}
@@ -396,7 +421,7 @@ export default function ProjectsManager() {
               <button
                 onClick={modalMode === 'add' ? handleAdd : handleUpdate}
                 className="btn-primary flex-1"
-                disabled={saving || !formData.title || !formData.description}
+                disabled={saving || !formData.title || !formData.description || (modalMode === 'add' && !formData.category)}
               >
                 {saving ? (
                   <>

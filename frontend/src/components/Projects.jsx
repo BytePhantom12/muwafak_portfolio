@@ -1,10 +1,23 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'framer-motion';
-import { useRef, useState, useEffect } from 'react';
+import { useMemo, useRef, useState, useEffect } from 'react';
 import { FaGithub } from 'react-icons/fa';
 import { HiArrowTopRightOnSquare } from 'react-icons/hi2';
 import { usePortfolioData } from '../context/usePortfolioData';
+import { PROJECT_CATEGORIES } from '../utils/projectCategory';
 import { resolveBackendUrl } from '../services/api';
+
+const FILTERS = ['All', ...PROJECT_CATEGORIES];
+
+// Data Analytics and Backend carry the primary accent colors; Full Stack is intentionally muted.
+const CATEGORY_STYLES = {
+  'Data Analytics': '#f59e0b',
+  Backend: '#2563EB',
+  'Full Stack': '#64748B',
+};
+
+// Featured work leads, then Data Analytics/Backend surface before Full Stack — no invented rankings.
+const CATEGORY_SORT_WEIGHT = { 'Data Analytics': 0, Backend: 0, 'Full Stack': 1 };
 
 // Helper function to get image URL
 const getImageUrl = (imagePath) => {
@@ -105,6 +118,18 @@ function ProjectTag({ tag, accentColor }) {
     >
       <div className="w-1.5 h-1.5 rounded-full shadow-sm" style={{ backgroundColor: accentColor, boxShadow: isHovered ? `0 0 8px ${accentColor}` : '' }} />
       {tag}
+    </span>
+  );
+}
+
+function ProjectCategoryBadge({ category }) {
+  const color = CATEGORY_STYLES[category] || CATEGORY_STYLES['Full Stack'];
+  return (
+    <span
+      className="mb-2 inline-flex w-fit items-center rounded-md px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide"
+      style={{ color, backgroundColor: `${color}17`, border: `1px solid ${color}40` }}
+    >
+      {category}
     </span>
   );
 }
@@ -256,10 +281,26 @@ function ProjectCard({ project, index }) {
 
       {/* Content */}
       <div className="flex flex-1 flex-col p-5 sm:p-6">
+        <ProjectCategoryBadge category={project.category} />
         <ProjectTitle title={project.title} accentColor={project.accentColor} />
-        <p className="text-sm text-[#64748B] leading-relaxed mb-6 flex-grow mt-1">
+        <p className="text-sm text-[#64748B] leading-relaxed mb-4 mt-1">
           {project.description}
         </p>
+
+        {Array.isArray(project.features) && project.features.length > 0 && (
+          <ul className="mb-4 space-y-1.5">
+            {project.features.slice(0, 4).map((feature) => (
+              <li key={feature} className="flex items-start gap-2 text-xs text-[#334155] leading-relaxed">
+                <span
+                  className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full"
+                  style={{ backgroundColor: project.accentColor }}
+                  aria-hidden="true"
+                />
+                {feature}
+              </li>
+            ))}
+          </ul>
+        )}
 
         <div className="flex flex-wrap gap-2 mt-auto relative z-10 pointer-events-auto">
           {project.tags && project.tags.split(',').map((tag_item) => tag_item.trim()).filter(Boolean).map((tag) => (
@@ -282,6 +323,18 @@ export default function Projects() {
   const _isInView = useInView(ref, { once: true, margin: '-100px' });
   const { portfolioData, loading } = usePortfolioData();
   const githubUrl = portfolioData.socials.find((social) => social.icon === 'FaGithub')?.href;
+  const [activeFilter, setActiveFilter] = useState('All');
+
+  const sortedProjects = useMemo(() => {
+    return [...portfolioData.projects].sort((a, b) => {
+      if (a.isFeatured !== b.isFeatured) return a.isFeatured ? -1 : 1;
+      return (CATEGORY_SORT_WEIGHT[a.category] ?? 1) - (CATEGORY_SORT_WEIGHT[b.category] ?? 1);
+    });
+  }, [portfolioData.projects]);
+
+  const visibleProjects = activeFilter === 'All'
+    ? sortedProjects
+    : sortedProjects.filter((project) => project.category === activeFilter);
 
   if (loading) {
     return (
@@ -315,16 +368,41 @@ export default function Projects() {
             My <span className="text-gradient">Projects</span>
           </h2>
           <p className="section-subtitle mx-0">
-            A selection of projects that showcase my skills and passion for building great products
+            A selection of my Data Analytics and Backend work, alongside full-stack builds
           </p>
         </motion.div>
 
-        {/* Projects Grid */}
-        <div className="grid grid-cols-1 gap-5 min-[700px]:grid-cols-2 lg:grid-cols-3 lg:gap-6">
-          {portfolioData.projects.map((project, i) => (
-            <ProjectCard key={project.id} project={project} index={i} />
-          ))}
+        {/* Category Filters */}
+        <div role="group" aria-label="Filter projects by category" className="mb-8 flex flex-wrap gap-2 sm:mb-10">
+          {FILTERS.map((filter) => {
+            const isActive = activeFilter === filter;
+            return (
+              <button
+                key={filter}
+                type="button"
+                aria-pressed={isActive}
+                onClick={() => setActiveFilter(filter)}
+                className={`rounded-full border px-4 py-2 text-sm font-semibold transition-all duration-300 ${isActive
+                    ? 'border-[#2563EB] bg-[#2563EB] text-white shadow-[0_4px_14px_rgba(37,99,235,0.25)]'
+                    : 'border-[#E2E8F0] bg-white text-[#64748B] hover:border-[#2563EB]/40 hover:text-[#2563EB]'
+                  }`}
+              >
+                {filter}
+              </button>
+            );
+          })}
         </div>
+
+        {/* Projects Grid */}
+        {visibleProjects.length > 0 ? (
+          <div className="grid grid-cols-1 gap-5 min-[700px]:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+            {visibleProjects.map((project, i) => (
+              <ProjectCard key={project.id} project={project} index={i} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-sm text-[#64748B]">No projects in this category yet.</p>
+        )}
 
         {/* View More CTA */}
         {githubUrl && <motion.div

@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useCallback } from 'react';
 import { portfolioAPI } from '../services/api';
-import { getSkillCategoryConfig, normalizeCategoryName, normalizeSkillItem } from '../utils/skillUtils';
+import { normalizeCategoryName, groupSkillsByCategory } from '../utils/skillUtils';
+import { normalizeProjectCategory } from '../utils/projectCategory';
 
 const EMPTY_PORTFOLIO_DATA = {
   name: '',
@@ -16,6 +17,7 @@ const EMPTY_PORTFOLIO_DATA = {
   projects: [],
   experience: [],
   education: [],
+  certifications: [],
 };
 
 const extractPublicId = (value) => {
@@ -91,19 +93,15 @@ const transformPortfolioData = (dbData) => {
       location: source.profile?.location || source.contact?.location || '',
     },
 
-    // Skills - Transform from database format
-    skillCategories: (source.skills || []).map((skillCategory) => {
-      const categoryName = normalizeCategoryName(skillCategory.category || skillCategory.name || 'Frontend');
-      const categoryConfig = getSkillCategoryConfig(categoryName);
-      const rawItems = skillCategory.items || skillCategory.skills || [];
-
-      return {
-        name: categoryName,
-        color: categoryConfig.color,
-        emoji: categoryConfig.emoji,
-        skills: rawItems.map((item) => normalizeSkillItem(item, categoryName, categoryConfig.color)),
-      };
-    }),
+    // Skills - normalize legacy category names, merge duplicates, and order by recruiter priority
+    // (Data & Analytics + Backend Development first — see SKILL_CATEGORY_ORDER for the single source of truth).
+    skillCategories: groupSkillsByCategory(
+      (source.skills || []).flatMap((skillCategory) => {
+        const categoryName = normalizeCategoryName(skillCategory.category || skillCategory.name);
+        const rawItems = skillCategory.items || skillCategory.skills || [];
+        return rawItems.map((item) => ({ ...item, category: categoryName }));
+      })
+    ).filter((category) => category.skills.length > 0),
 
     // Projects - Transform from database format
     projects: (source.projects || []).map((project, index) => ({
@@ -111,6 +109,7 @@ const transformPortfolioData = (dbData) => {
       id: project._id || index + 1,
       title: project.title,
       description: project.description,
+      category: normalizeProjectCategory(project),
       gradientStart: '#2563EB',
       gradientEnd: '#E2E8F0',
       accentColor: project.featured ? '#2563EB' : '#64748B',
@@ -132,6 +131,7 @@ const transformPortfolioData = (dbData) => {
 
     experience: Array.isArray(source.experience) ? source.experience : [],
     education: Array.isArray(source.education) ? source.education : [],
+    certifications: Array.isArray(source.certifications) ? source.certifications : [],
   };
 };
 

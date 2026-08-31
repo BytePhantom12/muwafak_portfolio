@@ -3,12 +3,11 @@ const mongoose = require('mongoose');
 const router = express.Router();
 const Portfolio = require('../models/Portfolio');
 const auth = require('../middleware/auth');
-const seedData = require('../../shared/seedData.json');
 const { cloudinary, deleteFromCloudinary } = require('../config/cloudinary');
 
 const EDITABLE_SECTIONS = new Set([
   'profile', 'about', 'skills', 'education', 'experience', 'projects',
-  'contact', 'socials', 'typingPhrases', 'statistics'
+  'certifications', 'contact', 'socials', 'typingPhrases', 'statistics'
 ]);
 
 router.param('id', (req, res, next, id) => {
@@ -62,13 +61,14 @@ router.param('id', (req, res, next, id) => {
 router.get('/', async (req, res) => {
   try {
     let portfolio = await Portfolio.findOne();
-    
+
     if (!portfolio) {
-      // Create default portfolio if none exists using shared seed helper
-      portfolio = new Portfolio(seedData);
+      // No portfolio document yet — create an empty one. MongoDB is the only
+      // source of truth; real content is entered through /admin.
+      portfolio = new Portfolio();
       await portfolio.save();
     }
-    
+
     res.json(portfolio);
   } catch (error) {
     console.error('Error fetching portfolio:', error);

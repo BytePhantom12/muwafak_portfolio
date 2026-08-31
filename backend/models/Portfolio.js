@@ -72,12 +72,23 @@ const portfolioSchema = new mongoose.Schema({
   projects: [{
     title: { type: String, required: false },
     description: { type: String, required: false },
+    category: { type: String, enum: ['Data Analytics', 'Backend', 'Full Stack'], required: false },
     image: { type: cloudinaryImageSchema, default: () => ({}) },
     technologies: [String],
     features: [String],
     liveUrl: String,
     githubUrl: String,
     featured: { type: Boolean, default: false }
+  }],
+
+  certifications: [{
+    title: { type: String, required: false },
+    issuer: { type: String, required: false },
+    issueDate: { type: Date, required: false },
+    credentialUrl: String,
+    credentialId: String,
+    skills: [String],
+    image: { type: cloudinaryImageSchema, default: () => ({}) }
   }],
   
   contact: {

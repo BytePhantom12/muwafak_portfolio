@@ -111,7 +111,7 @@ export default function Skills() {
 
         {/* All Categories Sequential List */}
         <div className="flex flex-col gap-12 md:gap-20">
-          {categories.map((cat, catIdx) => (
+          {categories.map((cat) => (
             <div key={cat.name} className="flex flex-col gap-8">
 
               {/* Category Header */}
@@ -134,49 +134,8 @@ export default function Skills() {
                   {cat.name}
                 </h3>
 
-                {/* Modern Tech Animated Line */}
-                <div className="flex-1 flex items-center gap-2 ml-2 md:ml-4 overflow-hidden opacity-80">
-                  <div className="h-px w-full bg-[#E2E8F0]/40 relative overflow-hidden rounded-full">
-                    {/* Fast moving data packet */}
-                    <motion.div
-                      className="absolute top-0 bottom-0 w-32"
-                      style={{
-                        background: `linear-gradient(90deg, transparent, ${cat.color}, transparent)`,
-                        boxShadow: `0 0 10px ${cat.color}`
-                      }}
-                      animate={{ x: ['-200%', '500%'] }}
-                      transition={{
-                        duration: 3,
-                        repeat: Infinity,
-                        ease: "linear",
-                        delay: catIdx * 0.4 // Stagger the animation per category
-                      }}
-                    />
-                    {/* Slow moving ambient glow */}
-                    <motion.div
-                      className="absolute top-0 bottom-0 w-full"
-                      style={{
-                        background: `linear-gradient(90deg, transparent, ${cat.color}40, transparent)`,
-                      }}
-                      animate={{ x: ['-100%', '100%'] }}
-                      transition={{
-                        duration: 7,
-                        repeat: Infinity,
-                        ease: "linear",
-                        delay: catIdx * 0.2
-                      }}
-                    />
-                  </div>
-                  {/* Circuit/tech node at the end */}
-                  <div
-                    className="w-1.5 h-1.5 shrink-0 rounded-sm"
-                    style={{ backgroundColor: cat.color, boxShadow: `0 0 8px ${cat.color}` }}
-                  />
-                  <div
-                    className="w-1 h-3 shrink-0 rounded-sm opacity-50"
-                    style={{ backgroundColor: cat.color }}
-                  />
-                </div>
+                {/* Divider */}
+                <div className="ml-2 h-px flex-1 md:ml-4" style={{ background: `linear-gradient(90deg, ${cat.color}40, transparent)` }} />
               </motion.div>
 
               {/* Skills Grid */}

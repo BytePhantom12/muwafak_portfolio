@@ -1,33 +1,53 @@
 import { getIconComponent } from './iconMap';
 
-export const SKILL_CATEGORY_CONFIG = {
-  Frontend: { color: '#2563EB', emoji: '🎨' },
-  Backend: { color: '#64748B', emoji: '⚙️' },
-  Database: { color: '#10b981', emoji: '🗄️' },
-  Databases: { color: '#10b981', emoji: '🗄️' },
-  'Data Analysis': { color: '#f59e0b', emoji: '📊' },
-  'Tools & Cloud': { color: '#10b981', emoji: '🛠️' },
-  Tools: { color: '#10b981', emoji: '🛠️' },
-  Cloud: { color: '#10b981', emoji: '🛠️' },
-};
-
-const CATEGORY_ALIASES = {
-  Databases: 'Database',
-  Database: 'Database',
-  Tools: 'Tools & Cloud',
-  Cloud: 'Tools & Cloud',
-};
-
-export const SKILL_CATEGORY_OPTIONS = [
-  'Frontend',
-  'Backend',
-  'Database',
+// Single source of truth for canonical category names and their recruiter-facing priority order.
+// Data Analysis leads (primary focus); Web Development merges backend + frontend, ordered backend-first below.
+export const SKILL_CATEGORY_ORDER = [
   'Data Analysis',
-  'Tools & Cloud',
+  'Web Development',
+  'Databases',
+  'Tools & Deployment',
 ];
 
+export const SKILL_CATEGORY_CONFIG = {
+  'Data Analysis': { color: '#f59e0b', emoji: '📊' },
+  'Web Development': { color: '#2563EB', emoji: '⚙️' },
+  Databases: { color: '#10b981', emoji: '🗄️' },
+  'Tools & Deployment': { color: '#06B6D4', emoji: '🛠️' },
+};
+
+// Backend-first ordering within the merged "Web Development" category (unlisted skills keep their
+// original relative order at the end, via a stable sort).
+const CATEGORY_ITEM_ORDER = {
+  'Web Development': [
+    'Python', 'Django', 'Django REST Framework', 'FastAPI', 'REST API',
+    'JWT', 'JWT / Authentication', 'Authentication', 'Node.js', 'Express',
+    'React', 'Next.js', 'JavaScript', 'HTML5', 'CSS3', 'Tailwind CSS',
+  ],
+};
+
+// Maps legacy/raw stored category names to the canonical display name (also covers identity mappings).
+const CATEGORY_ALIASES = {
+  'Data & Analytics': 'Data Analysis',
+  'Data Analytics': 'Data Analysis',
+  'Data Analysis': 'Data Analysis',
+  Backend: 'Web Development',
+  Frontend: 'Web Development',
+  'Backend Development': 'Web Development',
+  'Frontend Development': 'Web Development',
+  'Web Development': 'Web Development',
+  Database: 'Databases',
+  Databases: 'Databases',
+  'Tools & Cloud': 'Tools & Deployment',
+  Tools: 'Tools & Deployment',
+  Cloud: 'Tools & Deployment',
+  'Tools & Deployment': 'Tools & Deployment',
+};
+
+export const SKILL_CATEGORY_OPTIONS = SKILL_CATEGORY_ORDER;
+
 export const normalizeCategoryName = (category) => {
-  if (!category) return 'Frontend';
+  if (!category) return 'Web Development';
   return CATEGORY_ALIASES[category] || category;
 };
 
@@ -42,7 +62,7 @@ const formatSkillNameFromUrl = (url) => {
 
 export const getSkillCategoryConfig = (category) => {
   const normalizedCategory = normalizeCategoryName(category);
-  return SKILL_CATEGORY_CONFIG[normalizedCategory] || SKILL_CATEGORY_CONFIG.Frontend;
+  return SKILL_CATEGORY_CONFIG[normalizedCategory] || SKILL_CATEGORY_CONFIG['Web Development'];
 };
 
 export const normalizeSkillIcon = (iconValue, iconType) => {
@@ -116,7 +136,7 @@ export const normalizeSkillIcon = (iconValue, iconType) => {
   };
 };
 
-export const normalizeSkillItem = (item, fallbackCategory = 'Frontend', fallbackColor = getSkillCategoryConfig('Frontend').color) => {
+export const normalizeSkillItem = (item, fallbackCategory = 'Web Development', fallbackColor = getSkillCategoryConfig('Web Development').color) => {
   const category = normalizeCategoryName(item?.category || fallbackCategory);
   const categoryConfig = getSkillCategoryConfig(category);
   const normalizedIcon = normalizeSkillIcon(item?.icon ?? item, item?.iconType);
@@ -131,12 +151,14 @@ export const normalizeSkillItem = (item, fallbackCategory = 'Frontend', fallback
   };
 };
 
+// Groups a flat skill list by canonical category, then orders categories by SKILL_CATEGORY_ORDER
+// (any unrecognized category is appended at the end rather than dropped).
 export const groupSkillsByCategory = (skills = []) => {
   const grouped = new Map();
 
   skills.forEach((skill) => {
     const normalizedSkill = normalizeSkillItem(skill, skill?.category, skill?.color);
-    const category = normalizeCategoryName(normalizedSkill.category);
+    const category = normalizedSkill.category;
 
     if (!grouped.has(category)) {
       const categoryConfig = getSkillCategoryConfig(category);
@@ -151,7 +173,22 @@ export const groupSkillsByCategory = (skills = []) => {
     grouped.get(category).skills.push(normalizedSkill);
   });
 
-  return [...grouped.values()];
+  const orderedNames = [
+    ...SKILL_CATEGORY_ORDER.filter((name) => grouped.has(name)),
+    ...[...grouped.keys()].filter((name) => !SKILL_CATEGORY_ORDER.includes(name)),
+  ];
+
+  return orderedNames.map((name) => {
+    const category = grouped.get(name);
+    const itemOrder = CATEGORY_ITEM_ORDER[name];
+    if (!itemOrder) return category;
+
+    const priorityIndex = (skillName) => {
+      const idx = itemOrder.indexOf(skillName);
+      return idx === -1 ? Infinity : idx;
+    };
+    return { ...category, skills: [...category.skills].sort((a, b) => priorityIndex(a.name) - priorityIndex(b.name)) };
+  });
 };
 
 export const serializeSkillItem = (skill) => {
