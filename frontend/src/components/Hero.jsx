@@ -214,7 +214,7 @@ export default function Hero() {
 
             {/* Core stack — static, uncluttered grid */}
             <motion.div
-              className="grid grid-cols-3 gap-2.5 sm:gap-3"
+              className="grid grid-cols-2 gap-2.5 min-[375px]:grid-cols-3 sm:gap-3"
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 0.5 }}
@@ -223,7 +223,7 @@ export default function Hero() {
                 <div
                   key={name}
                   title={name}
-                  className="glass-card flex w-20 flex-col items-center gap-1.5 rounded-xl px-2 py-3 sm:w-24"
+                  className="glass-card flex w-full flex-col items-center gap-1.5 rounded-xl px-2 py-3 min-[375px]:w-20 sm:w-24"
                 >
                   <Icon className="h-5 w-5" style={{ color }} aria-hidden="true" />
                   <span className="text-center text-[10px] font-semibold leading-tight text-[#334155]">{name}</span>

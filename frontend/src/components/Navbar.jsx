@@ -24,8 +24,16 @@ export default function Navbar() {
   const [firstName = ''] = portfolioData.name.trim().split(/\s+/);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
+    let ticking = false;
+    const handleScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        setScrolled(window.scrollY > 20);
+        ticking = false;
+      });
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -57,7 +65,7 @@ export default function Navbar() {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
-              className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden md:flex-none"
+              className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden lg:flex-none"
             >
               <div className="w-8 h-8 shrink-0 rounded-lg bg-gradient-to-br from-[#2563EB] to-[#E2E8F0] flex items-center justify-center shadow-[0_0_15px_rgba(37, 99, 235,0.25)]">
                 <span className="text-white font-bold text-sm font-display">{firstName.charAt(0)}</span>
@@ -68,7 +76,7 @@ export default function Navbar() {
             </motion.div>
 
             {/* Desktop Nav */}
-            <div className="hidden md:flex items-center gap-8">
+            <div className="hidden lg:flex items-center gap-8">
               {navLinks.map((link, i) => (
                 <motion.div
                   key={link.to}
@@ -97,7 +105,7 @@ export default function Navbar() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.5 }}
-              className="hidden md:flex items-center gap-3"
+              className="hidden lg:flex items-center gap-3"
             >
               <RouterLink
                 to="/admin"
@@ -120,7 +128,7 @@ export default function Navbar() {
             {/* Hamburger */}
             <button
               id="mobile-menu-toggle"
-              className="touch-target md:hidden flex shrink-0 items-center justify-center rounded-xl glass-card text-[#64748B] hover:text-[#0F172A] transition-colors"
+              className="touch-target lg:hidden flex shrink-0 items-center justify-center rounded-xl glass-card text-[#64748B] hover:text-[#0F172A] transition-colors"
               onClick={() => setMenuOpen(!menuOpen)}
               aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
               aria-expanded={menuOpen}
@@ -135,7 +143,7 @@ export default function Navbar() {
       {menuOpen && (
         <button
           type="button"
-          className="fixed inset-0 z-30 bg-black/20 md:hidden"
+          className="fixed inset-0 z-30 bg-black/20 lg:hidden"
           onClick={() => setMenuOpen(false)}
           aria-label="Close navigation menu"
         />
@@ -150,7 +158,7 @@ export default function Navbar() {
             exit={{ opacity: 0, y: -20, height: 0 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
             id="mobile-navigation"
-            className="fixed inset-x-0 top-16 z-40 max-h-[calc(100dvh-4rem)] overflow-y-auto border-b border-[#E2E8F0] bg-[#F8FAFC]/98 shadow-lg backdrop-blur-xl md:hidden"
+            className="fixed inset-x-0 top-16 z-40 max-h-[calc(100dvh-4rem)] overflow-y-auto border-b border-[#E2E8F0] bg-[#F8FAFC]/98 shadow-lg backdrop-blur-xl lg:hidden"
           >
             <div className="container-custom py-6 flex flex-col gap-4">
               {navLinks.map((link, i) => (

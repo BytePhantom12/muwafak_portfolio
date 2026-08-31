@@ -66,19 +66,6 @@ function ProjectSlideshow({ images, title, hovered }) {
         />
       </AnimatePresence>
 
-      {/* Tech Scanning Overlay */}
-      <motion.div
-        className="absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#2563EB] to-transparent opacity-50 z-10"
-        animate={{
-          top: ["-10%", "110%"],
-        }}
-        transition={{
-          duration: 3,
-          repeat: Infinity,
-          ease: "linear"
-        }}
-      />
-
       {/* Slide Indicators */}
       <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-20">
         {images.map((_, i) => (
@@ -182,19 +169,6 @@ function ProjectCard({ project, index }) {
                 scale: hovered ? 1.05 : 1,
               }}
               transition={{ duration: 0.6, ease: "easeOut" }}
-            />
-
-            {/* Tech Scanning Overlay */}
-            <motion.div
-              className="absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#2563EB] to-transparent opacity-50 z-10"
-              animate={{
-                top: ["-10%", "110%"],
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                ease: "linear"
-              }}
             />
 
             {/* Corner Markers */}
@@ -308,7 +282,7 @@ function ProjectCard({ project, index }) {
           ))}
         </div>
         {(project.githubUrl || project.liveUrl) && (
-          <div className="mt-5 grid grid-cols-2 gap-3 sm:hidden">
+          <div className={`mt-5 grid gap-3 sm:hidden ${project.githubUrl && project.liveUrl ? 'grid-cols-2' : 'grid-cols-1'}`}>
             {project.githubUrl && <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="btn-outline px-3">Code</a>}
             {project.liveUrl && <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="btn-primary px-3">Live</a>}
           </div>

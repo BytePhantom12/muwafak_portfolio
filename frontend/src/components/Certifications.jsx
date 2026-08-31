@@ -27,6 +27,8 @@ function CertificationCard({ cert, index }) {
             src={logo}
             alt=""
             aria-hidden="true"
+            loading="lazy"
+            decoding="async"
             className="h-11 w-11 shrink-0 rounded-xl object-cover"
           />
         ) : (

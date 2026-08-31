@@ -90,7 +90,7 @@
 
 @layer components {
   .glass-card {
-    @apply backdrop-blur-xl rounded-2xl;
+    @apply backdrop-blur-md rounded-2xl;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
@@ -195,6 +195,7 @@
   animation: rotate-gradient 3s ease infinite;
 }
 
+/* Static (not animated) — avoids re-rasterizing a blurred layer every frame */
 .profile-ring::before {
   content: '';
   position: absolute;
@@ -202,7 +203,7 @@
   border-radius: 50%;
   background: linear-gradient(135deg, #2563EB, #E2E8F0, #2563EB);
   background-size: 200% 200%;
-  animation: rotate-gradient 3s ease infinite;
+  background-position: 50% 50%;
   filter: blur(12px);
   opacity: 0.5;
   z-index: -1;
